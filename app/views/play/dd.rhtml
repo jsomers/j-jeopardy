@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<%= javascript_include_tag :defaults -%>
+<%= stylesheet_link_tag 'main' -%>
+
+<style type="text/css">
+body {
+	background-color: #aa0011;
+}
+#score1 {
+	background-color: #aa0011;
+}
+
+#score2 {
+	background-color: #aa0011;
+}
+
+#score3 {
+	background-color: #aa0011;
+}
+
+</style>
+
+</head>
+
+<body>
+		<%= render :partial => 'standings' %>
+		<% form_tag(:action => 'daily_double', :controller => 'play') { %>
+		<div style="color:white; font-family: Optima; font-size:60px">DAILY DOUBLE!</div>
+		<input style="background-color:#aa0011;" id="ffinger" name="ffinger" value="<%= $current %> ($<%= if $current == $p1 then $p1pts elsif $current == $p2 then $p2pts else $p3pts end %>)" type="text"><br/>
+		<input id="wager" name="wager" type="text" style="text-align: center;"><br/><br/>
+		<input type="hidden" name="q_id" value="<%= params[:id] %>">
+		<input type="Submit" value="Submit your wager">
+		<% } %>
+		<embed name="myMusic" src="/sounds/jdaily2x.wav" type="audio/wav" autostart="true" mastersound width="1" height="1" style="position: absolute; left: 1px; top:1px;"></embed>
+		
+	</body>
+	</html>

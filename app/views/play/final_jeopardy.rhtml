@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<%= javascript_include_tag :defaults -%>
+<%= stylesheet_link_tag 'main' -%>
+
+</head>
+
+<body>
+
+	<form name="counter"><input type="text" name="d2" id="d2" style="background-color: #211eab; border: none; color: white; font-size: 20px; font-family: Optima; font-variant: small-caps; text-align: center;"></form>
+	<script type="text/javascript">
+	var milisec = 0;
+	var seconds = 33; 
+	document.counter.d2.value='33';
+
+	function display(){ 
+	 if (milisec<=0){ 
+	    milisec=9 
+	    seconds-=1 
+	 } 
+	 if (seconds<=-1){ 
+	    milisec=0 
+	    seconds+=1
+	    $('stumper').style.display = '';
+	 } 
+	 else 
+	    milisec-=1 
+	    document.counter.d2.value=seconds+"."+milisec 
+	    setTimeout("display()", 100) 
+	}
+	display()
+	</script>
+<div id="question"><%= @q.question %></div>
+
+<table class="wager">
+
+	<tr>
+		<% form_tag(:action => 'game_over', :controller => 'play') { %>
+		<td><input type="password" id="guess_1" name="guess_1" style="background-color: #211eab; color: #211eab; font-family: Optima; font-variant: small-caps; font-weight: bold; border: 1px dashed white; font-size: 20px; text-align: center; padding: 7px;"></td>
+		<td><input type="password" id="guess_2" name="guess_2" style="background-color: #211eab; color: #211eab; font-family: Optima; font-variant: small-caps; font-weight: bold; border: 1px dashed white; font-size: 20px; text-align: center; padding: 7px;"></td>
+		<td><input type="password" id="guess_3" name="guess_3" style="background-color: #211eab; color: #211eab; font-family: Optima; font-variant: small-caps; font-weight: bold; border: 1px dashed white; font-size: 20px; text-align: center; padding: 7px;"></td>
+	</tr>
+	<td colspan="3">
+		<input type="hidden" value="<%= @q.id %>" name="q_id" id="q_id">
+		<input type="hidden" value="<%= @wager1 %>" name="wager_1" id="wager_1">
+		<input type="hidden" value="<%= @wager2 %>" name="wager_2" id="wager_2">
+		<input type="hidden" value="<%= @wager3 %>" name="wager_3" id="wager_3">
+		<input type="Submit" value="Submit answers">
+	</td>
+			<% } %>
+</table>
+
+<div id="outcome"><%= @outcome %></div>
+
+<div id="stumper" style="display:none;"><font color="red"><b>Time's up!</b></font></div>
+<embed name="myMusic" src="/sounds/final_jeopardy.mp3" type="audio/mp3" autostart="true" mastersound width="1" height="1" style="position: absolute; left: 1px; top:1px;"></embed>
+</body>
+</html>

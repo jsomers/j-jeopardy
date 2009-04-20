@@ -1,0 +1,62 @@
+body {
+	margin:140px; padding:0px;
+	text-align:center;
+	background-color: #211eab;
+}
+
+#question {
+	width:500px;
+	margin:0px auto;
+	text-align:center;
+	padding:15px;
+	color: white;
+	font-family: Optima;
+	font-variant: small-caps;
+	font-size: 45px;
+	line-height: 100%;
+}
+
+#question a {
+	color: white;
+	color: #ffdb60;
+}
+#value {
+	font-size: 30px;
+	font-weight: bold;
+	font-family: Optima;
+	color: #ffdb60;
+}
+
+#ffinger {
+	background-color: #211eab; 
+	border: none; 
+	text-align: center; 
+	color: #ffdb60; 
+	font-family: Optima;
+	font-variant: small-caps;
+	font-size: 30px;
+}
+
+#outcome {
+	margin-top: 15px;
+	font-family: Optima;
+	color: white;
+}
+
+#stumper {
+	font-family: Optima;
+	font-size: 25px;
+	font-variant: small-caps;
+}
+
+#stumper a {
+	color: white;
+}
+
+.wager {
+	color: white;
+	font-family: Optima;
+	font-variant: small-caps;
+	width:500px;
+	margin:0px auto;
+}

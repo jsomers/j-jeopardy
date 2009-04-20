@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<%= javascript_include_tag :defaults -%>
+<%= stylesheet_link_tag 'main' -%>
+
+</head>
+
+<body onkeydown="getArrows(event)">
+
+	<form name="counter"><input type="text" name="d2" id="d2" style="background-color: #211eab; border: none; color: white; font-size: 20px; font-family: Optima; font-variant: small-caps; text-align: center;"></form>
+	<script type="text/javascript">
+	var milisec = 0;
+	var seconds = <%= (!params[:time].nil? ? params[:time] : 15) %>; 
+	document.counter.d2.value='<%= (!params[:time].nil? ? params[:time] : 15) %>';
+
+	function display(){ 
+	 if (milisec<=0){ 
+	    milisec=9 
+	    seconds-=1 
+	 } 
+	 if (seconds<=-1 & $('d2').style.display == ''){ 
+	    milisec=0 
+	    seconds+=1
+	    $('prompt').style.display = '';
+	 } 
+	 else 
+	    milisec-=1 
+	    document.counter.d2.value=seconds+"."+milisec 
+	    setTimeout("display()", 100) 
+	}
+		display()
+	</script>
+
+<div id="question"><%= @q.question %></div>
+
+<% form_remote_tag :url => { :action => 'validate_dd', :controller => 'play'}, :update => 'outcome' do -%>
+	<input type="hidden" name="wager" id="wager" value="<%= @wager %>">
+	<input id="question_id" name="question_id" type="hidden" value="<%= @q.id %>">
+	<input type="hidden" name="wager" id="wager" value="<%= @wager %>">
+	<input id="ffinger" name="ffinger" type="text" value="<%= $current %> (for $<%= @wager %>):"><br/>
+	<input id="answer" name="answer" type="text">
+	<% coords = @q.coord %>
+	<% col = coords.split(',')[1].to_i - 1 %>
+	<% row = coords.split(',')[2].to_i - 1 %>
+	<% if coords.include? 'DJ' then $double_table[col][row][3] = 0 else $single_table[col][row][3] = 0 end %>
+	<%= submit_tag 'Guess', :id => 'guess', :onclick => '$(\'d2\').style.color = \'#211eab\';seconds=1000' %>
+<% end -%>
+
+<div id="outcome"><%= @outcome %></div>
+<div id="prompt" style="display:none; text-align: center; font-family: Optima; color: white;">Time's up! Answer now if you haven't already.</div>
+</body>
+</html>

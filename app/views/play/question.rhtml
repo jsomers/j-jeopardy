@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<%= javascript_include_tag :defaults -%>
+<%= stylesheet_link_tag 'main' -%>
+
+<script type="text/javascript">
+
+nope1 = false;
+nope2 = false;
+nope3 = false;
+function playMusic(nm) {
+	obj = document.embeds[nm];
+	if(obj.Play) obj.Play();
+	return true;
+}
+var ct = 0;
+
+function getArrows(ev) {
+    arrows = ((ev.which) || (ev.keyCode));
+    
+    //ev = false;
+    if (ct > 0 || seconds > 5.0) {
+		switch(arrows) {
+			case 65:
+				nope1 = true;
+				break;
+			case 66:
+				nope2 = true;
+				break;
+			case 80:
+				nope3 = true;
+				break;
+		}
+        return '0'
+    } else {
+        //ev = false;
+        switch(arrows) {
+            case 65:
+				if (nope1) {
+					return '0'
+				} else {
+                $('ffinger').value = '<%= $p1 %>:';
+                $('player').value = '1';
+                $('answer').style.display = '';
+                $('guess').style.display = '';
+                $('d2').style.color = '#211eab';
+				ct = ct + 1;
+                break;
+			}
+            case 66:
+				if (nope2) {
+					return '0'
+				} else {
+                $('ffinger').value = '<%= $p2 %>:';
+                $('player').value = '2';
+                $('answer').style.display = '';
+                $('guess').style.display = '';
+                $('d2').style.color = '#211eab';
+				ct = ct + 1;
+                break;
+			}
+            case 80:
+				if (nope3) {
+					return '0'
+				} else {
+                $('ffinger').value = '<%= $p3 %>:';
+                $('player').value = '3';
+                $('answer').style.display = '';
+                $('guess').style.display = '';
+                $('d2').style.color = '#211eab';
+				ct = ct + 1;
+                break;
+			}
+        }
+        //document.getElementById('answer').focus();
+		//$('answer').value = '';
+		ev.stop();
+		$('answer').focus();
+        //document.getElementById('answer').onkeypress = "return true;";
+        
+    }
+}
+
+</script>
+
+</head>
+<div id="out" style="border: 5px solid #211eab; margin-bottom: 5px;"></div>
+<body onkeydown="getArrows(event);" onkeypress="//return true;">
+	<form name="counter"><input type="text" name="d2" id="d2" style="background-color: #211eab; border: none; color: #211eab; font-size: 20px; font-family: Optima; font-variant: small-caps; text-align: center;"></form>
+	<script type="text/javascript">
+	var milisec = 0;
+	var seconds = <%= (!params[:time].nil? ? params[:time] : 10) %>; 
+	document.counter.d2.value='<%= (!params[:time].nil? ? params[:time] : 10) %>';
+
+	function display(){ 
+	if (ct > 0) {
+		return;
+	} else {
+	 if (milisec<=0){ 
+	    milisec=9 
+	    seconds-=1 
+	 } 
+	 if (seconds<=-1){ 
+	    milisec=0 
+	    seconds+=1
+	    $('stumper').style.display = '';
+	 } 
+	 else 
+	    milisec-=1 
+	    document.counter.d2.value=seconds+"."+milisec 
+	    setTimeout("display()", 100) 
+		if (seconds < 6) {
+			$('out').style.border = '5px solid #f5573d';
+			$('d2').style.color = "white";
+		}
+	} }
+		display()
+	</script>
+
+<div id="question"><%= @q.question %></div>
+
+<% form_remote_tag :url => { :action => 'validate', :controller => 'play'}, :update => 'outcome' do -%>
+	<input id="ffinger" name="ffinger" type="text"><br/>
+	<input type="hidden" name="value" id="value" value="<%= @q.value %>">
+	<input id="question_id" name="question_id" type="hidden" value="<%= params[:id] %>">
+	<input type="hidden" name="player" id="player" value="">
+	<input id="answer" name="answer" type="text" style="display: none;" tabindex='1'>
+	<script type="text/javascript">   document.getElementById('answer').focus(); </script>
+
+	<%= submit_tag 'Guess', :id => 'guess', :style => 'display: none;' %>
+<% end -%>
+
+<div id="outcome"><%= @outcome %></div>
+
+
+<div id="stumper" style="display:none;"><small><a href="/play/board/<%= Question.find_by_id(params[:id]).game_id %>">(Back to the board!)</a></small><br/><small><span style="color: white; font-variant: normal;">The correct answer was</span> <font color="#33ff33"><%= Question.find_by_id(params[:id]).answer %></font></small></div>
+</body>
+</html>

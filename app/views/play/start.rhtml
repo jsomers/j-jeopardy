@@ -1,0 +1,12 @@
+<div style="margin-left: 20px;">
+Players, enter your names:<br/><br/>
+
+<% form_tag(:action => 'choose_game', :controller => 'play') { %>
+	
+	1. <input id="p1" name="p1" type="text" style="padding:2px;margin-bottom:5px;"/><br/>
+	2. <input id="p2" name="p2" type="text" style="padding:2px;margin-bottom:5px;"/><br/>
+	3. <input id="p3" name="p3" type="text" style="padding:2px;margin-bottom:5px;"/><br/>
+	<input type="Submit" value="Play" style="margin-left: 130px">
+<% } %>
+
+</div>

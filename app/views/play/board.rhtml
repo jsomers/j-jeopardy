@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<%= javascript_include_tag :defaults -%>
+</head>
+
+<style type="text/css">
+body {
+	background-color: #211eab;
+	margin:15px; padding:0px;
+	text-align: center;
+}
+#category_title {
+	padding: 10px;
+	font-variant: small-caps;
+	font-family: Optima;
+	font-weight: bold;
+	color: white;
+	font-size: 18px;
+}
+
+#category_title a {
+	color: white;
+}
+
+a.dollar {
+	font-variant: small-caps;
+	font-family: Optima;
+	font-weight: bold;
+	font-size: 25px;
+	text-decoration: none;
+	color: #ffdb60;
+}
+
+a.dollar:hover {
+	text-decoration: underline;
+}
+
+a.dollar:visited {
+	color: #001188;
+	display: none;
+}
+
+</style>
+
+<%= if params[:answer] then '<font color="white">(The answer was <b>' + params[:answer] + '</b>)</font>' end %>
+
+<%= render :partial => 'standings' %>
+
+<script type="text/javascript">
+	function upd(amt, player) {
+		old_score = parseInt($('score' + player).value.replace('$', ''))
+		new_score = old_score + amt
+		$('score' + player).value = '$' + new_score
+	}
+</script>
+<table align="center">
+	<tr>
+	<% for cat in @single %>
+		<td><span id="category_title"><%= cat.downcase.gsub(/\b\w/){$&.upcase} %></span></td>
+	<% end %>
+	</tr>
+	<% for j in (1..5) %>
+		<tr>
+		<% for i in (1..6) %>
+			<% begin %>
+			<td><a href="/play/question/<%= (the_q = @questions.select {|a| a.coord == 'J,' + i.to_s + ',' + j.to_s}[0]).id %>" class="dollar">$<%= if the_q.value != 'DD' then the_q.value else begin @questions.select {|a| a.coord == 'J,' + (i + 1).to_s + ',' + j.to_s}[0].value rescue @questions.select {|a| a.coord == 'J,' + (i - 1).to_s + ',' + j.to_s}[0].value end end %></a><table align="center" style="display: <%= ($single_table[i - 1][j - 1][3] == 1 ? "''" : "none") %>;"><tr>
+				<td><% if (a = $single_table[i - 1][j - 1][0]) == 1 %>
+					<span id="<%= i %>-<%= j %>-0"><%= link_to_remote( "<font color=\"#33ff33\">&#10003;</font>", :update => i.to_s + '-' + j.to_s + '-0', :url =>{ :action => :change_scores, :value => the_q.value, :type => 1, :my_id => i.to_s + '-' + j.to_s + '-0'}, :html => {:style => 'text-decoration: none'}) %></span>
+					<% elsif a == 0 %>
+						<span id="<%= i %>-<%= j %>-0"><%= link_to_remote( "<font color=\"red\">&#10007;</font>", :update => i.to_s + '-' + j.to_s + '-0', :url =>{ :action => :change_scores, :value => the_q.value, :type => 0, :my_id => i.to_s + '-' + j.to_s + '-0'}, :html => {:style => 'text-decoration: none'}) %></span>
+					<% else %>
+					<span id="<%= i %>-<%= j %>-0"><%= link_to_remote( "<font color=\"white\" size=\"1\">&#9679;</font>", :update => i.to_s + '-' + j.to_s + '-0', :url =>{ :action => :change_scores, :value => the_q.value, :type => 2, :my_id => i.to_s + '-' + j.to_s + '-0'}, :html => {:style => 'text-decoration: none'}) %></span>
+					<% end %>
+					<td><% if (b = $single_table[i - 1][j - 1][1]) == 1 %>
+						<span id="<%= i %>-<%= j %>-1"><%= link_to_remote( "<font color=\"#33ff33\">&#10003;</font>", :update => i.to_s + '-' + j.to_s + '-1', :url =>{ :action => :change_scores, :value => the_q.value, :type => 1, :my_id => i.to_s + '-' + j.to_s + '-1'}, :html => {:style => 'text-decoration: none'}) %></span>
+						<% elsif b == 0 %>
+							<span id="<%= i %>-<%= j %>-1"><%= link_to_remote( "<font color=\"red\">&#10007;</font>", :update => i.to_s + '-' + j.to_s + '-1', :url =>{ :action => :change_scores, :value => the_q.value, :type => 0, :my_id => i.to_s + '-' + j.to_s + '-1'}, :html => {:style => 'text-decoration: none'}) %></span>
+						<% else %>
+						<span id="<%= i %>-<%= j %>-1"><%= link_to_remote( "<font color=\"white\" size=\"1\">&#9679;</font>", :update => i.to_s + '-' + j.to_s + '-1', :url =>{ :action => :change_scores, :value => the_q.value, :type => 2, :my_id => i.to_s + '-' + j.to_s + '-1'}, :html => {:style => 'text-decoration: none'}) %></span>
+						<% end %>				
+						<td><% if (c = $single_table[i - 1][j - 1][2]) == 1 %>
+							<span id="<%= i %>-<%= j %>-2"><%= link_to_remote( "<font color=\"#33ff33\">&#10003;</font>", :update => i.to_s + '-' + j.to_s + '-2', :url =>{ :action => :change_scores, :value => the_q.value, :type => 1, :my_id => i.to_s + '-' + j.to_s + '-2'}, :html => {:style => 'text-decoration: none'}) %></span>
+							<% elsif c == 0 %>
+								<span id="<%= i %>-<%= j %>-2"><%= link_to_remote( "<font color=\"red\">&#10007;</font>", :update => i.to_s + '-' + j.to_s + '-2', :url =>{ :action => :change_scores, :value => the_q.value, :type => 0, :my_id => i.to_s + '-' + j.to_s + '-2'}, :html => {:style => 'text-decoration: none'}) %></span>
+							<% else %>
+							<span id="<%= i %>-<%= j %>-2"><%= link_to_remote( "<font color=\"white\" size=\"1\">&#9679;</font>", :update => i.to_s + '-' + j.to_s + '-2', :url =>{ :action => :change_scores, :value => the_q.value, :type => 2, :my_id => i.to_s + '-' + j.to_s + '-2'}, :html => {:style => 'text-decoration: none'}) %></span>
+							<% end %>
+				</tr></table></td>
+				
+			<% rescue %>
+			"></a><font color="white"><b>???</b></font>
+			<% end %>
+		<% end %>
+		
+		</tr>
+	<% end %>
+</table>
+ <br/><br/><br/>
+<table align="center">
+	<tr>
+	<% for cat in @double %>
+		<td><span id="category_title"><%= cat.downcase.gsub(/\b\w/){$&.upcase} %></span></td>
+	<% end %>
+	</tr>
+	<% for j in (1..5) %>
+		<tr>
+		<% for i in (1..6) %>
+			<% begin %>
+			<td><a href="/play/question/<%= (the_q = @questions.select {|a| a.coord == 'DJ,' + i.to_s + ',' + j.to_s}[0]).id %>" class="dollar">$<%= if the_q.value != 'DD' then the_q.value else begin @questions.select {|a| a.coord == 'DJ,' + (i + 1).to_s + ',' + j.to_s}[0].value rescue @questions.select {|a| a.coord == 'DJ,' + (i - 1).to_s + ',' + j.to_s}[0].value end end %></a><span class="stats" style="display:none;"><%= $double_table[i - 1][j - 1] %></span>
+				<table align="center" style="display: <%= ($double_table[i - 1][j - 1][3] == 1 ? "''" : "none") %>;"><tr>
+					<td><% if (a = $double_table[i - 1][j - 1][0]) == 1 %>
+						<span id="DJ<%= i %>-<%= j %>-0"><%= link_to_remote( "<font color=\"#33ff33\">&#10003;</font>", :update => 'DJ' + i.to_s + '-' + j.to_s + '-0', :url =>{ :action => :change_scores, :value => the_q.value, :type => 1, :my_id => 'DJ' +  i.to_s + '-' + j.to_s + '-0'}, :html => {:style => 'text-decoration: none'}) %></span>
+						<% elsif a == 0 %>
+							<span id="DJ<%= i %>-<%= j %>-0"><%= link_to_remote( "<font color=\"red\">&#10007;</font>", :update => 'DJ' + i.to_s + '-' + j.to_s + '-0', :url =>{ :action => :change_scores, :value => the_q.value, :type => 0, :my_id => 'DJ' +  i.to_s + '-' + j.to_s + '-0'}, :html => {:style => 'text-decoration: none'}) %></span>
+						<% else %>
+						<span id="DJ<%= i %>-<%= j %>-0"><%= link_to_remote( "<font color=\"white\" size=\"1\">&#9679;</font>", :update => 'DJ' + i.to_s + '-' + j.to_s + '-0', :url =>{ :action => :change_scores, :value => the_q.value, :type => 2, :my_id => 'DJ' +  i.to_s + '-' + j.to_s + '-0'}, :html => {:style => 'text-decoration: none'}) %></span>
+						<% end %>
+						<td><% if (b = $double_table[i - 1][j - 1][1]) == 1 %>
+							<span id="DJ<%= i %>-<%= j %>-1"><%= link_to_remote( "<font color=\"#33ff33\">&#10003;</font>", :update => 'DJ' + i.to_s + '-' + j.to_s + '-1', :url =>{ :action => :change_scores, :value => the_q.value, :type => 1, :my_id => 'DJ' +  i.to_s + '-' + j.to_s + '-1'}, :html => {:style => 'text-decoration: none'}) %></span>
+							<% elsif b == 0 %>
+								<span id="DJ<%= i %>-<%= j %>-1"><%= link_to_remote( "<font color=\"red\">&#10007;</font>", :update => 'DJ' + i.to_s + '-' + j.to_s + '-1', :url =>{ :action => :change_scores, :value => the_q.value, :type => 0, :my_id => 'DJ' +  i.to_s + '-' + j.to_s + '-1'}, :html => {:style => 'text-decoration: none'}) %></span>
+							<% else %>
+							<span id="DJ<%= i %>-<%= j %>-1"><%= link_to_remote( "<font color=\"white\" size=\"1\">&#9679;</font>", :update => 'DJ' + i.to_s + '-' + j.to_s + '-1', :url =>{ :action => :change_scores, :value => the_q.value, :type => 2, :my_id => 'DJ' +  i.to_s + '-' + j.to_s + '-1'}, :html => {:style => 'text-decoration: none'}) %></span>
+							<% end %>				
+							<td><% if (c = $double_table[i - 1][j - 1][2]) == 1 %>
+								<span id="DJ<%= i %>-<%= j %>-2"><%= link_to_remote( "<font color=\"#33ff33\">&#10003;</font>", :update => 'DJ' + i.to_s + '-' + j.to_s + '-2', :url =>{ :action => :change_scores, :value => the_q.value, :type => 1, :my_id => 'DJ' +  i.to_s + '-' + j.to_s + '-2'}, :html => {:style => 'text-decoration: none'}) %></span>
+								<% elsif c == 0 %>
+									<span id="DJ<%= i %>-<%= j %>-2"><%= link_to_remote( "<font color=\"red\">&#10007;</font>", :update => 'DJ' + i.to_s + '-' + j.to_s + '-2', :url =>{ :action => :change_scores, :value => the_q.value, :type => 0, :my_id => 'DJ' +  i.to_s + '-' + j.to_s + '-2'}, :html => {:style => 'text-decoration: none'}) %></span>
+								<% else %>
+								<span id="DJ<%= i %>-<%= j %>-2"><%= link_to_remote( "<font color=\"white\" size=\"1\">&#9679;</font>", :update => 'DJ' + i.to_s + '-' + j.to_s + '-2', :url =>{ :action => :change_scores, :value => the_q.value, :type => 2, :my_id => 'DJ' +  i.to_s + '-' + j.to_s + '-2'}, :html => {:style => 'text-decoration: none'}) %></span>
+								<% end %>
+					</tr></table>
+				</td>
+			<% rescue %>
+			"></a><font color="white"><b>???</b></font>
+			<% end %>
+		<% end %>
+		</tr>
+	<% end %>
+</table>
+<br/><br/>
+<div align="center">
+	<a style="font-size:40px;font-variant: small-caps; font-family: Optima; color: white; padding-top: 20px;" href="/play/wager/<%= @game_id %>">Final Jeopardy!</a>
+</div>
+
+</body>
+</html>
+
