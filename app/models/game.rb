@@ -56,4 +56,21 @@ class Game < ActiveRecord::Base
       end
     end
   end
+  
+  def self.add_metadata
+    f = File.new("#{RAILS_ROOT}/parse/metadata.txt", "r").readlines
+#    mes = []
+    for line in f
+      game_id = line.split(' ')[0]
+      metadata = line.split(' ')[1..-1].join(' ')
+      g = Game.find_by_game_id(game_id)
+#      mes << metadata.chomp.gsub(".", "")
+      begin
+        g.metadata = metadata.chomp.gsub(".", "")
+        g.save!
+      rescue
+      end
+    end
+#    return mes
+  end
 end

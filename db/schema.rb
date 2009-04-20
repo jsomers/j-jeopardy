@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090409051935) do
+ActiveRecord::Schema.define(:version => 20090420024603) do
 
   create_table "games", :force => true do |t|
     t.datetime "created_at"
@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(:version => 20090409051935) do
     t.text     "categories"
     t.text     "airdate"
     t.integer  "game_id"
+    t.text     "metadata"
   end
 
   add_index "games", ["game_id"], :name => "index_games_on_game_id", :unique => true
