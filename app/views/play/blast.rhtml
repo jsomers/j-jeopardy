@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<%= javascript_include_tag :defaults -%>
+<%= stylesheet_link_tag 'main' -%>
+
+</head>
+<div id="out" style="border: 5px solid #211eab; margin-bottom: 5px;"></div>
+<body>
+
+<div id="ffinger"><small>$<%= @q.value %></small><br/><%= @q.category %></div>
+<div id="question"><%= @q.question %></div>
+
+<% form_remote_tag :url => { :action => 'validate_blast', :controller => 'play'}, :update => 'outcome' do -%>
+	<input type="hidden" name="value" id="value" value="<%= @q.value %>">
+	<input id="question_id" name="question_id" type="hidden" value="<%= @q.id %>">
+	<input type="hidden" name="blast" id="blast" value="yes">
+	<input id="answer" name="answer" type="text" style="" tabindex='1'>
+	<script type="text/javascript">   document.getElementById('answer').focus(); </script>
+
+	<%= submit_tag 'Guess', :id => 'guess', :style => 'display: none;' %> <span id="outcome" style="padding:10px;font-size:20px"><%= @outcome %></span>
+<% end -%>
+
+
+</body>
+</html>

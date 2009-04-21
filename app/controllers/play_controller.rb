@@ -1,8 +1,14 @@
 class PlayController < ApplicationController
   require 'cgi'  
-
+  
+  def blast
+    $start_time = Time.new
+    $score = 0
+    @q = Question.find_all_by_value('200', :limit => 1, :order => :random)[0]
+  end
+  
   def start   
-    $ct = 0 
+    $ct = 0
   end
   
   def choose_game
@@ -279,6 +285,27 @@ class PlayController < ApplicationController
     font_color = (t ? '#33ff33' : 'red')
     answer_color = (t ? '#33ff33' : 'red')
     @outcome = '<b><font color="' + answer_color + '">' + answer + '</font></b><br/><small>' + '<font color="' + font_color + '">' + '[' + $current + (t ? ' +' : ' -') + '$' + value.to_s + ']</font><br/>' + '<a href="/play/board/' + game_id.to_s + '" style="color: white;">&lt;&lt; Go back</a>'
+  end
+  
+  def validate_blast
+    guess = params[:answer]
+    q = Question.find_by_id(params[:question_id])
+    value = params[:value]
+    if guess.empty?
+      @outcome = '(' + q.answer + ')<script type="text/javascript">window.location.href=window.location.href</script>'
+    else
+      t = true
+      for word in guess.split(' ')
+        if !q.answer.downcase.include? word.downcase
+          t = false
+        end
+      end
+      if t
+        @outcome = '<font color="#33ff33">&#10003; (' + q.answer + ')</font><script type="text/javascript">window.location.href=window.location.href</script>'
+      else
+        @outcome = '<font color="red">&#10007; (' + q.answer + ')</font><script type="text/javascript">window.location.href=window.location.href</script>'
+      end
+    end
   end
   
   def game_over

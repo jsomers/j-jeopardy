@@ -42,7 +42,7 @@ function getArrows(ev) {
         //ev = false;
         switch(arrows) {
             case 65:
-				if (nope1) {
+				if (nope1 && seconds > 4.0) {
 					return '0'
 				} else {
                 $('ffinger').value = '<%= $p1 %>:';
@@ -54,7 +54,7 @@ function getArrows(ev) {
                 break;
 			}
             case 66:
-				if (nope2) {
+				if (nope2 && seconds > 4.0) {
 					return '0'
 				} else {
                 $('ffinger').value = '<%= $p2 %>:';
@@ -66,7 +66,7 @@ function getArrows(ev) {
                 break;
 			}
             case 80:
-				if (nope3) {
+				if (nope3 && seconds > 4.0) {
 					return '0'
 				} else {
                 $('ffinger').value = '<%= $p3 %>:';
