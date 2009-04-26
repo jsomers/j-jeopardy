@@ -228,7 +228,7 @@ class PlayController < ApplicationController
     player = params[:player]
     value = params[:value]
     the_question = Question.find_by_id(params[:question_id])
-    answer = the_question.answer
+    answer = the_question.answer.gsub('\\', '')
     game_id = the_question.game_id
     guess_words = guess.split(' ')
     coords = the_question.coord
@@ -266,7 +266,7 @@ class PlayController < ApplicationController
     guess = params[:answer]
     value = params[:wager]
     the_question = Question.find_by_id(params[:question_id])
-    answer = the_question.answer
+    answer = the_question.answer.gsub('\\', '')
     game_id = the_question.game_id
     guess_words = guess.split(' ')
     t = true
@@ -295,18 +295,18 @@ class PlayController < ApplicationController
     q = Question.find_by_id(params[:question_id])
     value = params[:value]
     if guess.empty?
-      @outcome = '(' + q.answer + ')<script type="text/javascript">window.location.href=window.location.href</script>'
+      @outcome = '(' + q.answer.gsub('\\', '') + ')<script type="text/javascript">window.location.href=window.location.href</script>'
     else
       t = true
       for word in guess.split(' ')
-        if !q.answer.downcase.include? word.downcase
+        if !q.answer.gsub('\\', '').downcase.include? word.downcase
           t = false
         end
       end
       if t
-        @outcome = '<font color="#33ff33">&#10003; (' + q.answer + ')</font><script type="text/javascript">window.location.href=window.location.href</script>'
+        @outcome = '<font color="#33ff33">&#10003; (' + q.answer.gsub('\\', '') + ')</font><script type="text/javascript">window.location.href=window.location.href</script>'
       else
-        @outcome = '<font color="red">&#10007; (' + q.answer + ')</font><script type="text/javascript">window.location.href=window.location.href</script>'
+        @outcome = '<font color="red">&#10007; (' + q.answer.gsub('\\', '') + ')</font><script type="text/javascript">window.location.href=window.location.href</script>'
       end
     end
   end
