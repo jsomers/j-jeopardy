@@ -24,6 +24,85 @@
 
 <div style="margin-top: 50px; font-family: Optima; font-variant: small-caps; color: white; font-size: 50px;"><small>And the winner is...</small><br/><font color="#33ff33"><%= [[$p1pts, $p1], [$p2pts, $p2], [$p3pts, $p3]].max[1] %></font><br/><br/> <small>(The answer was "<%= @answer %>")</small></div>
 
+<div id="chart" style="margin-top: 50px;"></div>
+
+<script type="text/javascript">
+var max;
+var min; 
+var scale;
+var legend;
+
+function load() {
+    var hiPoints= [];
+    var loPoints= [];
+    var array0= '<%= $p1chart.join(',') %>'
+    var array1= '<%= $p2chart.join(',') %>'
+    var array2= '<%= $p3chart.join(',') %>'
+    array0= array0.split(',');
+    array1= array1.split(',');
+    array2= array2.split(',');
+    var arrays=[array0,array1,array2];
+
+    for(i=0; i<arrays.length; i++) {
+        var maxHeight = Math.max.apply(null, arrays[i]);
+        hiPoints.push(maxHeight);
+        var minHeight = Math.min.apply(null, arrays[i]);
+        loPoints.push(minHeight);
+    }
+    var maxBiggest = Math.max.apply(null, hiPoints);
+    var maxRound = Math.ceil(maxBiggest/10)*10;
+    max= maxRound;
+    var minLowest = Math.min.apply(null, loPoints);
+    min= Math.floor(minLowest/10)*10;
+    var yaxis="0:|" + min + "|" + max/2 + "|" + max ;
+    legend = "&chxt=y&chxl=" + yaxis;
+
+    var firstArrayScaled= scaling(array0);
+    var secondArrayScaled = scaling(array1);
+    var thirdArrayScaled = scaling(array2);  
+     
+    var chartBaseUrl = "http://chart.apis.google.com/chart?";
+    var chartParams = "cht=lc&chs=1000x250&chls=1,1,0|1,1,0|1,1,0|1,1,0&chco=ff0000,00ff00,eeeeee&chf=bg,s,211eab&chm=o,eeeeee,0,-1,5,0|o,eeeeee,1,-1,5,0|o,eeeeee,2,-1,5,0&chxt=x,r&chts=eeeeee,12&chdl=<%= $p1 %>|<%= $p2 %>|<%= $p3 %>";
+    var values = "&chd=e:";
+    var title = "&chtt=Game%20Progress";
+    values = values + extendedEncode(firstArrayScaled) + "," +  extendedEncode(secondArrayScaled) + "," +  extendedEncode(thirdArrayScaled);
+    document.getElementById('chart').innerHTML = "<img src=" + chartBaseUrl + chartParams + title + values + legend + ">"; 
+	$('test').value = "<img src=" + chartBaseUrl + chartParams + title + values + legend + ">"; 
+}
+function scaling(values) {		
+    var ymin=0;
+    var ymax=4095;
+    var arraylength = values.length;
+    var newvalues = new Array();
+    for (var i=0; i<arraylength;i++){
+	     var v = values[i];
+	     var y=Math.round((((ymin-ymax)/(max-min))*(max-v))+ymax);
+	     newvalues.push(y);
+    }
+    return newvalues;
+}
+
+function extendedEncode(values) {
+    var encodingString = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.';
+    var chartData = [''];
+    var esln = encodingString.length;
+    var firstChar, secondChar;
+    for (var i = 0; i < values.length; i++) {
+        var currentValue = values[i];
+    	  if (!isNaN(currentValue) && currentValue >= 0) {
+    	      firstChar = encodingString.charAt(Math.floor(currentValue/esln));
+		secondChar = encodingString.charAt((currentValue % esln));
+    		chartData.push(firstChar+secondChar);
+    	  } 
+        else {
+            chartData.push('__');
+        }
+    }
+    return chartData.join('');
+} load();
+</script>
+
+
 
 <div style="margin-top: 50px;">
 <%= '<img src="http://chart.apis.google.com/chart?cht=lc&chd=t:' + $p1chart.join(',') + '|' + $p2chart.join(',') + '|' + $p3chart.join(',') + '&chds=' + $p1chart.min.to_s + ',' + $p1chart.max.to_s + ',' + $p2chart.min.to_s + ',' + $p2chart.max.to_s + ',' + $p3chart.min.to_s + ',' + $p3chart.max.to_s + '&chs=1000x250&chf=bg,s,211eab&chco=ff0000,00ff00,eeeeee&chtt=Game+Progress&chxt=x,r&chts=eeeeee,12&chm=o,eeeeee,0,-1,5,0|o,eeeeee,1,-1,5,0|o,eeeeee,2,-1,5,0&chdl=' + $p1 + '|' + $p2 + '|' + $p3 + '">' %>
