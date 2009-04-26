@@ -129,6 +129,7 @@ function getArrows(ev) {
 	 	if (ct > 0) {
 			$('d2').style.display = 'none';
 			if (seconds == 0) {
+				playMusic('myMusic');
 				seconds += 100;
 				$('out').style.borderColor = '#211eab';
 				return;
@@ -159,7 +160,7 @@ function getArrows(ev) {
 
 <div id="outcome"><%= @outcome %></div>
 
-
 <div id="stumper" style="display:none;"><small><a href="/play/board/<%= Question.find_by_id(params[:id]).game_id %>">(Back to the board!)</a></small><br/><small><span style="color: white; font-variant: normal;">The correct answer was</span> <font color="#33ff33"><%= Question.find_by_id(params[:id]).answer %></font></small></div>
+<embed name="myMusic" src="/sounds/jtime.wav" type="audio/mp3" autostart="false" mastersound width="1" height="1" style="position: absolute; left: 1px; top:1px;"></embed>
 </body>
 </html>
