@@ -261,7 +261,7 @@ class PlayController < ApplicationController
     if t then $current = p end
 
     answer_color = (t ? '#33ff33' : '#211eab')
-    @outcome = '<script type="text/javascript">seconds += 100; $(\'out\').style.borderColor="#211eab";</script><b><font color="' + answer_color + '">' + answer + '</font></b><br/><small>' + '<font color="' + font_color + '">' + '[' + p + (t ? ' +' : ' -') + '$' + value.to_s + ']</font><br/>' + (t ? '<a href="/play/board/' + game_id.to_s + '" style="color: white;">&lt;&lt; Go back</a>' : '<a href="?time=7" style="color: white;">Anyone else?</a> &nbsp; &nbsp;<a href="/play/board/' + game_id.to_s + '?answer=' + answer + '" style="color: white;">No, go back</a>')
+    @outcome = '<script type="text/javascript">seconds += 100; $(\'out\').style.borderColor="#211eab";</script><b><font color="' + answer_color + '">' + answer + '</font></b><br/><small>' + '<font color="' + font_color + '">' + '[' + p + (t ? ' +' : ' -') + '$' + value.to_s + ']</font><br/>' + (t ? '<a href="/play/board/' + game_id.to_s + '" style="color: white;">&lt;&lt; Go back</a>' : '<a href="?time=7" style="color: white;">Anyone else?</a> &nbsp; &nbsp;<a href="/play/board/' + game_id.to_s + '?answer=' + CGI.escapeHTML(answer) + '" style="color: white;">No, go back</a>')
   end
   
   def validate_dd

@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
         ct += $single_table[i][j][3]
       end
     end
-    return ct >= 29
+    return ct >= 30
   end
   
   def final?
@@ -34,6 +34,6 @@ class ApplicationController < ActionController::Base
         ct += $double_table[i][j][3]
       end
     end
-    return ct >= 57
+    return ct >= 59
   end
 end

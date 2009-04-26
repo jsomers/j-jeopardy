@@ -72,6 +72,17 @@ a.dollar:visited {
 	}
 	
 </script>
+
+<% if @finished and $ct == 0 %>
+	<% scores = [[$p1pts, $p1], [$p2pts, $p2], [$p3pts, $p3]] %>
+	<% loser = scores.index(scores.min) + 1 %>
+	<% ts = scores[loser - 1][0] %>
+	<script type="text/javascript">
+		upd(<%= ts %>, <%= loser %>, 1);
+	</script>
+	<% $ct = 1 %>
+<% end %>
+
 <div id="single_jeopardy" style="display:<%= (@finished ? 'none' : '') %>"><table align="center">
 	<tr>
 	<% for cat in @single %>
@@ -107,7 +118,7 @@ a.dollar:visited {
 				</tr></table></td>
 				
 			<% rescue %>
-			"></a><font color="white"><b>???</b></font><% if @questions.select {|a| a.coord == 'J,' + i.to_s + ',' + j.to_s}[0].value != 'DD' then $single_table[i - 1][j - 1][3] = 1 end %>
+			"></a><font color="white"><b>???</b></font><% $single_table[i - 1][j - 1][3] = 1 %>
 			<% end %>
 		<% end %>
 		
@@ -151,7 +162,7 @@ a.dollar:visited {
 					</tr></table>
 				</td>
 			<% rescue %>
-			"></a><font color="white"><b>???</b></font><% if (@double and @questions.select {|a| a.coord == 'DJ,' + i.to_s + ',' + j.to_s}[0].value != 'DD') then $double_table[i - 1][j - 1][3] = 1 end %>
+			"></a><font color="white"><b>???</b></font><% if @finished then $double_table[i - 1][j - 1][3] = 1 end %>
 			<% end %>
 		<% end %>
 		</tr>
