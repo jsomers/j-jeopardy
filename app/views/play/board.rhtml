@@ -51,10 +51,28 @@ a.dollar:visited {
 <%= render :partial => 'standings' %>
 
 <script type="text/javascript">
-	function upd(amt, player) {
+	function upd(amt, player, cur) {
 		old_score = parseInt($('score' + player).value.replace('$', ''))
 		new_score = old_score + amt
 		$('score' + player).value = '$' + new_score
+		if(new_score >= 0) {
+			$('score' + player).style.color = '#33ff33';
+		} else {
+			$('score' + player).style.color = 'red';
+		}
+		if(cur == 1) {
+			$('name' + player).style.borderBottom = '1px solid white'
+			if (player == 1) {
+				$('name2').style.borderBottom = 'none';
+				$('name3').style.borderBottom = 'none';
+			} else if (player == 2) {
+				$('name1').style.borderBottom = 'none';
+				$('name3').style.borderBottom = 'none';
+			} else {
+				$('name1').style.borderBottom = 'none';
+				$('name2').style.borderBottom = 'none';
+			}
+		}
 	}
 </script>
 <table align="center">
