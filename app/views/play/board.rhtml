@@ -14,10 +14,7 @@ body {
 	text-align: center;
 }
 #category_title {
-	padding: 10px;
-	font-variant: small-caps;
 	font-family: Optima;
-	font-weight: bold;
 	color: white;
 	font-size: 18px;
 }
@@ -27,12 +24,11 @@ body {
 }
 
 a.dollar {
-	font-variant: small-caps;
 	font-family: Optima;
-	font-weight: bold;
-	font-size: 25px;
+	font-size: 30px;
 	text-decoration: none;
 	color: #ffdb60;
+	font-weight: bold;
 }
 
 a.dollar:hover {
@@ -74,15 +70,16 @@ a.dollar:visited {
 			}
 		}
 	}
+	
 </script>
-<table align="center">
+<div id="single_jeopardy" style="display:<%= (@finished ? 'none' : '') %>"><table align="center">
 	<tr>
 	<% for cat in @single %>
-		<td><span id="category_title"><%= cat.downcase.gsub(/\b\w/){$&.upcase} %></span></td>
+		<td width="250px;"><span id="category_title"><%= cat %></span></td>
 	<% end %>
 	</tr>
 	<% for j in (1..5) %>
-		<tr>
+		<tr height="50px">
 		<% for i in (1..6) %>
 			<% begin %>
 			<td><a href="/play/question/<%= (the_q = @questions.select {|a| a.coord == 'J,' + i.to_s + ',' + j.to_s}[0]).id %>" class="dollar">$<%= if the_q.value != 'DD' then the_q.value else begin @questions.select {|a| a.coord == 'J,' + (i + 1).to_s + ',' + j.to_s}[0].value rescue @questions.select {|a| a.coord == 'J,' + (i - 1).to_s + ',' + j.to_s}[0].value end end %></a><table align="center" style="display: <%= ($single_table[i - 1][j - 1][3] == 1 ? "''" : "none") %>;"><tr>
@@ -110,22 +107,22 @@ a.dollar:visited {
 				</tr></table></td>
 				
 			<% rescue %>
-			"></a><font color="white"><b>???</b></font>
+			"></a><font color="white"><b>???</b></font><% if @questions.select {|a| a.coord == 'J,' + i.to_s + ',' + j.to_s}[0].value != 'DD' then $single_table[i - 1][j - 1][3] = 1 end %>
 			<% end %>
 		<% end %>
 		
 		</tr>
 	<% end %>
-</table>
- <br/><br/><br/>
-<table align="center">
+</table></div>
+
+<div id="double_jeopardy" style="display:<%= (@finished ? '' : 'none') %>;"><table align="center">
 	<tr>
 	<% for cat in @double %>
-		<td><span id="category_title"><%= cat.downcase.gsub(/\b\w/){$&.upcase} %></span></td>
+		<td width="250px;"><span id="category_title"><%= cat %></span></td>
 	<% end %>
 	</tr>
 	<% for j in (1..5) %>
-		<tr>
+		<tr height="50px;">
 		<% for i in (1..6) %>
 			<% begin %>
 			<td><a href="/play/question/<%= (the_q = @questions.select {|a| a.coord == 'DJ,' + i.to_s + ',' + j.to_s}[0]).id %>" class="dollar">$<%= if the_q.value != 'DD' then the_q.value else begin @questions.select {|a| a.coord == 'DJ,' + (i + 1).to_s + ',' + j.to_s}[0].value rescue @questions.select {|a| a.coord == 'DJ,' + (i - 1).to_s + ',' + j.to_s}[0].value end end %></a><span class="stats" style="display:none;"><%= $double_table[i - 1][j - 1] %></span>
@@ -154,14 +151,15 @@ a.dollar:visited {
 					</tr></table>
 				</td>
 			<% rescue %>
-			"></a><font color="white"><b>???</b></font>
+			"></a><font color="white"><b>???</b></font><% if (@double and @questions.select {|a| a.coord == 'DJ,' + i.to_s + ',' + j.to_s}[0].value != 'DD') then $double_table[i - 1][j - 1][3] = 1 end %>
 			<% end %>
 		<% end %>
 		</tr>
 	<% end %>
-</table>
+</table></div>
 <br/><br/>
-<div align="center">
+
+<div id="final" align="center" style="display:<%= (@final ? '' : 'none') %>;">
 	<a style="font-size:40px;font-variant: small-caps; font-family: Optima; color: white; padding-top: 20px;" href="/play/wager/<%= @game_id %>">Final Jeopardy!</a>
 </div>
 

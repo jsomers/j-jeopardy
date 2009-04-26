@@ -12,4 +12,28 @@ class ApplicationController < ActionController::Base
   # Uncomment this to filter the contents of submitted sensitive data parameters
   # from your application log (in this case, all fields with names like "password"). 
   # filter_parameter_logging :password
+  def double?
+    ct = 0
+    for i in (0..5)
+      for j in (0..4)
+        ct += $single_table[i][j][3]
+      end
+    end
+    return ct >= 29
+  end
+  
+  def final?
+    ct = 0
+    for i in (0..5)
+      for j in (0..4)
+        ct += $single_table[i][j][3]
+      end
+    end
+    for i in (0..5)
+      for j in (0..4)
+        ct += $double_table[i][j][3]
+      end
+    end
+    return ct >= 57
+  end
 end

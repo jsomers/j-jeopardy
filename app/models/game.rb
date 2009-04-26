@@ -73,4 +73,5 @@ class Game < ActiveRecord::Base
     end
 #    return mes
   end
+  
 end
