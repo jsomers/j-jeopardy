@@ -12,13 +12,20 @@
 
 <body>
 
+	<script type="text/javascript">
+		function lock(n) {
+			$('guess_' + n).style.color = "#211eab";
+			$('guess_' + n).type = 'password';
+			$('lock_' + n).style.display = 'none';
+		}
+	</script>
+	
 	<form name="counter"><input type="text" name="d2" id="d2" style="background-color: #211eab; border: none; color: white; font-size: 20px; font-family: Optima; font-variant: small-caps; text-align: center;"></form>
 	<script type="text/javascript">
 	var milisec = 0;
 	var seconds = 33; 
-	document.counter.d2.value='33';
 
-	function display(){ 
+	function display(){
 	 if (milisec<=0){ 
 	    milisec=9 
 	    seconds-=1 
@@ -35,15 +42,20 @@
 	}
 	display()
 	</script>
+<div id="fj_category"><%= Game.find_by_game_id(@q.game_id).categories.split('^')[-1] %></div>
 <div id="question"><%= @q.question %></div>
 
 <table class="wager">
-
 	<tr>
 		<% form_tag(:action => 'game_over', :controller => 'play') { %>
-		<td><input type="password" id="guess_1" name="guess_1" style="background-color: #211eab; color: #211eab; font-family: Optima; font-variant: small-caps; font-weight: bold; border: 1px dashed white; font-size: 20px; text-align: center; padding: 7px;"></td>
-		<td><input type="password" id="guess_2" name="guess_2" style="background-color: #211eab; color: #211eab; font-family: Optima; font-variant: small-caps; font-weight: bold; border: 1px dashed white; font-size: 20px; text-align: center; padding: 7px;"></td>
-		<td><input type="password" id="guess_3" name="guess_3" style="background-color: #211eab; color: #211eab; font-family: Optima; font-variant: small-caps; font-weight: bold; border: 1px dashed white; font-size: 20px; text-align: center; padding: 7px;"></td>
+		<td><input id="guess_1" name="guess_1" class="fj"></td>
+		<td><input id="guess_2" name="guess_2" class="fj"></td>
+		<td><input id="guess_3" name="guess_3" class="fj"></td>
+	</tr>
+	<tr>
+		<td><a id="lock_1" href="#1" onclick="lock(1)">Lock</a></td>
+		<td><a id="lock_2" href="#2" onclick="lock(2)">Lock</a></td>
+		<td><a id="lock_3" href="#3" onclick="lock(3)">Lock</a></td>
 	</tr>
 	<td colspan="3">
 		<input type="hidden" value="<%= @q.id %>" name="q_id" id="q_id">
@@ -52,12 +64,15 @@
 		<input type="hidden" value="<%= @wager3 %>" name="wager_3" id="wager_3">
 		<input type="Submit" value="Submit answers">
 	</td>
-			<% } %>
+		<% } %>
 </table>
 
 <div id="outcome"><%= @outcome %></div>
 
-<div id="stumper" style="display:none;"><font color="red"><b>Time's up!</b></font></div>
+<div id="stumper" style="display:none;">
+	<font color="red"><b>Time's up!</b></font>
+</div>
+
 <embed name="myMusic" src="/sounds/final_jeopardy.mp3" type="audio/mp3" autostart="true" mastersound width="1" height="1" style="position: absolute; left: 1px; top:1px;"></embed>
 </body>
 </html>

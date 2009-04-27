@@ -2,12 +2,20 @@
    "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-<title></title>
+<title>Final Jeopardy!</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 
 <%= javascript_include_tag :defaults -%>
 <%= stylesheet_link_tag 'main' -%>
+</head>
 
+<script type="text/javascript">
+	function lock(n) {
+		$('wager_' + n).style.color = "#211eab";
+		$('wager_' + n).type = 'password';
+		$('lock_' + n).style.display = 'none';
+	}
+</script>
 <div id="question"><%= @category %></div>
 
 <table class="wager">
@@ -18,10 +26,14 @@
 	</tr>
 	<tr>
 		<% form_tag(:action => 'final_jeopardy', :controller => 'play') { %>
-		<td><input type="password" id="wager_1" name="wager_1" style="background-color: #211eab; color: #211eab; font-family: Optima; font-variant: small-caps; font-weight: bold; border: 1px dashed white; font-size: 20px; text-align: center; padding: 7px;"></td>
-		<td><input type="password" id="wager_2" name="wager_2" style="background-color: #211eab; color: #211eab; font-family: Optima; font-variant: small-caps; font-weight: bold; border: 1px dashed white; font-size: 20px; text-align: center; padding: 7px;"></td>
-		<td><input type="password" id="wager_3" name="wager_3" style="background-color: #211eab; color: #211eab; font-family: Optima; font-variant: small-caps; font-weight: bold; border: 1px dashed white; font-size: 20px; text-align: center; padding: 7px;"></td>
-
+		<td><input id="wager_1" name="wager_1" class="fj"></td>
+		<td><input id="wager_2" name="wager_2" class="fj"></td>
+		<td><input id="wager_3" name="wager_3" class="fj"></td>
+	</tr>
+	<tr>
+		<td><a id="lock_1" href="#1" onclick="lock(1)">Lock</a></td>
+		<td><a id="lock_2" href="#2" onclick="lock(2)">Lock</a></td>
+		<td><a id="lock_3" href="#3" onclick="lock(3)">Lock</a></td>
 	</tr>
 	<td colspan="3">
 		<input type="hidden" value="<%= @q.id %>" name="q_id" id="q_id">

@@ -101,6 +101,10 @@ body {
 	margin:0px auto;
 }
 
+.wager a {
+	color: white;
+}
+
 #out {
 	border: 5px solid #211eab;
 	margin-bottom: 5px;
@@ -115,4 +119,20 @@ body {
 	font-family: Optima;
 	font-variant: small-caps;
 	text-align: center;
+}
+
+.fj {
+	background-color: #211eab;
+	color: white;
+	font-family: Optima;
+	font-weight: bold;
+	border: 1px dashed white;
+	font-size: 16px;
+	text-align: center;
+	padding: 7px;
+}
+
+#fj_category {
+	font-family: Optima;
+	color: #ffdb60;
 }

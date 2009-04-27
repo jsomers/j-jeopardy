@@ -217,7 +217,17 @@ class PlayController < ApplicationController
     if t then $current = p end
 
     answer_color = (t ? '#33ff33' : '#211eab')
-    @outcome = '<script type="text/javascript">seconds += 100; $(\'out\').style.borderColor="#211eab";</script><b><font color="' + answer_color + '">' + answer + '</font></b><br/><small>' + '<font color="' + font_color + '">' + '[' + p + (t ? ' +' : ' -') + '$' + value.to_s + ']</font><br/>' + (t ? '<a href="/play/board/' + game_id.to_s + '" style="color: white;">&lt;&lt; Go back</a>' : '<a href="?time=7" style="color: white;">Anyone else?</a> &nbsp; &nbsp;<a href="/play/board/' + game_id.to_s + '?answer=' + CGI.escapeHTML(answer) + '" style="color: white;">No, go back</a>')
+    st = ''
+    st += '<script type="text/javascript">seconds += 100; $(\'out\').style.borderColor="#211eab";</script>'
+    st += '<b><font color="' + answer_color + '">' + answer + '</font></b><br/>'
+    st += '<small>' + '<font color="' + font_color + '">' + '[' + p + (t ? ' +' : ' -') + '$' + value.to_s + ']</font><br/>'
+    if t
+      st += '<a href="/play/board/' + game_id.to_s + '" style="color: white;">&lt;&lt; Go back</a>'
+    else
+      st += '<a href="?time=7" style="color: white;">Anyone else?</a> &nbsp; &nbsp;'
+      st += '<a href="/play/board/' + game_id.to_s + '?answer=' + CGI.escapeHTML(answer) + '" style="color: white;">No, go back</a>'
+    end
+    @outcome = st
   end
   
   def validate_dd
@@ -245,7 +255,11 @@ class PlayController < ApplicationController
     end
     font_color = (t ? '#33ff33' : 'red')
     answer_color = (t ? '#33ff33' : 'red')
-    @outcome = '<b><font color="' + answer_color + '">' + answer + '</font></b><br/><small>' + '<font color="' + font_color + '">' + '[' + $current + (t ? ' +' : ' -') + '$' + value.to_s + ']</font><br/>' + '<a href="/play/board/' + game_id.to_s + '" style="color: white;">&lt;&lt; Go back</a>'
+    st = ''
+    st += '<b><font color="' + answer_color + '">' + answer + '</font></b><br/>'
+    st += '<small>' + '<font color="' + font_color + '">' + '[' + $current + (t ? ' +' : ' -') + '$' + value.to_s + ']</font><br/>'
+    st += '<a href="/play/board/' + game_id.to_s + '" style="color: white;">&lt;&lt; Go back</a>'
+    @outcome = st
   end
   
   def validate_blast
