@@ -100,3 +100,19 @@ body {
 	width:500px;
 	margin:0px auto;
 }
+
+#out {
+	border: 5px solid #211eab;
+	margin-bottom: 5px;
+	width: 1000px;
+}
+
+#d2 {
+	background-color: #211eab;
+	border: none;
+	color: #211eab;
+	font-size: 20px;
+	font-family: Optima;
+	font-variant: small-caps;
+	text-align: center;
+}
