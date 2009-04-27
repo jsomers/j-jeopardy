@@ -12,21 +12,11 @@ class PlayController < ApplicationController
   end
   
   def choose_game
-    $p1 = params[:p1]
-    $p2 = params[:p2]
-    $p3 = params[:p3]
-
-    $p1pts = 0
-    $p2pts = 0
-    $p3pts = 0
-    
+    # Initialization
+    $p1, $p2, $p3 = params[:p1], params[:p2], params[:p3]
+    $p1pts, $p2pts, $p3pts = 0, 0, 0
     $current = [$p1, $p2, $p3].rand
-    
-    @games = Game.find(:all)
-    $p1chart = []
-    $p2chart = []
-    $p3chart = []
-
+    $p1chart, $p2chart, $p3chart = [], [], []
     $single_table = []
     for i in (1..6)
       a = []
@@ -35,7 +25,6 @@ class PlayController < ApplicationController
       end
       $single_table << a
     end
-
     $double_table = []
     for i in (1..6)
       a = []
@@ -44,6 +33,9 @@ class PlayController < ApplicationController
       end
       $double_table << a
     end
+    
+    # Grab list of games
+    @games = Game.find(:all)
 
   end
   
@@ -80,94 +72,56 @@ class PlayController < ApplicationController
   end
   
   def change_scores
+    # Get parameters
     value = params[:value].to_i
     type = params[:type].to_i
     my_id = params[:my_id]
     player = my_id.split('-')[-1].to_i
     col = my_id.split('-')[0].gsub('DJ', '').to_i - 1
     row = my_id.split('-')[1].to_i - 1
-    if player == 0
-      if type == 0
-        $p1pts += 2 * value
-        $current = $p1
-        if my_id.include? 'DJ'
-          $double_table[col][row][player] = 1
-        else
-          $single_table[col][row][player] = 1
-        end
-        render :text => '<script type="text/javascript">upd(' + (2 * value).to_s + ', 1, 1);</script><a style="text-decoration:none;" href="#" onclick="new Ajax.Updater(\'' + my_id + '\', \'/play/change_scores?my_id=' + my_id + '&amp;value=' + value.to_s + '&amp;type=1\', {asynchronous:true, evalScripts:true, parameters:\'authenticity_token=\' + encodeURIComponent(\'' + params[:authenticity_token] + '\')}); return false;"><font color="#33ff33">&#10003;</font></a>'
-      elsif type == 1
-        $p1pts -= value
-        if my_id.include? 'DJ'
-          $double_table[col][row][player] = 2
-        else
-          $single_table[col][row][player] = 2
-        end
-        render :text => '<script type="text/javascript">upd(' + (-1 * value).to_s + ', 1, 0);</script><a style="text-decoration:none;" href="#" onclick="new Ajax.Updater(\'' + my_id + '\', \'/play/change_scores?my_id=' + my_id + '&amp;value=' + value.to_s + '&amp;type=2\', {asynchronous:true, evalScripts:true, parameters:\'authenticity_token=\' + encodeURIComponent(\'' + params[:authenticity_token] + '\')}); return false;"><font color="white" size="1">&#9679;</font></a>'
-      else
-        $p1pts -= value
-        if my_id.include? 'DJ'
-          $double_table[col][row][player] = 0
-        else
-          $single_table[col][row][player] = 0
-        end
-        render :text => '<script type="text/javascript">upd(' + (-1 * value).to_s + ', 1, 0);</script><a style="text-decoration:none;" href="#" onclick="new Ajax.Updater(\'' + my_id + '\', \'/play/change_scores?my_id=' + my_id + '&amp;value=' + value.to_s + '&amp;type=0\', {asynchronous:true, evalScripts:true, parameters:\'authenticity_token=\' + encodeURIComponent(\'' + params[:authenticity_token] + '\')}); return false;"><font color="red">&#10007;</font></a>'
-      end
-    elsif player == 1
-      if type == 0
-        $p2pts += 2 * value
-        $current = $p2
-        if my_id.include? 'DJ'
-          $double_table[col][row][player] = 1
-        else
-          $single_table[col][row][player] = 1
-        end
-        render :text => '<script type="text/javascript">upd(' + (2 * value).to_s + ', 2, 1);</script><a style="text-decoration:none;" href="#" onclick="new Ajax.Updater(\'' + my_id + '\', \'/play/change_scores?my_id=' + my_id + '&amp;value=' + value.to_s + '&amp;type=1\', {asynchronous:true, evalScripts:true, parameters:\'authenticity_token=\' + encodeURIComponent(\'' + params[:authenticity_token] + '\')}); return false;"><font color="#33ff33">&#10003;</font></a>'
-      elsif type == 1
-        $p2pts -= value
-        if my_id.include? 'DJ'
-          $double_table[col][row][player] = 2
-        else
-          $single_table[col][row][player] = 2
-        end
-        render :text => '<script type="text/javascript">upd(' + (-1 * value).to_s + ', 2, 0);</script><a style="text-decoration:none;" href="#" onclick="new Ajax.Updater(\'' + my_id + '\', \'/play/change_scores?my_id=' + my_id + '&amp;value=' + value.to_s + '&amp;type=2\', {asynchronous:true, evalScripts:true, parameters:\'authenticity_token=\' + encodeURIComponent(\'' + params[:authenticity_token] + '\')}); return false;"><font color="white" size="1">&#9679;</font></a>'
-      else
-        $p2pts -= value
-        if my_id.include? 'DJ'
-          $double_table[col][row][player] = 0
-        else
-          $single_table[col][row][player] = 0
-        end
-        render :text => '<script type="text/javascript">upd(' + (-1 * value).to_s + ', 2, 0);</script><a style="text-decoration:none;" href="#" onclick="new Ajax.Updater(\'' + my_id + '\', \'/play/change_scores?my_id=' + my_id + '&amp;value=' + value.to_s + '&amp;type=0\', {asynchronous:true, evalScripts:true, parameters:\'authenticity_token=\' + encodeURIComponent(\'' + params[:authenticity_token] + '\')}); return false;"><font color="red">&#10007;</font></a>'
-      end
+    
+    new_type = ((type + 1) % 3).to_i
+    
+    # Change the question outcome
+    if my_id.include? 'DJ'
+      $double_table[col][row][player] = new_type
     else
-      if type == 0
-        $p3pts += 2 * value
-        $current = $p3
-        if my_id.include? 'DJ'
-          $double_table[col][row][player] = 1
-        else
-          $single_table[col][row][player] = 1
-        end
-        render :text => '<script type="text/javascript">upd(' + (2 * value).to_s + ', 3, 1);</script><a style="text-decoration:none;" href="#" onclick="new Ajax.Updater(\'' + my_id + '\', \'/play/change_scores?my_id=' + my_id + '&amp;value=' + value.to_s + '&amp;type=1\', {asynchronous:true, evalScripts:true, parameters:\'authenticity_token=\' + encodeURIComponent(\'' + params[:authenticity_token] + '\')}); return false;"><font color="#33ff33">&#10003;</font></a>'
-      elsif type == 1
-        $p3pts -= value
-        if my_id.include? 'DJ'
-          $double_table[col][row][player] = 2
-        else
-          $single_table[col][row][player] = 2
-        end
-        render :text => '<script type="text/javascript">upd(' + (-1 * value).to_s + ', 3, 0);</script><a style="text-decoration:none;" href="#" onclick="new Ajax.Updater(\'' + my_id + '\', \'/play/change_scores?my_id=' + my_id + '&amp;value=' + value.to_s + '&amp;type=2\', {asynchronous:true, evalScripts:true, parameters:\'authenticity_token=\' + encodeURIComponent(\'' + params[:authenticity_token] + '\')}); return false;"><font color="white" size="1">&#9679;</font></a>'
-      else
-        $p3pts -= value
-        if my_id.include? 'DJ'
-          $double_table[col][row][player] = 0
-        else
-          $single_table[col][row][player] = 0
-        end
-        render :text => '<script type="text/javascript">upd(' + (-1 * value).to_s + ', 3, 0);</script><a style="text-decoration:none;" href="#" onclick="new Ajax.Updater(\'' + my_id + '\', \'/play/change_scores?my_id=' + my_id + '&amp;value=' + value.to_s + '&amp;type=0\', {asynchronous:true, evalScripts:true, parameters:\'authenticity_token=\' + encodeURIComponent(\'' + params[:authenticity_token] + '\')}); return false;"><font color="red">&#10007;</font></a>'
-      end
+      $single_table[col][row][player] = new_type
     end
+    
+    # Build return string
+    case type
+      when 0 # incorrect -> correct
+        delta = 2 * value
+        char = '<font color="#33ff33">&#10003;</font>'
+        $current = [$p1, $p2, $p3][player] # update current player
+      when 1 # correct -> neutral
+        delta = -1 * value
+        char = '<font color="white" size="1">&#9679;</font>'
+      when 2 # neutral -> incorrect
+        delta = -1 * value
+        char = '<font color="red">&#10007;</font>'
+    end
+    
+    case player
+      when 0
+        $p1pts += delta
+      when 1
+        $p2pts += delta
+      when 2
+        $p3pts += delta
+    end
+    st = '<script type="text/javascript">'
+    st += 'upd(' + delta.to_s + ', ' + (player + 1).to_s + ', ' + (type == 0 ? '1' : '0') + ');'
+    st += '</script>'
+    st += '<a style="text-decoration:none;" href="#" onclick="'
+    st += 'new Ajax.Updater(\'' + my_id + '\', \'/play/change_scores?'
+    st += 'my_id=' + my_id + '&value=' + value.to_s + '&type=' + (new_type).to_s + '\', ' 
+    st += '{asynchronous:true, evalScripts:true, parameters:\''
+    st += 'authenticity_token=\' + encodeURIComponent(\'' + params[:authenticity_token] + '\')}); '
+    st += 'return false;">'
+    st += char + '</a>'
+    render :text => st
   end
   
   def dd
