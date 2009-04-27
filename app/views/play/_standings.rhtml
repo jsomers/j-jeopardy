@@ -16,7 +16,7 @@
 			border-bottom: <%= ($current == $p2 ? '1px solid white;' : 'none;'); %>
 	}
 	.name3 {
-		border-bottom: <%= ($current == $p3 ? '1px solid white;' : 'none;'); %>
+			border-bottom: <%= ($current == $p3 ? '1px solid white;' : 'none;'); %>
 	}
 	.score1 {
 		font-weight: bold;
@@ -53,7 +53,7 @@
 	}
 	
 </style>
-<a id="single_link" href="#" onclick="$('single_jeopardy').style.display = '';$('double_jeopardy').style.display = 'none';$('double_link').style.display=''; $('single_link').style.display='none';" style="display:<%= (@finished ? '' : 'none') %>;float:left;color:white;text-decoration:none;">&lt; &lt; single</a>
-<a id="double_link" href="#" onclick="$('double_jeopardy').style.display = '';$('single_jeopardy').style.display = 'none';$('single_link').style.display=''; $('double_link').style.display='none';" style="float:right;color:white;text-decoration:none;">double &gt; &gt;</a>
+<a id="single_link" href="#" onclick="$('single_jeopardy').style.display = '';$('double_jeopardy').style.display = 'none';$('double_link').style.display=''; $('single_link').style.display='none';" style="display:<%= (@finished ? '' : 'none') %>;float:left;color:white;text-decoration:none;">&lt;&lt; single</a>
+<a id="double_link" href="#" onclick="$('double_jeopardy').style.display = '';$('single_jeopardy').style.display = 'none';$('single_link').style.display=''; $('double_link').style.display='none';" style="float:right;color:white;text-decoration:none;">double &gt;&gt;</a>
 
 <div id="standings"><%= "<span id='name1' class='name1'>#{$p1}</span>: <input id='score1' class='score1' type='text' value='$#{$p1pts}'> | " + "<span id='name2' class='name2'>#{$p2}</span>: <input id='score2' class='score2' type='text' value='$#{$p2pts}'> | " + "<span id='name3' class='name3'>#{$p3}</span>: <input id='score3' class='score3' type='text' value='$#{$p3pts}'>" %></div>

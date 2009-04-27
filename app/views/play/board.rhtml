@@ -23,10 +23,13 @@ body {
 	color: white;
 }
 
+a {
+	text-decoration: none;
+}
+
 a.dollar {
 	font-family: Optima;
 	font-size: 30px;
-	text-decoration: none;
 	color: #ffdb60;
 	font-weight: bold;
 }
@@ -83,6 +86,7 @@ a.dollar:visited {
 	<% $ct = 1 %>
 <% end %>
 
+
 <div id="single_jeopardy" style="display:<%= (@finished ? 'none' : '') %>"><table align="center">
 	<tr>
 	<% for cat in @single %>
@@ -108,7 +112,7 @@ a.dollar:visited {
 							<% p1_outcome = $single_table[i - 1][j - 1][pl].to_i %>
 							<% char = @chars[p1_outcome] %>
 							<% self_id = i.to_s + '-' + j.to_s + '-' + pl.to_s %>
-							<span id="<%= self_id %>"><%= link_to_remote(char, :update => self_id, :url =>{ :action => :change_scores, :value => the_q.value, :type => p1_outcome, :my_id => self_id}, :html => {:style => 'text-decoration: none'}) %></span>
+							<span id="<%= self_id %>"><%= link_to_remote(char, :update => self_id, :url =>{ :action => :change_scores, :value => the_q.value, :type => p1_outcome, :my_id => self_id}) %></span>
 						<% end %>
 					</tr></table>
 					<!-- END Corrector -->
@@ -147,7 +151,7 @@ a.dollar:visited {
 						<% p1_outcome = $double_table[i - 1][j - 1][pl].to_i %>
 						<% char = @chars[p1_outcome] %>
 						<% self_id = 'DJ' + i.to_s + '-' + j.to_s + '-' + pl.to_s %>
-						<span id="<%= self_id %>"><%= link_to_remote(char, :update => self_id, :url =>{ :action => :change_scores, :value => the_q.value, :type => p1_outcome, :my_id => self_id}, :html => {:style => 'text-decoration: none'}) %></span>
+						<span id="<%= self_id %>"><%= link_to_remote(char, :update => self_id, :url =>{ :action => :change_scores, :value => the_q.value, :type => p1_outcome, :my_id => self_id}) %></span>
 					<% end %>
 				</tr></table>
 				<!-- END DJ Corrector -->
