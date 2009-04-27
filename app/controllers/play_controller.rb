@@ -52,6 +52,8 @@ class PlayController < ApplicationController
     @questions = Question.find(:all, :conditions => 'game_id = ' + @game_id)
     @finished = double?
     @final = final?
+    
+    @chars = ['<font color="red">&#10007;</font>', '<font color="#33ff33">&#10003;</font>', '<font color="white" size="1">&#9679;</font>']
   end
   
   def question
