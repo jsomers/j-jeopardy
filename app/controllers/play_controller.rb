@@ -44,10 +44,10 @@ class PlayController < ApplicationController
     $p2chart << $p2pts unless $p2pts < 0
     $p3chart << $p3pts unless $p3pts < 0
     @game_id = params[:id]
-    game = Game.find_by_game_id(@game_id)
+    @game = Game.find_by_game_id(@game_id)
     
-    @single = CGI.unescapeHTML(game.categories).split('^')[1..6]
-    @double = CGI.unescapeHTML(game.categories).split('^')[7..-2]
+    @single = CGI.unescapeHTML(@game.categories).split('^')[1..6]
+    @double = CGI.unescapeHTML(@game.categories).split('^')[7..-2]
     
     @questions = Question.find(:all, :conditions => 'game_id = ' + @game_id)
     @finished = double?

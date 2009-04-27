@@ -4,6 +4,46 @@ body {
 	background-color: #211eab;
 }
 
+/* Board */
+#category_title {
+	font-family: Optima;
+	color: white;
+	font-size: 18px;
+}
+
+#category_title a {
+	color: white;
+}
+
+#board a {
+	text-decoration: none;
+}
+
+#board a.dollar {
+	font-family: Optima;
+	font-size: 30px;
+	color: #ffdb60;
+	font-weight: bold;
+}
+
+#board a.dollar:hover {
+	text-decoration: underline;
+}
+
+#board a.dollar:visited {
+	color: #001188;
+	display: none;
+}
+
+#board a.final {
+	font-size: 40px;
+	font-variant: small-caps;
+	font-family: Optima; 
+	color: white; 
+	padding-top: 20px;
+}
+
+/* Question */
 #question {
 	width:500px;
 	margin:0px auto;
