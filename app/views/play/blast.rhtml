@@ -13,7 +13,7 @@
 <div id="out" style="border: 5px solid #211eab; margin-bottom: 5px;"></div>
 <body>
 
-<div id="ffinger"><small>$<%= @q.value %></small><br/><%= @q.category %></div>
+<div id="ffinger"><small>$<%= @q.value %></small><br/><%= @q.my_category %></div>
 <div id="question"><%= @q.question %></div>
 
 <% form_remote_tag :url => { :action => 'validate_blast', :controller => 'play'}, :update => 'outcome' do -%>

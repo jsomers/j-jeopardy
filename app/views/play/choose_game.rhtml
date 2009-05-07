@@ -1,7 +1,9 @@
 <% for n in (1..25).to_a.reverse %>
 	<h3>Season <%= n %></h3>
 	<% for game in @games.select { |g| g.season == n }.reverse %>
-		<a href="/play/board/<%= game.game_id %>">Show #<%= game.game_id %>, aired <%= game.airdate %></a> <%= if (game.metadata and !game.metadata.empty?) then '<small><font color="#aaaaaa">' + game.metadata + '</font></small>' end %><br/>
+		<% if Complete.find_by_game_id(game.game_id).complete == true %>
+			<a href="/play/board/<%= game.game_id %>">Show #<%= game.game_id %>, aired <%= game.airdate %></a> <%= if (game.metadata and !game.metadata.empty?) then '<small><font color="#aaaaaa">' + game.metadata + '</font></small>' end %>
+			<br/>
+		<% end %>
 	<% end %>
-	<br/>
 <% end %>

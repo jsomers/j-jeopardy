@@ -74,4 +74,28 @@ class Game < ActiveRecord::Base
 #    return mes
   end
   
+  def self.add_categories
+    qs = Question.find(:all)
+    qs.each { |q|
+      begin
+        puts q.id
+        q.category = q.my_category.downcase
+        q.save!
+      rescue
+        p "failed"
+      end
+    }
+  end
+  
+  def self.check_completeness(game_id)
+    game = Game.find_by_game_id(game_id)
+    questions = Question.find_all_by_game_id(game_id)
+    for j in (1..5)
+      for i in (1..6)
+        qJ = questions.select {|q| q.coord == 'DJ,' + i.to_s + ',' + j.to_s}[0]
+        if qJ.nil? or qJ.question == '' then return false end
+      end
+    end
+    return true
+  end
 end

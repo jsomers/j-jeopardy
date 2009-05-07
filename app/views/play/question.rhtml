@@ -3,7 +3,7 @@
 <html>
 <head>
 
-<title>$<%= @q.value %> | <%= @q.category %></title>
+<title>$<%= @q.value %> | <%= @q.my_category %></title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 
 <%= javascript_include_tag :defaults -%>
@@ -12,7 +12,6 @@
 <%= javascript_include_tag 'fastest_finger' %>
 </head>
 
-
 <center><div id="out"></div></center><!-- the orange bar -->
 
 <body onkeydown="getArrows(event, '<%= $p1 %>', '<%= $p2 %>', '<%= $p3 %>');">
@@ -20,7 +19,9 @@
 	<script type="text/javascript">
 	var milisec = 0;
 	var seconds = <%= (!params[:time].nil? ? params[:time] : 10) %>;
+	var home_url = '/play/board/<%= Question.find_by_id(params[:id]).game_id %>'
 	</script>
+	
 	<%= javascript_include_tag 'timer' %>
 
 	<% begin image = @q.question.scan(/<a href="(.*?)"/)[0] rescue image = false end %>
@@ -43,7 +44,7 @@
 
 	<div id="stumper" style="display:none;">
 		<small>
-			<a href="/play/board/<%= Question.find_by_id(params[:id]).game_id %>">(Back to the board!)</a>
+			<a id="home" href="/play/board/<%= Question.find_by_id(params[:id]).game_id %>">(Back to the board!)</a>
 		</small><br/>
 		<small>
 			<span style="color: white; font-variant: normal;">The correct answer was</span>

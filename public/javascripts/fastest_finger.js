@@ -1,6 +1,7 @@
 nope1 = false;
 nope2 = false;
 nope3 = false;
+
 function playMusic(nm) {
 	obj = document.embeds[nm];
 	if(obj.Play) obj.Play();
@@ -9,18 +10,22 @@ function playMusic(nm) {
 var ct = 0;
 
 function getArrows(ev, p1, p2, p3) {
+	time_to_n = (seconds * 10) + milisec
     arrows = ((ev.which) || (ev.keyCode));
     
+	if (arrows == 33) {
+		window.location = home_url
+	}
     //ev = false;
     if (ct > 0 || seconds > 5.0) {
 		switch(arrows) {
-			case 65:
+			case 37:
 				nope1 = true;
 				break;
 			case 66:
 				nope2 = true;
 				break;
-			case 80:
+			case 39:
 				nope3 = true;
 				break;
 		}
@@ -28,8 +33,8 @@ function getArrows(ev, p1, p2, p3) {
     } else {
         //ev = false;
         switch(arrows) {
-            case 65:
-				if (nope1 && seconds > 4.0) {
+            case 37:
+				if (nope1 && time_to_n > 55) {
 					return '0'
 				} else {
                 $('ffinger').value = p1 + ':';
@@ -45,7 +50,7 @@ function getArrows(ev, p1, p2, p3) {
                 break;
 			}
             case 66:
-				if (nope2 && seconds > 4.0) {
+				if (nope2 && time_to_n > 55) {
 					return '0'
 				} else {
                 $('ffinger').value = p2 + ':';
@@ -60,8 +65,8 @@ function getArrows(ev, p1, p2, p3) {
 				ct = ct + 1;
                 break;
 			}
-            case 80:
-				if (nope3 && seconds > 4.0) {
+            case 39:
+				if (nope3 && time_to_n > 55) {
 					return '0'
 				} else {
                 $('ffinger').value = p3 + ':';

@@ -4,7 +4,7 @@ class PlayController < ApplicationController
   def blast
     $start_time = Time.new
     $score = 0
-    @q = Question.find_all_by_value('200', :limit => 1, :order => :random)[0]
+    @q = Question.find_all_by_category('common bonds', :limit => 1, :order => :random)[0]
   end
   
   def start

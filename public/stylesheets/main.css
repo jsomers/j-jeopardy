@@ -136,3 +136,29 @@ body {
 	font-family: Optima;
 	color: #ffdb60;
 }
+
+#edit_value {
+	color: white;
+	border: none;
+	background-color: #211eab;
+	font-size: 10px;
+	text-align:center;
+}
+
+#edit_question {
+	color: white;
+	border: 1px solid gray;
+	background-color: #211eab;
+	font-family: sans-serif;
+	padding: 5px;
+	font-size: 10px;
+	height: 100px;
+}
+
+#edit_answer {
+	color: white;
+	border: 1px solid gray;
+	background-color: #211eab;
+	font-size: 10px;
+	text-align: center;
+}
