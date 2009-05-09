@@ -26,3 +26,5 @@ Extra stats
 	- games you've played
 	- semantically tagged questions? Categories?
 	- grid of probabilities
+	
+nikhil check
