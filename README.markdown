@@ -1,16 +1,16 @@
 ## Getting started
 
-To start a game, head to /play/start and enter your names. If you're only playing with two people, I'd use the first and third slots and leave the second one blank.
+To start a game, head to `/play/start` and enter your names. If you're only playing with two people, I'd use the first and third slots and leave the second one blank.
 
-When you hit enter, that'll take you to /play/choose_game---where you can, obviously, choose a game. Pick one that sounds fun.
+When you hit enter, that'll take you to `/play/choose_game`&mdash;where you can, obviously, choose a game. Pick one that sounds fun.
 
 At the top of the board screen, one player's name (chosen randomly) should be underlined, which means it's their turn to select a category.
 
-At this point you might want to go into "full-screen mode" on your browser. Close all tabs but the current one; hit the little button in the top-right corner of the window to get rid of the location bar; and go to View -> Status Bar to remove that. Minimize your Dock and drag the window as far as it can go.
+At this point you might want to go into "full-screen mode" on your browser. Close all tabs but the current one; hit the little button in the top-right corner of the window to get rid of the location bar; and go to **View -> Status Bar** to remove that. Minimize your Dock and drag the window as far as it can go.
 
 ## Fastest finger
 
-The buzzers are: P1 = left, P2 = B, P3 = right. The reason they're wacky like that is because I've been playing with one person at the keyboard (B) and two guys using Wiimotes (in which case you don't want "typeable" letters, which is why you go with the arrows). These can be changed---search for "Javascript keycodes" and change the corresponding values (everywhere you see case 37, case 66, case 39) in the fastest_finger.js file in the /public folder.
+The buzzers are: P1 = left, P2 = B, P3 = right. The reason they're wacky like that is because I've been playing with one person at the keyboard (B) and two guys using Wiimotes (in which case you don't want "typeable" letters, which is why you go with the arrows). These can be changed&mdash;reference this [Javascript keycodes page](http://www.cambiaresearch.com/c4/702b8cd1-e5b0-42e6-83ac-25f0306e3e25/Javascript-Char-Codes-Key-Codes.aspx) and change the corresponding values (everywhere you see `case 37`, `case 66`, and `case 39`) in the `fastest_finger.js` file in the `/public` folder.
 
 When you choose a question, there will be a roughly four-second delay before an orange bar appears indicating that it's okay to buzz in. The idea is to give everyone time to read the question. (I may add a feature that varies this interval based on the length/difficulty of the question's text, but for now people seem to think the four seconds works nicely.)
 
@@ -28,13 +28,13 @@ If the validator calls a guess incorrect when everyone actually thinks it's righ
 
 ## Correctors
 
-Those cute little check marks and red X's and white dots are actually clickable, and they'll change a player's score appropriately. They can also be used to switch the player in control---just cycle through any one of that player's correctors and you'll see the underline move to their name.
+Those cute little check marks and red X's and white dots are actually clickable, and they'll change a player's score appropriately. They can also be used to switch the player in control&mdash;just cycle through any one of that player's correctors and you'll see the underline move to their name.
 
 ## Daily doubles
 
-These are hidden in the board, and they should work as expected. They make that familiar sound when you click them, so be sure to have your speakers on.
+These are hidden in the board, and they should work as expected. They make that familiar sound when you click them so be sure to have your speakers on.
 
-First, make a wager (must be at least $5), submit it, and answer the question. Players are given 15 seconds, which again gives them time to read and think a bit. Don't feel pressed to type the answer before the 15 seconds is up---you just have to say it before then. All that happens when the time runs out is that you're prompted to type in a guess.
+First, make a wager (must be at least $5), submit it, and answer the question. Players are given 15 seconds, which again gives them time to read and think a bit. Don't feel pressed to type the answer before the 15 seconds is up&mdash;you just have to say it before then. All that happens when the time runs out is that you're prompted to type in a guess.
 
 If there's a dispute here, fix it by playing with the text box (either by just hitting "enter" or by typing gibberish); there aren't correctors yet for daily doubles.
 
@@ -52,21 +52,21 @@ On the game over screen, if you're connected to the internet you should see a "G
 
 You'll need (a) a nice TV and hookup to your computer, (b) two or three wiimotes, (c) a sensor bar and Wii, and (d) a wireless (or long-wired) keyboard.
 
-The first thing to do is set up the wiimotes. There's kind of a crazy procedure (takes two minutes but it's got to happen in a specific order), but it's totally worth it. First, download Darwiin Remote here. Before you open the program, though, duplicate it however times you need (for however many wiimotes you need)---and open up all the copies.
+The first thing to do is set up the wiimotes. There's kind of a crazy procedure (takes two minutes but it's got to happen in a specific order), but it's totally worth it. First, [download Darwiin Remote here](http://sourceforge.net/projects/darwiin-remote/). Before you open the program, though, duplicate it however times you need (for however many wiimotes you need) and open up all the copies.
 
-   1. Make sure your Wii is off when you do this.
+   1. Make sure your Wii is off to start.
    2. On one (and only one) of the control panels, select Mouse Mode On (IR) from the drop-down box. This'll be used by the main player in control (who types, too) to select questions from the board. It's not strictly necessary but it's kind of fun to point at the screen.
    3. One at a time, click "Find Wiimote" and hold 1 and 2 on the wiimote you're trying to associate with that control box. Test it by moving it around and clicking buttons. Make sure the wiimotes fire on different screens.
-   4. The mouse won't work on the one that you indicated just yet. First, turn on your Wii---that'll activate the sensor bar. It's a bit overkill but works for the moment. Then, click the IR Sensor button the control panel for that wiimote. Then test it---it should work now.
+   4. The mouse won't work on the one that you indicated just yet. First, turn on your Wii&mdash;that'll activate the sensor bar. It's a bit overkill but works for the moment. Then, click the IR Sensor button the control panel for that wiimote. Then test it&mdash;it should work now.
    5. Head to Preferences and be sure to select the Wiimote tab; the program defaults to the Classic Controller tab and that's the wrong one.
    6. Change the B button (trigger) to "left click" and the A button (on the front; thumb button; this is the one you want to use for buzzer), on each wiimote, to the appropriate player's key. Left for P1, Right for P3, etc.
    7. Also, change the "home" button to Page Up.
    8. On the mouse-enabled wiimote's preferences pane, head to "Mouse" and decrease the IR sensitivity by two notches.
-   9. Save---and ignore the "sensitivity too small" warning.
+   9. Save&mdash;and ignore the "sensitivity too small" warning.
 
 Now, hook the computer up to the TV. "Mirror" the displays, rather than arranging them side-by-side.
 
-Everything should work as usual, just that the non-typing players should be able to buzz in by clicking their wiimotes. The typing / mouse-wiimote-wielding player should choose questions (like a Trebek would), buzz in like the other players, and type everyone's answers. Hit "page up" or the "home" button on the wiimote to head to the main board after a question's been completed (rather than clicking the "back to the board" links). Do click the "go back" links though if someone's tried and gotten it wrong, because the "page up" method won't reveal the correct answer.
+Everything should work as usual, just that the non-typing players should be able to buzz in by clicking their wiimotes. The typing / mouse-wiimote-wielding player should choose questions (like a Trebek would), buzz in like the other players, and type everyone's answers. Hit "page up" or the "home" button on the wiimote to head to the main board after a question's been completed (rather than clicking the "back to the board" links). Do click the "go back" links, though, if someone's tried and gotten it wrong, because the "page up" method won't reveal the correct answer.
 
 It may be awkward at first if you're the player in control. The hardest things are clicking links with the Wiimote and switching to the keyboard. After about five questions, though, I got used to it and was moving around like a pro.
 
@@ -74,9 +74,9 @@ It may be awkward at first if you're the player in control. The hardest things a
 
 ## Hidden modes
 
-    * Try going to /play/search to search clues.
-    * At /play/blast there's a "one-player" game that will feed you questions. See line 7 of /app/controllers/play_controller to see how questions are being pulled in at the moment. I haven't added scoring to this yet or anything but it has potential I think. If you enter a blank answer it'll show you the correct response and move you to the next question.
-    * If you go to /edit/board/[id], you'll be able to edit that particular game. It's the beginning of a "custom game" feature and/or just to make corrections.
+   * Try going to `/play/search` to search clues.
+   * At /play/blast there's a "one-player" game that will feed you questions. See line 7 of `/app/controllers/play_controller` to see how questions are being pulled in at the moment. I haven't added scoring to this yet or anything but it has potential I think. If you enter a blank answer it'll show you the correct response and move you to the next question.
+   * If you go to `/edit/board/[id]`, you'll be able to edit that particular game. It's the beginning of a "custom game" feature and/or just to make corrections.
 
 ## That's it!
 
