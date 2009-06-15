@@ -1,256 +1,83 @@
-== Welcome to Rails
-
-Rails is a web-application framework that includes everything needed to create 
-database-backed web applications according to the Model-View-Control pattern. 
-
-This pattern splits the view (also called the presentation) into "dumb" templates
-that are primarily responsible for inserting pre-built data in between HTML tags.
-The model contains the "smart" domain objects (such as Account, Product, Person,
-Post) that holds all the business logic and knows how to persist themselves to
-a database. The controller handles the incoming requests (such as Save New Account,
-Update Product, Show Post) by manipulating the model and directing data to the view.
-
-In Rails, the model is handled by what's called an object-relational mapping
-layer entitled Active Record. This layer allows you to present the data from
-database rows as objects and embellish these data objects with business logic
-methods. You can read more about Active Record in
-link:files/vendor/rails/activerecord/README.html.
-
-The controller and view are handled by the Action Pack, which handles both
-layers by its two parts: Action View and Action Controller. These two layers
-are bundled in a single package due to their heavy interdependence. This is
-unlike the relationship between the Active Record and Action Pack that is much
-more separate. Each of these packages can be used independently outside of
-Rails.  You can read more about Action Pack in
-link:files/vendor/rails/actionpack/README.html.
-
-
-== Getting Started
-
-1. At the command prompt, start a new Rails application using the <tt>rails</tt> command
-   and your application name. Ex: rails myapp
-2. Change directory into myapp and start the web server: <tt>script/server</tt> (run with --help for options)
-3. Go to http://localhost:3000/ and get "Welcome aboard: You're riding the Rails!"
-4. Follow the guidelines to start developing your application
-
-
-== Web Servers
-
-By default, Rails will try to use Mongrel and lighttpd if they are installed, otherwise
-Rails will use WEBrick, the webserver that ships with Ruby. When you run script/server,
-Rails will check if Mongrel exists, then lighttpd and finally fall back to WEBrick. This ensures
-that you can always get up and running quickly.
+<h2>Getting started</h2>
 
-Mongrel is a Ruby-based webserver with a C component (which requires compilation) that is
-suitable for development and deployment of Rails applications. If you have Ruby Gems installed,
-getting up and running with mongrel is as easy as: <tt>gem install mongrel</tt>.
-More info at: http://mongrel.rubyforge.org
+To start a game, head to /play/start and enter your names. If you're only playing with two people, I'd use the first and third slots and leave the second one blank.
 
-If Mongrel is not installed, Rails will look for lighttpd. It's considerably faster than
-Mongrel and WEBrick and also suited for production use, but requires additional
-installation and currently only works well on OS X/Unix (Windows users are encouraged
-to start with Mongrel). We recommend version 1.4.11 and higher. You can download it from
-http://www.lighttpd.net.
+When you hit enter, that'll take you to /play/choose_game---where you can, obviously, choose a game. Pick one that sounds fun.
 
-And finally, if neither Mongrel or lighttpd are installed, Rails will use the built-in Ruby
-web server, WEBrick. WEBrick is a small Ruby web server suitable for development, but not
-for production.
-
-But of course its also possible to run Rails on any platform that supports FCGI.
-Apache, LiteSpeed, IIS are just a few. For more information on FCGI,
-please visit: http://wiki.rubyonrails.com/rails/pages/FastCGI
+At the top of the board screen, one player's name (chosen randomly) should be underlined, which means it's their turn to select a category.
 
+At this point you might want to go into "full-screen mode" on your browser. Close all tabs but the current one; hit the little button in the top-right corner of the window to get rid of the location bar; and go to View -> Status Bar to remove that. Minimize your Dock and drag the window as far as it can go.
 
-== Apache .htaccess example
+<h2>Fastest finger</h2>
 
-# General Apache options
-AddHandler fastcgi-script .fcgi
-AddHandler cgi-script .cgi
-Options +FollowSymLinks +ExecCGI
+The buzzers are: P1 = left, P2 = B, P3 = right. The reason they're wacky like that is because I've been playing with one person at the keyboard (B) and two guys using Wiimotes (in which case you don't want "typeable" letters, which is why you go with the arrows). These can be changed---search for "Javascript keycodes" and change the corresponding values (everywhere you see case 37, case 66, case 39) in the fastest_finger.js file in the /public folder.
 
-# If you don't want Rails to look in certain directories,
-# use the following rewrite rules so that Apache won't rewrite certain requests
-# 
-# Example:
-#   RewriteCond %{REQUEST_URI} ^/notrails.*
-#   RewriteRule .* - [L]
+When you choose a question, there will be a roughly four-second delay before an orange bar appears indicating that it's okay to buzz in. The idea is to give everyone time to read the question. (I may add a feature that varies this interval based on the length/difficulty of the question's text, but for now people seem to think the four seconds works nicely.)
 
-# Redirect all requests not available on the filesystem to Rails
-# By default the cgi dispatcher is used which is very slow
-# 
-# For better performance replace the dispatcher with the fastcgi one
-#
-# Example:
-#   RewriteRule ^(.*)$ dispatch.fcgi [QSA,L]
-RewriteEngine On
+If a player buzzes in early, they will be locked out for a quarter of a second. Jumping the gun multiple times will not add more lockout time (so if you know you're locked out, you might as well frantically jam the crap out of the buzzer).
 
-# If your Rails application is accessed via an Alias directive,
-# then you MUST also set the RewriteBase in this htaccess file.
-#
-# Example:
-#   Alias /myrailsapp /path/to/myrailsapp/public
-#   RewriteBase /myrailsapp
+Once someone buzzes in, a red bar will show up and start to shrink. Players must say their answer before the bar disappears, and if they don't, the person with the keyboard should just type gibberish into the box.
 
-RewriteRule ^$ index.html [QSA]
-RewriteRule ^([^.]+)$ $1.html [QSA]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ dispatch.cgi [QSA,L]
+<h2>Typing answers</h2>
 
-# In case Rails experiences terminal errors
-# Instead of displaying this message you can supply a file here which will be rendered instead
-# 
-# Example:
-#   ErrorDocument 500 /500.html
+The function for validating answers works by (1) assuming the guess is correct, (2) breaking the guess into words, and (3) checking to make sure each word of the guess is contained somewhere in the answer; if not, the player's wrong. Case doesn't matter.
 
-ErrorDocument 500 "<h2>Application error</h2>Rails application failed to start properly"
+One helpful rule of thumb is: if the spelling of something is ambiguous, leave it out. If you're not sure whether it's "Bonnie and Clyde" or "Bonnie & Clyde", just type "bonnie clyde". If you think it's "Bonny and Clide", try "bon cli". Go with enough to unambiguously pin down an answer, and no more.
 
+If the validator calls a guess incorrect when everyone actually thinks it's right, and the reason is spelling or punctuation or whatever, just submit a blank guess enough times to get the score to where it should be (because a blank guess is assumed to be correct). If you're not sure, play as though the validator is correct and if you need to, use the little "correctors" after you get back to the main game board. That way you don't risk seeing a correct answer before everyone has taken an honest crack at it.
 
-== Debugging Rails
+<h2>Correctors</h2>
 
-Sometimes your application goes wrong.  Fortunately there are a lot of tools that
-will help you debug it and get it back on the rails.
+Those cute little check marks and red X's and white dots are actually clickable, and they'll change a player's score appropriately. They can also be used to switch the player in control---just cycle through any one of that player's correctors and you'll see the underline move to their name.
 
-First area to check is the application log files.  Have "tail -f" commands running
-on the server.log and development.log. Rails will automatically display debugging
-and runtime information to these files. Debugging info will also be shown in the
-browser on requests from 127.0.0.1.
+<h2>Daily doubles</h2>
 
-You can also log your own messages directly into the log file from your code using
-the Ruby logger class from inside your controllers. Example:
+These are hidden in the board, and they should work as expected. They make that familiar sound when you click them, so be sure to have your speakers on.
 
-  class WeblogController < ActionController::Base
-    def destroy
-      @weblog = Weblog.find(params[:id])
-      @weblog.destroy
-      logger.info("#{Time.now} Destroyed Weblog ID ##{@weblog.id}!")
-    end
-  end
+First, make a wager (must be at least $5), submit it, and answer the question. Players are given 15 seconds, which again gives them time to read and think a bit. Don't feel pressed to type the answer before the 15 seconds is up---you just have to say it before then. All that happens when the time runs out is that you're prompted to type in a guess.
 
-The result will be a message in your log file along the lines of:
+If there's a dispute here, fix it by playing with the text box (either by just hitting "enter" or by typing gibberish); there aren't correctors yet for daily doubles.
 
-  Mon Oct 08 14:22:29 +1000 2007 Destroyed Weblog ID #1
+<h2>Final jeopardy</h2>
 
-More information on how to use the logger is at http://www.ruby-doc.org/core/
+When the game is nearly done, there should be a link to final jeopardy. The first thing you'll see is a wagering screen: three text boxes with "Lock" links beneath them. Hitting the "Lock" link will just password-ize and hide the text in the box above it; the idea is to allow people to see their wager as they type (so as not to make mistakes), but hide it from everyone else once they're done. Alternatively, you can hit lock before you type, if you're using a wireless keyboard and everyone's playing on a big TV.
 
-Also, Ruby documentation can be found at http://www.ruby-lang.org/ including:
+Once all the wagers are in, hit Submit and head to the question page. The "think" music will play, and you must settle on an answer in your mind by the time the music's finished; if you can't think of anything by then, type gibberish into the box. (Honor system!)
 
-* The Learning Ruby (Pickaxe) Book: http://www.ruby-doc.org/docs/ProgrammingRuby/
-* Learn to Program: http://pine.fm/LearnToProgram/  (a beginners guide)
+Make sure everyone knows to be careful typing their answers here; have them type as little as possible while still pinning down an unambiguous guess. Have them avoid conjunctions, punctuation (if it's "jacob's ladder", type "jacob ladder"), etc. If you're not sure whether something is one compound word or two words broken by a space or hyphen, type two words broken by a space (type "post man", not "postman").
 
-These two online (and free) books will bring you up to speed on the Ruby language
-and also on programming in general.
+On the game over screen, if you're connected to the internet you should see a "Game progress" graph (built using google charts) in addition to the overall outcome of the game, as well as the answer to the final jeopardy question.
 
+<h2>Wiimotes!</h2>
 
-== Debugger
+You'll need (a) a nice TV and hookup to your computer, (b) two or three wiimotes, (c) a sensor bar and Wii, and (d) a wireless (or long-wired) keyboard.
 
-Debugger support is available through the debugger command when you start your Mongrel or
-Webrick server with --debugger. This means that you can break out of execution at any point
-in the code, investigate and change the model, AND then resume execution! 
-You need to install ruby-debug to run the server in debugging mode. With gems, use 'gem install ruby-debug'
-Example:
+The first thing to do is set up the wiimotes. There's kind of a crazy procedure (takes two minutes but it's got to happen in a specific order), but it's totally worth it. First, download Darwiin Remote here. Before you open the program, though, duplicate it however times you need (for however many wiimotes you need)---and open up all the copies.
 
-  class WeblogController < ActionController::Base
-    def index
-      @posts = Post.find(:all)
-      debugger
-    end
-  end
+   1. Make sure your Wii is off when you do this.
+   2. On one (and only one) of the control panels, select Mouse Mode On (IR) from the drop-down box. This'll be used by the main player in control (who types, too) to select questions from the board. It's not strictly necessary but it's kind of fun to point at the screen.
+   3. One at a time, click "Find Wiimote" and hold 1 and 2 on the wiimote you're trying to associate with that control box. Test it by moving it around and clicking buttons. Make sure the wiimotes fire on different screens.
+   4. The mouse won't work on the one that you indicated just yet. First, turn on your Wii---that'll activate the sensor bar. It's a bit overkill but works for the moment. Then, click the IR Sensor button the control panel for that wiimote. Then test it---it should work now.
+   5. Head to Preferences and be sure to select the Wiimote tab; the program defaults to the Classic Controller tab and that's the wrong one.
+   6. Change the B button (trigger) to "left click" and the A button (on the front; thumb button; this is the one you want to use for buzzer), on each wiimote, to the appropriate player's key. Left for P1, Right for P3, etc.
+   7. Also, change the "home" button to Page Up.
+   8. On the mouse-enabled wiimote's preferences pane, head to "Mouse" and decrease the IR sensitivity by two notches.
+   9. Save---and ignore the "sensitivity too small" warning.
 
-So the controller will accept the action, run the first line, then present you
-with a IRB prompt in the server window. Here you can do things like:
+Now, hook the computer up to the TV. "Mirror" the displays, rather than arranging them side-by-side.
 
-  >> @posts.inspect
-  => "[#<Post:0x14a6be8 @attributes={\"title\"=>nil, \"body\"=>nil, \"id\"=>\"1\"}>,
-       #<Post:0x14a6620 @attributes={\"title\"=>\"Rails you know!\", \"body\"=>\"Only ten..\", \"id\"=>\"2\"}>]"
-  >> @posts.first.title = "hello from a debugger"
-  => "hello from a debugger"
+Everything should work as usual, just that the non-typing players should be able to buzz in by clicking their wiimotes. The typing / mouse-wiimote-wielding player should choose questions (like a Trebek would), buzz in like the other players, and type everyone's answers. Hit "page up" or the "home" button on the wiimote to head to the main board after a question's been completed (rather than clicking the "back to the board" links). Do click the "go back" links though if someone's tried and gotten it wrong, because the "page up" method won't reveal the correct answer.
 
-...and even better is that you can examine how your runtime objects actually work:
+It may be awkward at first if you're the player in control. The hardest things are clicking links with the Wiimote and switching to the keyboard. After about five questions, though, I got used to it and was moving around like a pro.
 
-  >> f = @posts.first
-  => #<Post:0x13630c4 @attributes={"title"=>nil, "body"=>nil, "id"=>"1"}>
-  >> f.
-  Display all 152 possibilities? (y or n)
+(One thing I might add is a way to choose questions using just the keyboard. So one player would just use a keyboard, no wiimote... might make things easier for them.)
 
-Finally, when you're ready to resume execution, you enter "cont"
+<h2>Hidden modes</h2>
 
+    * Try going to /play/search to search clues.
+    * At /play/blast there's a "one-player" game that will feed you questions. See line 7 of /app/controllers/play_controller to see how questions are being pulled in at the moment. I haven't added scoring to this yet or anything but it has potential I think. If you enter a blank answer it'll show you the correct response and move you to the next question.
+    * If you go to /edit/board/[id], you'll be able to edit that particular game. It's the beginning of a "custom game" feature and/or just to make corrections.
 
-== Console
+<h2>That's it!</h2>
 
-You can interact with the domain model by starting the console through <tt>script/console</tt>.
-Here you'll have all parts of the application configured, just like it is when the
-application is running. You can inspect domain models, change values, and save to the
-database. Starting the script without arguments will launch it in the development environment.
-Passing an argument will specify a different environment, like <tt>script/console production</tt>.
-
-To reload your controllers and models after launching the console run <tt>reload!</tt>
-
-== dbconsole
-
-You can go to the command line of your database directly through <tt>script/dbconsole</tt>.
-You would be connected to the database with the credentials defined in database.yml.
-Starting the script without arguments will connect you to the development database. Passing an
-argument will connect you to a different database, like <tt>script/dbconsole production</tt>.
-Currently works for mysql, postgresql and sqlite.
-
-== Description of Contents
-
-app
-  Holds all the code that's specific to this particular application.
-
-app/controllers
-  Holds controllers that should be named like weblogs_controller.rb for
-  automated URL mapping. All controllers should descend from ApplicationController
-  which itself descends from ActionController::Base.
-
-app/models
-  Holds models that should be named like post.rb.
-  Most models will descend from ActiveRecord::Base.
-
-app/views
-  Holds the template files for the view that should be named like
-  weblogs/index.html.erb for the WeblogsController#index action. All views use eRuby
-  syntax.
-
-app/views/layouts
-  Holds the template files for layouts to be used with views. This models the common
-  header/footer method of wrapping views. In your views, define a layout using the
-  <tt>layout :default</tt> and create a file named default.html.erb. Inside default.html.erb,
-  call <% yield %> to render the view using this layout.
-
-app/helpers
-  Holds view helpers that should be named like weblogs_helper.rb. These are generated
-  for you automatically when using script/generate for controllers. Helpers can be used to
-  wrap functionality for your views into methods.
-
-config
-  Configuration files for the Rails environment, the routing map, the database, and other dependencies.
-
-db
-  Contains the database schema in schema.rb.  db/migrate contains all
-  the sequence of Migrations for your schema.
-
-doc
-  This directory is where your application documentation will be stored when generated
-  using <tt>rake doc:app</tt>
-
-lib
-  Application specific libraries. Basically, any kind of custom code that doesn't
-  belong under controllers, models, or helpers. This directory is in the load path.
-
-public
-  The directory available for the web server. Contains subdirectories for images, stylesheets,
-  and javascripts. Also contains the dispatchers and the default HTML files. This should be
-  set as the DOCUMENT_ROOT of your web server.
-
-script
-  Helper scripts for automation and generation.
-
-test
-  Unit and functional tests along with fixtures. When using the script/generate scripts, template
-  test files will be generated for you and placed in this directory.
-
-vendor
-  External libraries that the application depends on. Also includes the plugins subdirectory.
-  If the app has frozen rails, those gems also go here, under vendor/rails/.
-  This directory is in the load path.
+Let me know if you have other questions or ideas for improvement.
