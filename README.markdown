@@ -1,4 +1,4 @@
-<h2>Getting started</h2>
+## Getting started
 
 To start a game, head to /play/start and enter your names. If you're only playing with two people, I'd use the first and third slots and leave the second one blank.
 
@@ -8,7 +8,7 @@ At the top of the board screen, one player's name (chosen randomly) should be un
 
 At this point you might want to go into "full-screen mode" on your browser. Close all tabs but the current one; hit the little button in the top-right corner of the window to get rid of the location bar; and go to View -> Status Bar to remove that. Minimize your Dock and drag the window as far as it can go.
 
-<h2>Fastest finger</h2>
+## Fastest finger
 
 The buzzers are: P1 = left, P2 = B, P3 = right. The reason they're wacky like that is because I've been playing with one person at the keyboard (B) and two guys using Wiimotes (in which case you don't want "typeable" letters, which is why you go with the arrows). These can be changed---search for "Javascript keycodes" and change the corresponding values (everywhere you see case 37, case 66, case 39) in the fastest_finger.js file in the /public folder.
 
@@ -18,7 +18,7 @@ If a player buzzes in early, they will be locked out for a quarter of a second. 
 
 Once someone buzzes in, a red bar will show up and start to shrink. Players must say their answer before the bar disappears, and if they don't, the person with the keyboard should just type gibberish into the box.
 
-<h2>Typing answers</h2>
+## Typing answers
 
 The function for validating answers works by (1) assuming the guess is correct, (2) breaking the guess into words, and (3) checking to make sure each word of the guess is contained somewhere in the answer; if not, the player's wrong. Case doesn't matter.
 
@@ -26,11 +26,11 @@ One helpful rule of thumb is: if the spelling of something is ambiguous, leave i
 
 If the validator calls a guess incorrect when everyone actually thinks it's right, and the reason is spelling or punctuation or whatever, just submit a blank guess enough times to get the score to where it should be (because a blank guess is assumed to be correct). If you're not sure, play as though the validator is correct and if you need to, use the little "correctors" after you get back to the main game board. That way you don't risk seeing a correct answer before everyone has taken an honest crack at it.
 
-<h2>Correctors</h2>
+## Correctors
 
 Those cute little check marks and red X's and white dots are actually clickable, and they'll change a player's score appropriately. They can also be used to switch the player in control---just cycle through any one of that player's correctors and you'll see the underline move to their name.
 
-<h2>Daily doubles</h2>
+## Daily doubles
 
 These are hidden in the board, and they should work as expected. They make that familiar sound when you click them, so be sure to have your speakers on.
 
@@ -38,7 +38,7 @@ First, make a wager (must be at least $5), submit it, and answer the question. P
 
 If there's a dispute here, fix it by playing with the text box (either by just hitting "enter" or by typing gibberish); there aren't correctors yet for daily doubles.
 
-<h2>Final jeopardy</h2>
+## Final jeopardy
 
 When the game is nearly done, there should be a link to final jeopardy. The first thing you'll see is a wagering screen: three text boxes with "Lock" links beneath them. Hitting the "Lock" link will just password-ize and hide the text in the box above it; the idea is to allow people to see their wager as they type (so as not to make mistakes), but hide it from everyone else once they're done. Alternatively, you can hit lock before you type, if you're using a wireless keyboard and everyone's playing on a big TV.
 
@@ -48,7 +48,7 @@ Make sure everyone knows to be careful typing their answers here; have them type
 
 On the game over screen, if you're connected to the internet you should see a "Game progress" graph (built using google charts) in addition to the overall outcome of the game, as well as the answer to the final jeopardy question.
 
-<h2>Wiimotes!</h2>
+## Wiimotes!
 
 You'll need (a) a nice TV and hookup to your computer, (b) two or three wiimotes, (c) a sensor bar and Wii, and (d) a wireless (or long-wired) keyboard.
 
@@ -72,12 +72,12 @@ It may be awkward at first if you're the player in control. The hardest things a
 
 (One thing I might add is a way to choose questions using just the keyboard. So one player would just use a keyboard, no wiimote... might make things easier for them.)
 
-<h2>Hidden modes</h2>
+## Hidden modes
 
     * Try going to /play/search to search clues.
     * At /play/blast there's a "one-player" game that will feed you questions. See line 7 of /app/controllers/play_controller to see how questions are being pulled in at the moment. I haven't added scoring to this yet or anything but it has potential I think. If you enter a blank answer it'll show you the correct response and move you to the next question.
     * If you go to /edit/board/[id], you'll be able to edit that particular game. It's the beginning of a "custom game" feature and/or just to make corrections.
 
-<h2>That's it!</h2>
+## That's it!
 
 Let me know if you have other questions or ideas for improvement.
