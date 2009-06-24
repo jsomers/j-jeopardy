@@ -17,8 +17,8 @@
 <body onkeydown="getArrows(event, '<%= $p1 %>', '<%= $p2 %>', '<%= $p3 %>');">
 	<form name="counter"><input type="text" name="d2" id="d2"></form><!-- the timer -->
 	<script type="text/javascript">
-	var milisec = 0;
-	var seconds = <%= (!params[:time].nil? ? params[:time] : 10) %>;
+	var milisec = <%= time(@q.question.split(" ").length)[1] %>;
+	var seconds = <%= (!params[:time].nil? ? time(@q.question.split(" ").length)[0] - 2 : time(@q.question.split(" ").length)[0]) %>;
 	var home_url = '/play/board/<%= Question.find_by_id(params[:id]).game_id %>'
 	</script>
 	

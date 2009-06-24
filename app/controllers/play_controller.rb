@@ -4,7 +4,7 @@ class PlayController < ApplicationController
   def blast
     $start_time = Time.new
     $score = 0
-    @q = Question.find_all_by_fj(true, :limit => 1, :order => :random)[0]
+    @q = Question.find_all_by_category("word origins", :limit => 1, :order => :random)[0]
   end
   
   def start

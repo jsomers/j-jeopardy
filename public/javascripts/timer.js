@@ -23,7 +23,7 @@ function display(){
 		old = parseInt($('out').style.width.replace('px', ''))
 		$('out').style.width = old - 5 + 'px';
 	} else {
-	if (seconds < 6) {
+	if (seconds < 4) {
 		$('out').style.border = '5px solid #f5573d';
 		$('d2').style.color = "white";
 	}
