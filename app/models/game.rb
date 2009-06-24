@@ -87,9 +87,9 @@ class Game < ActiveRecord::Base
     }
   end
   
-  def self.check_completeness(game_id)
-    game = Game.find_by_game_id(game_id)
-    questions = Question.find_all_by_game_id(game_id)
+  def check_completeness
+    game = Game.find_by_game_id(self.game_id)
+    questions = Question.find_all_by_game_id(self.game_id)
     for j in (1..5)
       for i in (1..6)
         qJ = questions.select {|q| q.coord == 'DJ,' + i.to_s + ',' + j.to_s}[0]

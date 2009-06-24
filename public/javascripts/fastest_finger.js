@@ -19,7 +19,7 @@ function getArrows(ev, p1, p2, p3) {
     //ev = false;
     if (ct > 0 || seconds > 5.0) {
 		switch(arrows) {
-			case 65:
+			case 37:
 				nope1 = true;
 				break;
 			case 66:
@@ -33,7 +33,7 @@ function getArrows(ev, p1, p2, p3) {
     } else {
         //ev = false;
         switch(arrows) {
-            case 65:
+            case 37:
 				if (nope1 && time_to_n > 55) {
 					return '0'
 				} else {

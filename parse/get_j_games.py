@@ -13,8 +13,11 @@ for season in range(25, 26):
 		id_re = re.compile('http://www\.j\-archive\.com/showgame\.php\?game_id\=([0-9]+)')
 		game_id = id_re.findall(line)
 		if game_id:
-			game_id = game_id[0]
-			game_ids.append(game_id)
+			if int(game_id) > 2980:
+				game_id = game_id[0]
+				game_ids.append(game_id)
+			else:
+				continue
 
 	# Get games
 	for game_id in game_ids:
