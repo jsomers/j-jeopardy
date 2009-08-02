@@ -1,0 +1,6 @@
+<span style="color: red; font-weight: bold;"><%= flash[:notice] %></span>
+<% form_tag(:action => "new") { %>
+	Handle: <input type="text" name="player[handle]" id="player[handle]" />
+	Password: <input type="password" name="player[password]" id="player[password]" />
+	<input type="submit" value="Sign up">
+<% } %>

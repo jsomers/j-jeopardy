@@ -1,0 +1,7 @@
+<% p = player %>
+<% form_remote_tag :url => { :action => 'validate', :controller => 'player'}, :update => 'p' + p + '_spot' do -%>
+
+	<input id="handle" name="handle" type="text" class="inactive" onkeypress="keypress(this)" onfocus="enterTextbox(this)" onblur="leaveTextbox(this, 'Player <%= p %>')" value="Player <%= p %>" style="padding:2px;margin-bottom:5px;"/> <input id="pass" name="pass" type="password" class="inactive" onkeypress="keypress(this)" onfocus="enterTextbox(this)" onblur="leaveTextbox(this, 'password')" value="password" style="padding:2px;margin-bottom:5px;"/>
+	<input type="hidden" name="player" value="<%= p %>">
+	<input type="submit" value="Validate"/>
+<% end -%>
