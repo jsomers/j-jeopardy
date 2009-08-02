@@ -30,10 +30,6 @@ body {
 	text-decoration: underline;
 }
 
-#board a.dollar:visited {
-	color: #001188;
-	display: none;
-}
 
 #board a.final {
 	font-size: 40px;

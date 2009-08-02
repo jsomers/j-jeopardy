@@ -20,9 +20,9 @@
 
 <table class="wager">
 	<tr>
-		<td><%= $p1 %> (<%= $p1pts %>)</td>
-		<td><%= $p2 %> (<%= $p2pts %>)</td>
-		<td><%= $p3 %> (<%= $p3pts %>)</td>
+		<td><%= p1 %> (<%= ep.points[0] %>)</td>
+		<td><%= p2 %> (<%= ep.points[1] %>)</td>
+		<td><%= p3 %> (<%= ep.points[2] %>)</td>
 	</tr>
 	<tr>
 		<% form_tag(:action => 'final_jeopardy', :controller => 'play') { %>

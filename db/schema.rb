@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090506214354) do
+ActiveRecord::Schema.define(:version => 20090801205812) do
 
   create_table "completeness", :force => true do |t|
     t.integer "game_id"
@@ -21,6 +21,16 @@ ActiveRecord::Schema.define(:version => 20090506214354) do
     t.datetime "updated_at"
     t.integer  "game_id"
     t.boolean  "complete"
+  end
+
+  create_table "episodes", :force => true do |t|
+    t.string  "key"
+    t.text    "single_table"
+    t.text    "double_table"
+    t.text    "points"
+    t.text    "charts"
+    t.integer "game_id"
+    t.integer "answered",     :default => 0
   end
 
   create_table "games", :force => true do |t|
@@ -38,6 +48,9 @@ ActiveRecord::Schema.define(:version => 20090506214354) do
   create_table "players", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "handle"
+    t.string   "password"
+    t.string   "salt"
   end
 
   create_table "questions", :force => true do |t|
@@ -51,19 +64,5 @@ ActiveRecord::Schema.define(:version => 20090506214354) do
     t.boolean  "fj",         :default => false
     t.text     "category"
   end
-
-  create_table "users", :force => true do |t|
-    t.string   "login",                     :limit => 40
-    t.string   "name",                      :limit => 100, :default => ""
-    t.string   "email",                     :limit => 100
-    t.string   "crypted_password",          :limit => 40
-    t.string   "salt",                      :limit => 40
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "remember_token",            :limit => 40
-    t.datetime "remember_token_expires_at"
-  end
-
-  add_index "users", ["login"], :name => "index_users_on_login", :unique => true
 
 end

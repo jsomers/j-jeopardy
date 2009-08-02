@@ -2,61 +2,82 @@ class PlayController < ApplicationController
   require 'cgi'  
   
   def blast
-    $start_time = Time.new
-    $score = 0
     @q = Question.find_all_by_category("word origins", :limit => 1, :order => :random)[0]
   end
   
   def start
-    $ct = 0
+    session[:ct] = 0
+    session[:players] = [nil, nil, nil]
   end
   
   def choose_game
-    # Initialization
-    $p1, $p2, $p3 = params[:p1], params[:p2], params[:p3]
-    $p1pts, $p2pts, $p3pts = 0, 0, 0
-    $current = [$p1, $p2, $p3].rand
-    $p1chart, $p2chart, $p3chart = [], [], []
-    $single_table = []
-    for i in (1..6)
-      a = []
-      for j in (1..5)
-        a << [2, 2, 2, 0, 0]
-      end
-      $single_table << a
+    if session[:players].compact.length < 2
+      flash[:notice] = "<b>At least two players</b> must be signed in before you can play."
+      redirect_to "/play/start"
+    else
+      # Grab list of games
+      @games = Game.find(:all)#.reject {|g| Episode.find_all_by_game_id(g.game_id).select {|ep| !(ep.key.split('_')[0..2].reject {|x| x == '0'} & session[:players].reject {|y| y.nil?}).empty?}.length > 0}
     end
-    $double_table = []
-    for i in (1..6)
-      a = []
-      for j in (1..5)
-        a << [2, 2, 2, 0, 0]
-      end
-      $double_table << a
-    end
-    
-    # Grab list of games
-    @games = Game.find(:all)
-
   end
   
   def board
-    $p1chart << $p1pts unless $p1pts < 0
-    $p2chart << $p2pts unless $p2pts < 0
-    $p3chart << $p3pts unless $p3pts < 0
+    if (old_ep = Episode.find_all_by_game_id(params[:id]).select {|e| (e.key.split('_')[0..2].reject {|x| x == '0'} & session[:players].reject {|y| y.nil?}).length == session[:players].reject {|y| y.nil?}.length}.first)
+      ep_key = old_ep.key
+      session[:players] = old_ep.key.split('_')[0..2].collect {|x| if x == '0' then nil else x end}
+      ep = old_ep
+    else
+      ep_key = session[:players].collect {|p| p.to_i}.join('_') + '_' + params[:id]
+      ep = Episode.find_by_key(ep_key)
+    end
+    if ep
+      session[:ep_key] = ep_key
+      ep_charts = ep.charts.dclone
+      ep_charts[0] << ep.points[0]
+      ep_charts[1] << ep.points[1]
+      ep_charts[2] << ep.points[2]
+      ep.charts = ep_charts
+      ep.save
+      @finished = double?
+      @final = final?
+    else
+      points = [0, 0, 0]
+      session[:current] = session[:players].rand
+      charts = [[], [], []]
+      single_table = []
+      for i in (1..6)
+        a = []
+        for j in (1..5)
+          a << [2, 2, 2, 0, 0]
+        end
+        single_table << a
+      end
+      double_table = []
+      for i in (1..6)
+        a = []
+        for j in (1..5)
+          a << [2, 2, 2, 0, 0]
+        end
+        double_table << a
+      end
+      new_ep = Episode.new(:key => ep_key, :game_id => params[:id].to_i, :answered => 0, :single_table => single_table, :double_table => double_table, :points => points, :charts => charts)
+      new_ep.save
+      session[:ep_key] = ep_key
+      @finished = false
+      @final = false
+    end
     @game_id = params[:id]
     @game = Game.find_by_game_id(@game_id)
     
     @single = CGI.unescapeHTML(@game.categories).split('^')[1..6]
     @double = CGI.unescapeHTML(@game.categories).split('^')[7..-2]
-    
+  
     @questions = Question.find(:all, :conditions => 'game_id = ' + @game_id)
-    @finished = double?
-    @final = final?
     
     @chars = ['<font color="red">&#10007;</font>', '<font color="#33ff33">&#10003;</font>', '<font color="white" size="1">&#9679;</font>']
   end
   
   def question
+    ep = Episode.find_by_key(session[:ep_key])
     @q = Question.find_by_id(params[:id])
     if @q.value == 'DD'
       redirect_to '/play/dd/' + params[:id]
@@ -64,16 +85,25 @@ class PlayController < ApplicationController
     coords = @q.coord
     col = coords.split(',')[1].to_i - 1
     row = coords.split(',')[2].to_i - 1
-    if coords.split(',')[0] == 'J'
-      $single_table[col][row][3] = 1
-      $single_table[col][row][4] = @q.id
-    else
-      $double_table[col][row][3] = 1
-      $double_table[col][row][4] = @q.id
+    if (ep.single_table[col][row][4].zero? and ep.double_table[col][row][4].zero?) # First time here.
+      ep.answered += 1
     end
+    if coords.split(',')[0] == 'J'
+      ep_single_table = ep.single_table.dclone
+      ep_single_table[col][row][3] = 1
+      ep_single_table[col][row][4] = @q.id
+      ep.single_table = ep_single_table
+    else
+      ep_double_table = ep.double_table.dclone
+      ep_double_table[col][row][3] = 1
+      ep_double_table[col][row][4] = @q.id
+      ep.double_table = ep_double_table
+    end
+    ep.save
   end
   
   def change_scores
+    ep = Episode.find_by_key(session[:ep_key])
     # Get parameters
     value = params[:value].to_i
     type = params[:type].to_i
@@ -86,9 +116,13 @@ class PlayController < ApplicationController
     
     # Change the question outcome
     if my_id.include? 'DJ'
-      $double_table[col][row][player] = new_type
+      ep_double_table = ep.double_table.dclone
+      ep_double_table[col][row][player] = new_type
+      ep.double_table = ep_double_table
     else
-      $single_table[col][row][player] = new_type
+      ep_single_table = ep.single_table.dclone
+      ep_single_table[col][row][player] = new_type
+      ep.single_table = ep_single_table
     end
     
     # Build return string
@@ -96,7 +130,7 @@ class PlayController < ApplicationController
       when 0 # incorrect -> correct
         delta = 2 * value
         char = '<font color="#33ff33">&#10003;</font>'
-        $current = [$p1, $p2, $p3][player] # update current player
+        session[:current] = session[:players][player] # update current player
       when 1 # correct -> neutral
         delta = -1 * value
         char = '<font color="white" size="1">&#9679;</font>'
@@ -105,14 +139,16 @@ class PlayController < ApplicationController
         char = '<font color="red">&#10007;</font>'
     end
     
+    ep_points = ep.points.dclone
     case player
       when 0
-        $p1pts += delta
+        ep_points[0] += delta
       when 1
-        $p2pts += delta
+        ep_points[1] += delta
       when 2
-        $p3pts += delta
+        ep_points[2] += delta
     end
+    ep.points = ep_points
     st = '<script type="text/javascript">'
     st += 'upd(' + delta.to_s + ', ' + (player + 1).to_s + ', ' + (type == 0 ? '1' : '0') + ');'
     st += '</script>'
@@ -123,6 +159,7 @@ class PlayController < ApplicationController
     st += 'authenticity_token=\' + encodeURIComponent(\'' + params[:authenticity_token] + '\')}); '
     st += 'return false;">'
     st += char + '</a>'
+    ep.save
     render :text => st
   end
   
@@ -182,6 +219,7 @@ class PlayController < ApplicationController
   end
   
   def validate
+    ep = Episode.find_by_key(session[:ep_key])
     guess = params[:answer]
     player = params[:player]
     value = params[:value]
@@ -199,38 +237,46 @@ class PlayController < ApplicationController
       end
     end
     font_color = (t ? '#33ff33' : 'red')
+    ep_points = ep.points.dclone
     if player == '1'
-      $p1pts += (t ? value.to_i : value.to_i * -1)
-      p = $p1
+      ep_points[0] += (t ? value.to_i : value.to_i * -1)
+      p = session[:players][0]
     elsif player == '2'
-      $p2pts += (t ? value.to_i : value.to_i * -1)
-      p = $p2
+      ep_points[1] += (t ? value.to_i : value.to_i * -1)
+      p = session[:players][1]
     elsif player == '3'
-      $p3pts += (t ? value.to_i : value.to_i * -1)
-      p = $p3
+      ep_points[2] += (t ? value.to_i : value.to_i * -1)
+      p = session[:players][2]
     end
+    ep.points = ep_points
     if coords.split(',')[0] == 'J'
-      $single_table[col][row][player.to_i - 1] = (t ? 1 : 0)
-    elsif coords.split(',')[0] == 'DJ'                                                          
-      $double_table[col][row][player.to_i - 1] = (t ? 1 : 0)
+      ep_single_table = ep.single_table.dclone
+      ep_single_table[col][row][player.to_i - 1] = (t ? 1 : 0)
+      ep.single_table = ep_single_table
+    elsif coords.split(',')[0] == 'DJ' 
+      ep_double_table = ep.double_table.dclone
+      ep_double_table[col][row][player.to_i - 1] = (t ? 1 : 0)
+      ep.double_table = ep_double_table
     end
-    if t then $current = p end
+    if t then session[:current] = p end
 
     answer_color = (t ? '#33ff33' : '#211eab')
     st = ''
     st += '<script type="text/javascript">seconds += 100; $(\'out\').style.borderColor="#211eab";</script>'
     st += '<b><font color="' + answer_color + '">' + answer + '</font></b><br/>'
-    st += '<small>' + '<font color="' + font_color + '">' + '[' + p + (t ? ' +' : ' -') + '$' + value.to_s + ']</font><br/>'
+    st += '<small>' + '<font color="' + font_color + '">' + '[' + (!p.nil? ? Player.find(p.to_i).handle : '') + (t ? ' +' : ' -') + '$' + value.to_s + ']</font><br/>'
     if t
       st += '<a href="/play/board/' + game_id.to_s + '" style="color: white;">&lt;&lt; Go back</a>'
     else
       st += '<a href="?time=7" style="color: white;">Anyone else?</a> &nbsp; &nbsp;'
       st += '<a href="/play/board/' + game_id.to_s + '?answer=' + CGI.escapeHTML(answer) + '" style="color: white;">No, go back</a>'
     end
+    ep.save
     @outcome = st
   end
   
   def validate_dd
+    ep = Episode.find_by_key(session[:ep_key])
     guess = params[:answer]
     value = params[:wager]
     the_question = Question.find_by_id(params[:question_id])
@@ -243,22 +289,25 @@ class PlayController < ApplicationController
         t = false
       end
     end
-    if $current == $p1
-      $p1pts += (t ? value.to_i : value.to_i * -1)
-      p = $p1
-    elsif $current == $p2
-      $p2pts += (t ? value.to_i : value.to_i * -1)
-      p = $p2
-    elsif $current == $p3
-      $p3pts += (t ? value.to_i : value.to_i * -1)
-      p = $p3
+    ep_points = ep.points.dclone
+    if session[:current] == session[:players][0]
+      ep_points[0] += (t ? value.to_i : value.to_i * -1)
+      p = session[:players][0]
+    elsif session[:current] == session[:players][1]
+      ep_points[1] += (t ? value.to_i : value.to_i * -1)
+      p = session[:players][1]
+    elsif $session[:current] == session[:players][2]
+      ep_points[2] += (t ? value.to_i : value.to_i * -1)
+      p = session[:players][2]
     end
+    ep.points = ep_points
     font_color = (t ? '#33ff33' : 'red')
     answer_color = (t ? '#33ff33' : 'red')
     st = ''
     st += '<b><font color="' + answer_color + '">' + answer + '</font></b><br/>'
-    st += '<small>' + '<font color="' + font_color + '">' + '[' + $current + (t ? ' +' : ' -') + '$' + value.to_s + ']</font><br/>'
+    st += '<small>' + '<font color="' + font_color + '">' + '[' + session[:current] + (t ? ' +' : ' -') + '$' + value.to_s + ']</font><br/>'
     st += '<a href="/play/board/' + game_id.to_s + '" style="color: white;">&lt;&lt; Go back</a>'
+    ep.save
     @outcome = st
   end
   
@@ -284,6 +333,7 @@ class PlayController < ApplicationController
   end
   
   def game_over
+    ep = Episode.find_by_key(session[:ep_key])
     @guess1 = params[:guess_1]
     @guess2 = params[:guess_2]
     @guess3 = params[:guess_3]
@@ -317,10 +367,12 @@ class PlayController < ApplicationController
         t3 = false
       end
     end
-    
-    $p1pts += (t1 ? @wager1.to_i : @wager1.to_i * -1)
-    $p2pts += (t2 ? @wager2.to_i : @wager2.to_i * -1)
-    $p3pts += (t3 ? @wager3.to_i : @wager3.to_i * -1)
+    ep_points = ep.points.dclone
+    ep_points[0] += (t1 ? @wager1.to_i : @wager1.to_i * -1)
+    ep_points[1] += (t2 ? @wager2.to_i : @wager2.to_i * -1)
+    ep_points[2] += (t3 ? @wager3.to_i : @wager3.to_i * -1)
+    ep.points = ep_points
+    ep.save
     @answer = answer
     
   end

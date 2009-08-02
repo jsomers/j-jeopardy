@@ -1,9 +1,26 @@
+<style type="text/css">
+
+a { color: #003399; padding: 0 3px 0 3px; text-decoration: none; }
+a:hover { background-color: #ffff33; }
+a.played { color: #aaa; }
+a.played:hover { background-color: #ffff33; }
+a.in_progress { background-color: #ccffcc; }
+a.in_progress:hover { background-color: #ffff33; }
+body { font-family: Verdana; font-size: 13px; line-height: 0.3em; }
+h3 { line-height: 1em; margin-top: 20px; }
+
+</style>
+
 <% for n in (1..25).to_a.reverse %>
 	<h3>Season <%= n %></h3>
 	<% for game in @games.select { |g| g.season == n }.reverse %>
-		<% if Complete.find_by_game_id(game.game_id).complete == true %>
-			<a href="/play/board/<%= game.game_id %>">Show #<%= game.game_id %>, aired <%= game.airdate %></a> <%= if (game.metadata and !game.metadata.empty?) then '<small><font color="#aaaaaa">' + game.metadata + '</font></small>' end %>
-			<br/>
-		<% end %>
+		<p>
+			<a class="<%= (game.played?(session[:players]) ? 'played' : '') %> <%= (game.in_progress?(session[:players]) ? 'in_progress' : '') %>" href="/play/board/<%= game.game_id %>">
+				Show #<%= game.game_id %>, aired <%= game.airdate %>
+			</a>
+			<% if (game.metadata and !game.metadata.empty?) %>
+				<small><span style="color:#aaa;"><%= game.metadata %></span></small>
+			<% end %>
+		</p>
 	<% end %>
 <% end %>

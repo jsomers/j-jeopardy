@@ -10,14 +10,14 @@
 	border-bottom: 1px solid #777;
 }
 .name1 {
-	border-bottom: <%= ($current == $p1 ? '1px solid white;' : 'none;'); %>
+	border-bottom: <%= (session[:current] == session[:players][0] ? '1px solid white;' : 'none;'); %>
 }
 
 .name2 {
-		border-bottom: <%= ($current == $p2 ? '1px solid white;' : 'none;'); %>
+		border-bottom: <%= (session[:current] == session[:players][1] ? '1px solid white;' : 'none;'); %>
 }
 .name3 {
-		border-bottom: <%= ($current == $p3 ? '1px solid white;' : 'none;'); %>
+		border-bottom: <%= (session[:current] == session[:players][2] ? '1px solid white;' : 'none;'); %>
 }
 .score1 {
 	font-weight: bold;
@@ -27,7 +27,7 @@
 	text-align: center;
 	font-family: Optima;
 	font-size: 18px;
-	color: <%= ($p1pts.to_i >= 0 ? '#33ff33' : 'red') %>;
+	color: <%= (ep.points[0] >= 0 ? '#33ff33' : 'red') %>;
 	
 }
 .score2 {
@@ -38,7 +38,7 @@
 	text-align: center;
 	font-family: Optima;
 	font-size: 18px;
-	color: <%= ($p2pts.to_i >= 0 ? '#33ff33' : 'red') %>;
+	color: <%= (ep.points[1] >= 0 ? '#33ff33' : 'red') %>;
 
 }
 .score3 {
@@ -49,7 +49,7 @@
 	text-align: center;
 	font-family: Optima;
 	font-size: 18px;
-	color: <%= ($p3pts.to_i >= 0 ? '#33ff33' : 'red') %>;
+	color: <%= (ep.points[2] >= 0 ? '#33ff33' : 'red') %>;
 	
 }
 
@@ -92,8 +92,8 @@
 
 <div id="standings">
 	<% st = "" %>
-	<% st += "<span id='name1' class='name1'>#{$p1}</span>: <input id='score1' class='score1' type='text' value='$#{$p1pts}'> | " %>
-	<% st += "<span id='name2' class='name2'>#{$p2}</span>: <input id='score2' class='score2' type='text' value='$#{$p2pts}'> | " %>
-	<% st += "<span id='name3' class='name3'>#{$p3}</span>: <input id='score3' class='score3' type='text' value='$#{$p3pts}'>" %>
+	<% st += "<span id='name1' class='name1'>#{if p1 then p1.handle end}</span>: <input id='score1' class='score1' type='text' value='$#{ep.points[0]}'> | " %>
+	<% st += "<span id='name2' class='name2'>#{if p2 then p2.handle end}</span>: <input id='score2' class='score2' type='text' value='$#{ep.points[1]}'> | " %>
+	<% st += "<span id='name3' class='name3'>#{if p3 then p3.handle end}</span>: <input id='score3' class='score3' type='text' value='$#{ep.points[2]}'>" %>
 	<%= st %>
 </div>

@@ -24,7 +24,7 @@ body {background-color: #aa0011;}
 		<%= render :partial => 'standings' %>
 		<% form_tag(:action => 'daily_double', :controller => 'play') { %>
 		<div id="double">DAILY DOUBLE!</div>
-		<input style="background-color:#aa0011;" id="ffinger" name="ffinger" value="<%= $current %> ($<%= if $current == $p1 then $p1pts elsif $current == $p2 then $p2pts else $p3pts end %>)" type="text"><br/>
+		<input style="background-color:#aa0011;" id="ffinger" name="ffinger" value="<%= Player.find(session[:current].to_i).handle %> ($<%=  ep.points[session[:players].index(session[:current])] %>)" type="text"><br/>
 		<input id="wager" name="wager" type="text" style="text-align: center;"><br/><br/>
 		<input type="hidden" name="q_id" value="<%= params[:id] %>">
 		<input type="Submit" value="Submit your wager">

@@ -43,12 +43,12 @@
 	<input type="hidden" name="wager" id="wager" value="<%= @wager %>">
 	<input id="question_id" name="question_id" type="hidden" value="<%= @q.id %>">
 	<input type="hidden" name="wager" id="wager" value="<%= @wager %>">
-	<input id="ffinger" name="ffinger" type="text" value="<%= $current %> (for $<%= @wager %>):"><br/>
+	<input id="ffinger" name="ffinger" type="text" value="<%= session[:current] %> (for $<%= @wager %>):"><br/>
 	<input id="answer" name="answer" type="text">
 	<% coords = @q.coord %>
 	<% col = coords.split(',')[1].to_i - 1 %>
 	<% row = coords.split(',')[2].to_i - 1 %>
-	<% if coords.include? 'DJ' then $double_table[col][row][3] = 1 else $single_table[col][row][3] = 1 end %>
+	<% if coords.include? 'DJ' then ep.double_table[col][row][3] = 1 else ep.single_table[col][row][3] = 1 end %>
 	<%= submit_tag 'Guess', :id => 'guess', :onclick => '$(\'d2\').style.color = \'#211eab\';seconds=1000' %>
 <% end -%>
 

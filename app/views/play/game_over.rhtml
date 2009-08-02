@@ -18,11 +18,15 @@
 	</tr>
 </table>
 
-<% $p1chart << $p1pts %>
-<% $p2chart << $p2pts %>
-<% $p3chart << $p3pts %>
+<% the_ep = Episode.find_by_key(session[:ep_key]) %>
+<% ep_charts = the_ep.charts.dclone %>
+<% ep_charts[0] << the_ep.points[0] %>
+<% ep_charts[1] << the_ep.points[1] %>
+<% ep_charts[2] << the_ep.points[2] %>
+<% the_ep.charts = ep_charts %>
+<% the_ep.save %>
 
-<div style="margin-top: 50px; font-family: Optima; font-variant: small-caps; color: white; font-size: 50px;"><small>And the winner is...</small><br/><font color="#33ff33"><%= [[$p1pts, $p1], [$p2pts, $p2], [$p3pts, $p3]].max[1] %></font><br/><br/> <small>(The answer was "<%= @answer %>")</small></div>
+<div style="margin-top: 50px; font-family: Optima; font-variant: small-caps; color: white; font-size: 50px;"><small>And the winner is...</small><br/><font color="#33ff33"><%= [[ep.points[0], p1], [ep.points[1], p2], [ep.points[2], p3]].max[1] %></font><br/><br/> <small>(The answer was "<%= @answer %>")</small></div>
 
 <div id="chart" style="margin-top: 50px;"></div>
 
@@ -35,9 +39,9 @@ var legend;
 function load() {
     var hiPoints= [];
     var loPoints= [];
-    var array0= '<%= $p1chart.join(',') %>'
-    var array1= '<%= $p2chart.join(',') %>'
-    var array2= '<%= $p3chart.join(',') %>'
+    var array0= '<%= ep.charts[0].join(',') %>'
+    var array1= '<%= ep.charts[1].join(',') %>'
+    var array2= '<%= ep.charts[2].join(',') %>'
     array0= array0.split(',');
     array1= array1.split(',');
     array2= array2.split(',');
@@ -62,7 +66,7 @@ function load() {
     var thirdArrayScaled = scaling(array2);  
      
     var chartBaseUrl = "http://chart.apis.google.com/chart?";
-    var chartParams = "cht=lc&chs=1000x250&chls=1,1,0|1,1,0|1,1,0|1,1,0&chco=ff0000,00ff00,eeeeee&chf=bg,s,211eab&chm=o,eeeeee,0,-1,5,0|o,eeeeee,1,-1,5,0|o,eeeeee,2,-1,5,0&chxt=x,r&chts=eeeeee,12&chdl=<%= $p1 %>|<%= $p2 %>|<%= $p3 %>";
+    var chartParams = "cht=lc&chs=1000x250&chls=1,1,0|1,1,0|1,1,0|1,1,0&chco=ff0000,00ff00,eeeeee&chf=bg,s,211eab&chm=o,eeeeee,0,-1,5,0|o,eeeeee,1,-1,5,0|o,eeeeee,2,-1,5,0&chxt=x,r&chts=eeeeee,12&chdl=<%= p1 %>|<%= p2 %>|<%= p3 %>";
     var values = "&chd=e:";
     var title = "&chtt=Game%20Progress";
     values = values + extendedEncode(firstArrayScaled) + "," +  extendedEncode(secondArrayScaled) + "," +  extendedEncode(thirdArrayScaled);
