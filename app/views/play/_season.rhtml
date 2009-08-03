@@ -1,0 +1,8 @@
+<div id="season_<%= n %>" season:id="<%= n %>">
+	<% games.select { |g| g.season == n }.reverse.each_with_index do |game, i| %>
+		<a class="game_link <%= (game.played?(session[:players]) ? 'played' : '') %> <%= (game.in_progress?(session[:players]) ? 'in_progress' : '') %> <%= ((game.metadata and game.metadata.include? 'College Championship') ? 'college' : '') %> <%= ((game.metadata and game.metadata.include? 'Tournament of Champions') ? 'toc' : '') %>" href="/play/board/<%= game.game_id %>">
+			Show #<%= game.game_id %>, aired <%= game.airdate %>
+		</a>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<% if (i - 3).modulo(4) == 0 and i > 1 %><br/><% end %>
+	<% end %>
+</div>

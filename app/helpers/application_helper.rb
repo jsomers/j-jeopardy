@@ -23,4 +23,9 @@ module ApplicationHelper
   def p3
     if (s = session[:players][2]) and (p = Player.find(s)) then return p end
   end
+  
+  def games
+    @games ||= Game.find(:all)
+    return @games
+  end
 end

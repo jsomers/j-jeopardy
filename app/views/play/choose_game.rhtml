@@ -1,26 +1,72 @@
+<%= javascript_include_tag "jquery-1.3.2.min.js" %>
+<%= javascript_include_tag "jquery-ui-1.7.2.custom.min" %>
+
+<script type="text/javascript">
+	$(function() {
+			$("#accordion").accordion({
+				animated: false,
+				autoHeight: false,
+				change: function(e, ui) {
+					var season = ui.newContent.attr("season:id");
+					$.getJSON("/play/load_season", {season_number: season},
+						function(ret) {
+							$("#season_" + ret["season_n"] + "_shell").html(ret["content"]);
+					});
+				}
+			});
+		});
+</script>
 <style type="text/css">
 
-a { color: #003399; padding: 0 3px 0 3px; text-decoration: none; }
-a:hover { background-color: #ffff33; }
-a.played { color: #aaa; }
-a.played:hover { background-color: #ffff33; }
-a.in_progress { background-color: #ccffcc; }
-a.in_progress:hover { background-color: #ffff33; }
-body { font-family: Verdana; font-size: 13px; line-height: 0.3em; }
-h3 { line-height: 1em; margin-top: 20px; }
+a { text-decoration: none; }
+a.game_link { padding: 3px; padding-bottom: 0; color: #555; font-size: 15px; font-weight: bold;} 
+a.game_link:hover { color: black; text-decoration: underline;}
+a.game_link.played { color: #aaa; }
+a.game_link.in_progress { color: green; }
+a.game_link.college { color: #1e6c8f; }
+a.game_link.toc { color: #b8441c; }
+h3 {
+	margin:0 auto;
+	width: 900px;
+	padding: 10px;
+	background:#fffbcc;
+	border:1px solid #e6db55;
+	text-align: center;
+	font-family: Georgia;
+}
+a.season_link {
+	color: #444;
+	font-weight: bold;
+	text-decoration: none;
+}
+a.season_link:hover {
+	background-color: #fffbcc;
+}
+
+.season {
+	margin:0 auto;
+	width: 900px;
+	padding: 10px;
+	background:#fffbee;
+	border:1px solid #e6db55;
+	border-top: none;
+	line-height: 1.5em;
+}
 
 </style>
 
-<% for n in (1..25).to_a.reverse %>
-	<h3>Season <%= n %></h3>
-	<% for game in @games.select { |g| g.season == n }.reverse %>
-		<p>
-			<a class="<%= (game.played?(session[:players]) ? 'played' : '') %> <%= (game.in_progress?(session[:players]) ? 'in_progress' : '') %>" href="/play/board/<%= game.game_id %>">
-				Show #<%= game.game_id %>, aired <%= game.airdate %>
-			</a>
-			<% if (game.metadata and !game.metadata.empty?) %>
-				<small><span style="color:#aaa;"><%= game.metadata %></span></small>
+<div style="margin:0 auto; text-align: center; margin-bottom: 10px; font-weight: bold; font-family: Georgia; font-size: 12px;">
+	<br/> <span style="color:#555">Normal game</span> &nbsp; <span style="color: green;">In-progress</span> &nbsp; <span style="color: #aaa">Already played</span> &nbsp; <span style="color: #1e6c8f">College Championship</span> &nbsp; <span style="color: #b8441c">Tournament of Champions</span>
+</div>
+<div id="accordion">
+	<% for n in (1..25).to_a.reverse %>
+		<a href="#<%= n %>" class="season_link"><h3>Season <span style=""><%= n %></span></h3></a>
+		<div id="season_<%= n %>_shell" class="season" season:id="<%= n %>">
+			<% if n == 25 %>
+				<%= render :partial => "season", :locals => {:n => n} %>
+			<% else %>
+				<div id="season_<%= n %>_shell" season:id="<%= n %>"><div style="margin:0 auto; text-align: center;;"><img src="/images/loader.gif"/></div></div>
 			<% end %>
-		</p>
+		</div>
 	<% end %>
-<% end %>
+</div>

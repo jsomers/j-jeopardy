@@ -1,5 +1,6 @@
 class PlayController < ApplicationController
   require 'cgi'  
+  protect_from_forgery :except => [:load_season]
   
   def blast
     @q = Question.find_all_by_category("word origins", :limit => 1, :order => :random)[0]
@@ -375,6 +376,13 @@ class PlayController < ApplicationController
     ep.save
     @answer = answer
     
+  end
+  
+  def load_season
+    ret = {}
+    ret[:content] = render_to_string :partial => "season", :locals => {:n => params[:season_number].to_i}
+    ret[:season_n] = params[:season_number].to_i
+    render :json => ret
   end
   
 end
