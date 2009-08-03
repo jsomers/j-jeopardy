@@ -23,7 +23,7 @@ class PlayerController < ApplicationController
     p = Player.find_by_handle(handle)
     if p and p.password_matches?(password)
       session[:players][plyr - 1] = p.id.to_s
-      render :text => handle + "<br/><br/>"
+      render :text => "<div style='margin-left: -30px; padding: 10px; border: 1px solid #eee; background: #ffffee;'>" + handle + "</div><br/>"
     else
       render :partial => "play/start_spot", :locals => {:player => plyr.to_s}
     end
