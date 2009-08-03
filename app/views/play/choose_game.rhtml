@@ -18,8 +18,8 @@
 </script>
 <style type="text/css">
 
-a { text-decoration: none; }
-a.game_link { padding: 3px; padding-bottom: 0; color: #555; font-size: 15px; font-weight: bold;} 
+a { text-decoration: none; font-family: Verdana;}
+a.game_link { padding: 3px; padding-bottom: 0; color: #222; font-size: 11.85px;} 
 a.game_link:hover { color: black; text-decoration: underline;}
 a.game_link.played { color: #aaa; }
 a.game_link.in_progress { color: green; }
@@ -27,7 +27,7 @@ a.game_link.college { color: #1e6c8f; }
 a.game_link.toc { color: #b8441c; }
 h3 {
 	margin:0 auto;
-	width: 900px;
+	width: 750px;
 	padding: 10px;
 	background:#fffbcc;
 	border:1px solid #e6db55;
@@ -45,7 +45,7 @@ a.season_link:hover {
 
 .season {
 	margin:0 auto;
-	width: 900px;
+	width: 750px;
 	padding: 10px;
 	background:#fffbee;
 	border:1px solid #e6db55;
@@ -53,10 +53,14 @@ a.season_link:hover {
 	line-height: 1.5em;
 }
 
+table {
+	padding-left: 32px;
+}
+
 </style>
 
 <div style="margin:0 auto; text-align: center; margin-bottom: 10px; font-weight: bold; font-family: Georgia; font-size: 12px;">
-	<br/> <span style="color:#555">Normal game</span> &nbsp; <span style="color: green;">In-progress</span> &nbsp; <span style="color: #aaa">Already played</span> &nbsp; <span style="color: #1e6c8f">College Championship</span> &nbsp; <span style="color: #b8441c">Tournament of Champions</span>
+	<br/> <span style="color:#222">Normal game</span> &nbsp; <span style="color: green;">In-progress</span> &nbsp; <span style="color: #aaa">Already played</span> &nbsp; <span style="color: #1e6c8f">College Championship</span> &nbsp; <span style="color: #b8441c">Tournament of Champions</span>
 </div>
 <div id="accordion">
 	<% for n in (1..25).to_a.reverse %>
