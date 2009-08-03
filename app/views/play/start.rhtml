@@ -87,7 +87,7 @@
 </style>
 
 <div id="wrapper">
-	<div style="color: #ff2222; margin-bottom: 10px; font-family: Verdana; font-size: 13px;"><%= flash[:alert] %></div>
+	<% if flash[:alert] %><div style="color: #ff2244; margin-bottom: 10px; font-family: Verdana; font-size: 18px; padding: 5px; background-color: #fff; border: 1px solid #ddd;"><%= flash[:alert] %></div><% end %>
 	<div style="color: green; margin-bottom: 10px; font-family: Verdana; font-size: 13px;"><%= flash[:notice] %></div>
 
 	<div>
