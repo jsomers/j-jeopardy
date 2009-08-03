@@ -1,30 +1,8 @@
-Pull in important metadata (college, teen, tournament of champions)
-Fix Daily Double scoring (and the corrector behavior)
-Fix charts using (http://steveyoung.wordpress.com/2008/08/13/google-chart-api-extended-encoding-with-scaling/)
-Refactor
-Player logins and sessions
-"Study mode"
-	- difficulty level
-	- category
-	- search term
-
-DB schema w/ Avi
-	"games" with all the session vars, some serialized
-		eliminate all globals ($<something>)
-	players, logins, passwords, etc.
-	question outcomes tied to players
-
-
-Wager limits
-Final Jeopardy +/- score display
-Daily double wagering more info (category, other players' scores)
-Outbound links? (J-archive is broken a lot of the time)
-Player select screen (with instructions about keyboard key)
-Coryat scores
-Extra stats
-	- % correct pie chart (everyone loves pie charts!)
-	- games you've played
-	- semantically tagged questions? Categories?
-	- grid of probabilities
-	
-nikhil check
+- setting to change keycode
+- fix deploy / faster deploy
+- index page
+- popups
+- new games (& better process)
+- split up the seasons (sliders?)
+- refactor / speed up code
+- github styling on pages with lots of text.

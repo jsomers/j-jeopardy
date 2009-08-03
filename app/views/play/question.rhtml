@@ -17,9 +17,12 @@
 <body onkeydown="getArrows(event, '<%= if p1 then p1.handle end %>', '<%= if p2 then p2.handle end %>', '<%= if p3 then p3.handle end %>');">
 	<form name="counter"><input type="text" name="d2" id="d2"></form><!-- the timer -->
 	<script type="text/javascript">
-	var milisec = <%= time(@q.question.split(" ").length)[1] %>;
-	var seconds = <%= (!params[:time].nil? ? time(@q.question.split(" ").length)[0] - 2 : time(@q.question.split(" ").length)[0]) %>;
-	var home_url = '/play/board/<%= Question.find_by_id(params[:id]).game_id %>'
+		var milisec = <%= time(@q.question.split(" ").length)[1] %>;
+		var seconds = <%= (!params[:time].nil? ? time(@q.question.split(" ").length)[0] - 2 : time(@q.question.split(" ").length)[0]) %>;
+		var home_url = '/play/board/<%= Question.find_by_id(params[:id]).game_id %>';
+		var p1_key = 65;
+		var p2_key = 66;
+		var p3_key = 80;
 	</script>
 	
 	<%= javascript_include_tag 'timer' %>

@@ -19,13 +19,13 @@ function getArrows(ev, p1, p2, p3) {
     //ev = false;
     if (ct > 0 || seconds > 5.0) {
 		switch(arrows) {
-			case 65:
+			case p1_key:
 				nope1 = true;
 				break;
-			case 66:
+			case p2_key:
 				nope2 = true;
 				break;
-			case 39:
+			case p3_key:
 				nope3 = true;
 				break;
 		}
@@ -33,7 +33,7 @@ function getArrows(ev, p1, p2, p3) {
     } else {
         //ev = false;
         switch(arrows) {
-            case 65:
+            case p1_key:
 				if (nope1 && time_to_n > 55) {
 					return '0'
 				} else {
@@ -49,7 +49,7 @@ function getArrows(ev, p1, p2, p3) {
 				ct = ct + 1;
                 break;
 			}
-            case 66:
+            case p2_key:
 				if (nope2 && time_to_n > 55) {
 					return '0'
 				} else {
@@ -65,7 +65,7 @@ function getArrows(ev, p1, p2, p3) {
 				ct = ct + 1;
                 break;
 			}
-            case 39:
+            case p3_key:
 				if (nope3 && time_to_n > 55) {
 					return '0'
 				} else {

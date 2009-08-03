@@ -1,12 +1,21 @@
 class PlayerController < ApplicationController
   def new
     if request.post? and params[:player]
-      @player = Player.new(params[:player])
-      @player.save
-      redirect_to '/play/start'
+      pass = params[:player][:password]
+      hndl = params[:player][:handle]
+      if hndl.nil? or hndl.empty?
+        flash[:alert] = "You've gotta enter a handle there, chief."
+      elsif pass.nil? or pass.empty?
+        flash[:alert] = "You've gotta enter a password there, chief."
+      elsif Player.find_by_handle(hndl)
+        flash[:alert] = "Looks like the handle <b>#{hndl}</b> has been taken by somebody else. What are the odds?"
+      else
+        @player = Player.new(params[:player])
+        @player.save
+        flash[:notice] = "Your account (<b>#{hndl}</b>) has been created successfully!"
+        redirect_to '/play/start'
+      end
     end
-  rescue
-    flash[:notice] = "Something went wrong! Maybe your handle is taken."
   end
   
   def validate

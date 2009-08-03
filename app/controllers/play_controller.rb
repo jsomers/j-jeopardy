@@ -12,7 +12,7 @@ class PlayController < ApplicationController
   
   def choose_game
     if session[:players].compact.length < 2
-      flash[:notice] = "<b>At least two players</b> must be signed in before you can play."
+      flash[:alert] = "<b>At least two players</b> must be signed in before you can play."
       redirect_to "/play/start"
     else
       # Grab list of games
