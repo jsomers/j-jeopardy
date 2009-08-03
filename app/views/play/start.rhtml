@@ -84,6 +84,10 @@
 		background:url('/images/signupbackground.gif') center bottom no-repeat;
 		text-shadow:#b8441c 2px 2px 0px;
 	}
+	
+	.failed_validation {
+		background-color: red;
+	}
 </style>
 
 <div id="wrapper">
@@ -91,11 +95,11 @@
 	<div style="color: green; margin-bottom: 10px; font-family: Verdana; font-size: 13px;"><%= flash[:notice] %></div>
 
 	<div>
-		<div style="border-bottom: 1px solid #aaa; padding-bottom: 10px;">First time here? <a href="/player/new">Sign up in seconds.</a></div>
+		<div style="border-bottom: 1px solid #aaa; border-top: 1px solid #aaa; padding-bottom: 10px; padding-top: 10px; background-color: #ffffee">First time here? <a href="/player/new">Sign up in seconds.</a></div>
 		
-		<div style="margin-top: 10px;">Otherwise, sign in:</div>
+		<div style="margin-top: 10px;">Otherwise, sign in:<br/><span style="font-size: 14.24px; color: #777;">Type in your handle and password, then hit the &#10003; button to validate.<br/><strong>At least two players</strong> have to validate before you can play, so grab a friend!</span></div>
 		<ol style="list-style: none;">
-			<li><span id="p1_spot"><%= render :partial => "start_spot", :locals => {:player => "1"} %></span></li>
+			<li><span id="p1_spot"><%= render :partial => "start_spot", :locals => {:player => "1", :failed => false} %></span></li>
 			<li style="margin-top: -15px;"><span id="p2_spot"><%= render :partial => "start_spot", :locals => {:player => "2"} %></span></li>
 			<li style="margin-top: -15px;"><span id="p3_spot"><%= render :partial => "start_spot", :locals => {:player => "3"} %></span></li>
 		</ol>

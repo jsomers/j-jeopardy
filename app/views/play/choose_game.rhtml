@@ -18,7 +18,8 @@
 </script>
 <style type="text/css">
 
-a { text-decoration: none; font-family: Verdana;}
+a { text-decoration: none; font-family: Verdana; color: #21759B;}
+a.info { font-family: Georgia; text-decoration: underline; }
 a.game_link { padding: 3px; padding-bottom: 0; color: #222; font-size: 11.85px;} 
 a.game_link:hover { color: black; text-decoration: underline;}
 a.game_link.played { color: #aaa; }
@@ -31,6 +32,7 @@ h3 {
 	padding: 10px;
 	background:#fffbcc;
 	border:1px solid #e6db55;
+	border-bottom: none;
 	text-align: center;
 	font-family: Georgia;
 }
@@ -59,12 +61,12 @@ table {
 
 </style>
 
-<div style="margin:0 auto; text-align: center; margin-bottom: 10px; font-weight: bold; font-family: Georgia; font-size: 12px;">
-	<br/> <span style="color:#222">Normal game</span> &nbsp; <span style="color: green;">In-progress</span> &nbsp; <span style="color: #aaa">Already played</span> &nbsp; <span style="color: #1e6c8f">College Championship</span> &nbsp; <span style="color: #b8441c">Tournament of Champions</span>
+<div style="margin:0 auto; text-align: center; margin-bottom: 10px; font-family: Verdana; font-size: 11.85px;">
+	<span style="font-size: 23.28px; font-family: Georgia;">Choose a game below. <br/><span style="font-size: 18px;">If you haven't played before, you may want to <a class="info" href="/play/rules">review the rules</a>.</span></span><br/><br/> <span style="color:#222">Normal game</span> &nbsp; <span style="color: green;">In-progress</span> &nbsp; <span style="color: #aaa">Already played</span> &nbsp; <span style="color: #1e6c8f">College Championship</span> &nbsp; <span style="color: #b8441c">Tournament of Champions</span>
 </div>
 <div id="accordion">
 	<% for n in (1..25).to_a.reverse %>
-		<a href="#<%= n %>" class="season_link"><h3>Season <span style=""><%= n %></span></h3></a>
+		<a href="#" class="season_link"><h3 <% if n == 1 %> style="border-bottom: 1px solid #e6db55;"<% end %>>Season <span style=""><%= n %></span></h3></a>
 		<div id="season_<%= n %>_shell" class="season" season:id="<%= n %>">
 			<% if n == 25 %>
 				<%= render :partial => "season", :locals => {:n => n} %>
