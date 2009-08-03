@@ -100,8 +100,8 @@
 		<div style="margin-top: 10px;">Otherwise, sign in:<br/><span style="font-size: 14.24px; color: #777;">Type in your handle and password, then hit the &#10003; button to validate.<br/><strong>At least two players</strong> have to validate before you can play, so grab a friend!</span></div>
 		<ol style="list-style: none;">
 			<li><span id="p1_spot"><%= render :partial => "start_spot", :locals => {:player => "1", :failed => false} %></span></li>
-			<li style="margin-top: -15px;"><span id="p2_spot"><%= render :partial => "start_spot", :locals => {:player => "2"} %></span></li>
-			<li style="margin-top: -15px;"><span id="p3_spot"><%= render :partial => "start_spot", :locals => {:player => "3"} %></span></li>
+			<li style="margin-top: -15px;"><span id="p2_spot"><%= render :partial => "start_spot", :locals => {:player => "2", :failed => false} %></span></li>
+			<li style="margin-top: -15px;"><span id="p3_spot"><%= render :partial => "start_spot", :locals => {:player => "3", :failed => false} %></span></li>
 		</ol>
 	</div>
 	
