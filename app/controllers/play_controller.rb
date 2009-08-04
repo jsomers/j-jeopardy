@@ -8,7 +8,7 @@ class PlayController < ApplicationController
   
   def start
     session[:ct] = 0
-    if session[:players].empty?
+    if !session[:players] or session[:players].empty?
       session[:players] = [nil, nil, nil]
     end
   end
