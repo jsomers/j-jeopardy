@@ -1,4 +1,6 @@
 <%= javascript_include_tag :defaults -%>
+<%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? %>
+
 <script type="text/javascript">
 	var firstKeypress = true;
 
@@ -33,6 +35,22 @@
 			tbox.value = label;
 			tbox.className = "inactive";
 		}
+	}
+</script>
+
+<script type="text/javascript">
+	<% session[:players].each_with_index do |plyr_id, i| %>
+		<% if plyr_id %>
+			new Ajax.Updater('p<%= i + 1 %>_spot', '/player/validate', {
+			  parameters: { handle: "<%= Player.find(plyr_id.to_i).handle %>", pass: "", authenticity_token: AUTH_TOKEN, crypted_pass: "<%= Player.find(plyr_id.to_i).password %>", player: "<%= i + 1 %>"}
+			});
+		<% end %>
+	<% end %>
+	
+	function remove_player(index) {
+		new Ajax.Updater('p' + (index + 1) + '_spot', '/player/remove', {
+			parameters: { num: index, authenticity_token: AUTH_TOKEN}
+		});
 	}
 </script>
 
