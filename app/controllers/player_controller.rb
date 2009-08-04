@@ -12,7 +12,7 @@ class PlayerController < ApplicationController
       else
         @player = Player.new(params[:player])
         @player.save
-        flash[:notice] = "Your account (<b>#{hndl}</b>) has been created successfully!"
+        flash[:notice] = "Great! Now you're ready to <b>plug your new handle and password into a box below</b>. Hit the &#10003; to validate (sign in)."
         redirect_to '/play/start'
       end
     end
