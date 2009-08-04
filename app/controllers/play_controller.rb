@@ -385,4 +385,7 @@ class PlayController < ApplicationController
     render :json => ret
   end
   
+  def info
+  end
+  
 end
