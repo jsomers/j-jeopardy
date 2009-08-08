@@ -92,8 +92,8 @@
 
 <div id="standings">
 	<% st = "" %>
-	<% st += "<span id='name1' class='name1'>#{if p1 then p1.handle end}</span>: <input id='score1' class='score1' type='text' value='$#{ep.points[0]}'> | " %>
-	<% st += "<span id='name2' class='name2'>#{if p2 then p2.handle end}</span>: <input id='score2' class='score2' type='text' value='$#{ep.points[1]}'> | " %>
-	<% st += "<span id='name3' class='name3'>#{if p3 then p3.handle end}</span>: <input id='score3' class='score3' type='text' value='$#{ep.points[2]}'>" %>
+	<% st += "<span id='name1' class='name1'>#{if p1 then p1.handle else "Player 1" end}</span>: <input id='score1' class='score1' type='text' value='$#{ep.points[0]}'> | " %>
+	<% st += "<span id='name2' class='name2'>#{if p2 then p2.handle else "Player 2" end}</span>: <input id='score2' class='score2' type='text' value='$#{ep.points[1]}'> | " %>
+	<% st += "<span id='name3' class='name3'>#{if p3 then p3.handle else "Player 3" end}</span>: <input id='score3' class='score3' type='text' value='$#{ep.points[2]}'>" %>
 	<%= st %>
 </div>

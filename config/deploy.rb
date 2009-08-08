@@ -5,6 +5,7 @@ set :scm, "git"
 # set :scm_passphrase, "D0nkeyB0nkers!" # This is your custom user's password
 set :branch, "master"
 set :user, "james"
+set :deploy_via, :remote_cache
 set :port, 30000
 
 set :runner, "james"
@@ -23,9 +24,13 @@ role :app, location
 role :web, location
 role :db,  location, :primary => true
 
-# namespace :deploy do
-#   desc "Restarting mod_rails with restart.txt"
-#   task :restart, :roles => :app, :except => { :no_release => true } do
-#     run "touch /home/james/public_html/jeopardy/tmp/restart.txt"
-#   end  
-# end
+namespace :deploy do
+  desc "Restarting mod_rails with restart.txt"
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "touch /home/james/public_html/jeopardy/current/tmp/restart.txt"
+  end
+  
+  task :start do
+    # nothing
+  end
+end

@@ -14,7 +14,7 @@
 
 <center><div id="out"></div></center><!-- the orange bar -->
 
-<body onkeydown="getArrows(event, '<%= if p1 then p1.handle end %>', '<%= if p2 then p2.handle end %>', '<%= if p3 then p3.handle end %>');">
+<body onkeydown="getArrows(event, '<%= if p1 then p1.handle else "Player 1" end %>', '<%= if p2 then p2.handle else "Player 2" end %>', '<%= if p3 then p3.handle else "Player 3" end %>');">
 	<form name="counter"><input type="text" name="d2" id="d2"></form><!-- the timer -->
 	<script type="text/javascript">
 		var milisec = <%= time(@q.question.split(" ").length)[1] %>;

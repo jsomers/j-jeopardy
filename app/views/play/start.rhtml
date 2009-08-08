@@ -109,7 +109,6 @@
 </style>
 
 <div id="wrapper">
-	<% if flash[:alert] %><div style="color: #ff2244; margin-bottom: 10px; font-family: Verdana; font-size: 18px; padding: 5px; background-color: #fff; border: 1px solid #ddd;"><%= flash[:alert] %></div><% end %>
 
 	<div>
 		<div style="border-bottom: 1px solid #aaa; border-top: 1px solid #aaa; padding-bottom: 10px; padding-top: 10px; background-color: #ffffee">First time here? <a href="/player/new">Sign up in seconds.</a></div>
@@ -122,6 +121,6 @@
 			<li style="margin-top: -15px;"><span id="p3_spot"><%= render :partial => "start_spot", :locals => {:player => "3", :failed => false} %></span></li>
 		</ol>
 	</div>
-	
+		<% if flash[:alert] %><div style="color: #ff2244; margin-bottom: 10px; font-family: Verdana; font-size: 16.54px; padding: 5px; background-color: #ffcccc; border: 1px solid #ff5566; color: #dd0000;"><%= flash[:alert] %></div><% end %>
 	<div id="signupnow-button"><a href="/play/choose_game">Ready? Play!</a></div>
 </div>

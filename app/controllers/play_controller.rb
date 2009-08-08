@@ -15,7 +15,7 @@ class PlayController < ApplicationController
   
   def choose_game
     if session[:players].compact.length < 2
-      flash[:alert] = "<b>At least two players</b> must be signed in before you can play."
+      flash[:alert] = "Don't jeop solo! <b>At least two players</b> must be signed in before you can play."
       redirect_to "/play/start"
     else
       # Grab list of games
@@ -267,7 +267,7 @@ class PlayController < ApplicationController
     st = ''
     st += '<script type="text/javascript">seconds += 100; $(\'out\').style.borderColor="#211eab";</script>'
     st += '<b><font color="' + answer_color + '">' + answer + '</font></b><br/>'
-    st += '<small>' + '<font color="' + font_color + '">' + '[' + (!p.nil? ? Player.find(p.to_i).handle : '') + (t ? ' +' : ' -') + '$' + value.to_s + ']</font><br/>'
+    st += '<small>' + '<font color="' + font_color + '">' + '[' + (!p.nil? ? Player.find(p.to_i).handle : 'Player ' + player) + (t ? ' +' : ' -') + '$' + value.to_s + ']</font><br/>'
     if t
       st += '<a href="/play/board/' + game_id.to_s + '" style="color: white;">&lt;&lt; Go back</a>'
     else
