@@ -1,11 +1,28 @@
 <div id="season_<%= n %>" season:id="<%= n %>">
 	<table>
 		<tr>
-	<% games.select { |g| g.season == n }.reverse.each_with_index do |game, i| %>
-		<td style="padding-left:0px; text-align: center;"><a class="game_link <%= (game.played?(session[:players]) ? 'played' : '') %> <%= (game.in_progress?(session[:players]) ? 'in_progress' : '') %> <%= ((game.metadata and game.metadata.include? 'College Championship') ? 'college' : '') %> <%= ((game.metadata and game.metadata.include? 'Tournament of Champions') ? 'toc' : '') %>" href="/play/board/<%= game.game_id %>">
-			Episode #<%= game.game_id %> <div style="opacity: 0.6; filter: alpha(opacity = 50); font-size: 10.34px; text-align: center;">(<%= game.airdate %>)</div>
-		</a></td>
-	<% if (i - 6).modulo(7) == 0 and i > 1 %></tr><tr><% end %>
+	<% Game.find(:all, :conditions => ['season = ?', n]).reverse.each_with_index do |game, i| %>
+		<% cl = nil %>
+		<% if (m = game.metadata) %>
+			<% if m.include? "College Championship" %>
+				<% cl = "college" %>
+			<% elsif m.include? "Tournament of Champions" %>
+				<% cl = "toc" %>
+			<% end %>
+		<% end %>
+		<% if game.in_progress?(session[:players]) %>
+			<% cl = "in_progress" %>
+		<% end %>
+		<% if game.played?(session[:players]) %>
+			<% cl = "played" %>
+		<% end %>
+		<td>
+			<a class="game_link <%= cl %>" href="/play/board/<%= game.game_id %>">Episode #<%= game.game_id %> <div class="airdate">(<%= game.airdate %>)</div>
+			</a>
+		</td>
+		<% if (i - 6).modulo(7) == 0 and i > 1 %>
+			</tr><tr>
+		<% end %>
 	<% end %>
 	</table>
 </div>

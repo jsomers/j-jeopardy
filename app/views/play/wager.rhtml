@@ -1,14 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-<title>Final Jeopardy!</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-
-<%= javascript_include_tag :defaults -%>
-<%= stylesheet_link_tag 'main' -%>
-</head>
-
 <script type="text/javascript">
 	function lock(n) {
 		$('wager_' + n).style.color = "#211eab";
@@ -16,16 +5,16 @@
 		$('lock_' + n).style.display = 'none';
 	}
 </script>
-<div id="question"><%= @category %></div>
+<div id="q"><%= @category %></div>
 
 <table class="wager">
 	<tr>
-		<td><%= p1 %> (<%= ep.points[0] %>)</td>
-		<td><%= p2 %> (<%= ep.points[1] %>)</td>
-		<td><%= p3 %> (<%= ep.points[2] %>)</td>
+		<td><%= if p1 then p1.handle else "Player 1" end %> (<%= ep.points[0] %>)</td>
+		<td><%= if p2 then p2.handle else "Player 2" end %> (<%= ep.points[1] %>)</td>
+		<td><%= if p3 then p3.handle else "Player 3" end %> (<%= ep.points[2] %>)</td>
 	</tr>
 	<tr>
-		<% form_tag(:action => 'final_jeopardy', :controller => 'play') { %>
+		<% form_tag(:action => 'final_jeopardy', :controller => 'play') do %>
 		<td><input id="wager_1" name="wager_1" class="fj"></td>
 		<td><input id="wager_2" name="wager_2" class="fj"></td>
 		<td><input id="wager_3" name="wager_3" class="fj"></td>
@@ -39,7 +28,5 @@
 		<input type="hidden" value="<%= @q.id %>" name="q_id" id="q_id">
 		<input type="Submit" value="Submit Wagers">
 	</td>
-			<% } %>
+		<% end %>
 </table>
-</body>
-</html>

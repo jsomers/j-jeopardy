@@ -1,15 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-<title></title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-
-<%= javascript_include_tag :defaults -%>
-<%= stylesheet_link_tag 'main' -%>
-
 <%= render :partial => 'standings' %>
-
 <table class="wager">
 	<tr>
 		<td><%= @guess1 %></td>
@@ -26,7 +15,7 @@
 <% the_ep.charts = ep_charts %>
 <% the_ep.save %>
 
-<div style="margin-top: 50px; font-family: Optima; font-variant: small-caps; color: white; font-size: 50px;"><small>And the winner is...</small><br/><font color="#33ff33"><%= [[ep.points[0], p1], [ep.points[1], p2], [ep.points[2], p3]].max[1] %></font><br/><br/> <small>(The answer was "<%= @answer %>")</small></div>
+<div style="margin-top: 50px; font-family: Optima; font-variant: small-caps; color: white; font-size: 50px;"><small>And the winner is...</small><br/><font color="#33ff33"><%= [[ep.points[0], (p1 ? p1.handle : "Player 1")], [ep.points[1], (p2 ? p2.handle : "Player 2")], [ep.points[2], (p3 ? p3.handle : "Player 3")]].max[1] %></font><br/><br/> <small>(The answer was "<%= @answer %>")</small></div>
 
 <div id="chart" style="margin-top: 50px;"></div>
 
@@ -66,12 +55,11 @@ function load() {
     var thirdArrayScaled = scaling(array2);  
      
     var chartBaseUrl = "http://chart.apis.google.com/chart?";
-    var chartParams = "cht=lc&chs=1000x250&chls=1,1,0|1,1,0|1,1,0|1,1,0&chco=ff0000,00ff00,eeeeee&chf=bg,s,211eab&chm=o,eeeeee,0,-1,5,0|o,eeeeee,1,-1,5,0|o,eeeeee,2,-1,5,0&chxt=x,r&chts=eeeeee,12&chdl=<%= p1 %>|<%= p2 %>|<%= p3 %>";
+    var chartParams = "cht=lc&chs=1000x250&chls=1,1,0|1,1,0|1,1,0|1,1,0&chco=ff0000,00ff00,eeeeee&chf=bg,s,211eab&chm=o,eeeeee,0,-1,5,0|o,eeeeee,1,-1,5,0|o,eeeeee,2,-1,5,0&chxt=x,r&chts=eeeeee,12&chdl=<%= (p1 ? p1.handle : 'Player 1') %>|<%= (p2 ? p2.handle : 'Player 2') %>|<%= (p3 ? p3.handle : 'Player 3') %>";
     var values = "&chd=e:";
     var title = "&chtt=Game%20Progress";
     values = values + extendedEncode(firstArrayScaled) + "," +  extendedEncode(secondArrayScaled) + "," +  extendedEncode(thirdArrayScaled);
     document.getElementById('chart').innerHTML = "<img src=" + chartBaseUrl + chartParams + title + values + legend + ">"; 
-	$('test').value = "<img src=" + chartBaseUrl + chartParams + title + values + legend + ">"; 
 }
 function scaling(values) {		
     var ymin=0;
@@ -105,7 +93,3 @@ function extendedEncode(values) {
     return chartData.join('');
 } load();
 </script>
-
-
-</body>
-</html>

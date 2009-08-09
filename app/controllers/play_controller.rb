@@ -1,25 +1,38 @@
 class PlayController < ApplicationController
-  require 'cgi'  
+  require 'cgi'
   protect_from_forgery :except => [:load_season]
   
-  def blast
-    @q = Question.find_all_by_category("word origins", :limit => 1, :order => :random)[0]
+  def landing
+    @page_title = "Jimbo Jeopardy! Play nearly every Jeopardy game ever aired, free."
+    @body_id = "landing"
+    @no_script = true
   end
   
   def start
+    @page_title = "Jimbo Jeopardy! Player sign-in"
+    @body_id = "start"
+    @slick_input = true
+    
     session[:ct] = 0
     if !session[:players] or session[:players].empty?
       session[:players] = [nil, nil, nil]
     end
   end
   
+  def blast
+    @q = Question.find_all_by_category("word origins", :limit => 1, :order => :random)[0]
+  end
+  
   def choose_game
+    @page_title = "Jimbo Jeopardy! Choose a game to play"
+    @body_id = "choose_game"
+    @no_script = true
     if session[:players].compact.length < 2
-      flash[:alert] = "Don't jeop solo! <b>At least two players</b> must be signed in before you can play."
+      flash[:alert] = "<strong>At least two players</strong> must be signed in before you can play."
       redirect_to "/play/start"
     else
       # Grab list of games
-      @games = Game.find(:all)#.reject {|g| Episode.find_all_by_game_id(g.game_id).select {|ep| !(ep.key.split('_')[0..2].reject {|x| x == '0'} & session[:players].reject {|y| y.nil?}).empty?}.length > 0}
+      @games = Game.find(:all, :conditions => 'season = 25')
     end
   end
   
@@ -70,6 +83,8 @@ class PlayController < ApplicationController
     end
     @game_id = params[:id]
     @game = Game.find_by_game_id(@game_id)
+    @page_title = "Jeopardy! Game #{@game.game_id} (#{@game.airdate})"
+    @body_id = "board"
     
     @single = CGI.unescapeHTML(@game.categories).split('^')[1..6]
     @double = CGI.unescapeHTML(@game.categories).split('^')[7..-2]
@@ -81,7 +96,9 @@ class PlayController < ApplicationController
   
   def question
     ep = Episode.find_by_key(session[:ep_key])
-    @q = Question.find_by_id(params[:id])
+    @q = Question.find(params[:id])
+    @page_title = "$#{@q.value} | #{@q.my_category}"
+    @body_id = "question"
     if @q.value == 'DD'
       redirect_to '/play/dd/' + params[:id]
     end
@@ -167,12 +184,15 @@ class PlayController < ApplicationController
   end
   
   def dd
-    
+    @page_title = "Daily Double!"
+    @body_id = "dd"
   end
   
   def daily_double
     @q = Question.find_by_id(params[:q_id])
     @wager = params[:wager]
+    @page_title = "Daily Double in #{@q.category} for $#{@wager}"
+    @body_id = "question"
   end
   
   def search
@@ -211,6 +231,8 @@ class PlayController < ApplicationController
   def wager
     @q = Question.find_by_game_id(params[:id], :conditions => ['fj = ?', true])
     @category = Game.find_by_game_id(params[:id]).categories.split('^')[-1]
+    @page_title = "Final Jeopardy! (#{@category})"
+    @body_id = "question"
   end
   
   def final_jeopardy
@@ -219,6 +241,8 @@ class PlayController < ApplicationController
     @wager1 = params[:wager_1]
     @wager2 = params[:wager_2]
     @wager3 = params[:wager_3]
+    @page_title = "Final Jeopardy!"
+    @body_id = "question"
   end
   
   def validate
@@ -308,7 +332,7 @@ class PlayController < ApplicationController
     answer_color = (t ? '#33ff33' : 'red')
     st = ''
     st += '<b><font color="' + answer_color + '">' + answer + '</font></b><br/>'
-    st += '<small>' + '<font color="' + font_color + '">' + '[' + session[:current] + (t ? ' +' : ' -') + '$' + value.to_s + ']</font><br/>'
+    st += '<small>' + '<font color="' + font_color + '">' + '[' + ((pl = Player.find(session[:current].to_i)) ? pl.handle : 'Player') + (t ? ' +' : ' -') + '$' + value.to_s + ']</font><br/>'
     st += '<a href="/play/board/' + game_id.to_s + '" style="color: white;">&lt;&lt; Go back</a>'
     ep.save
     @outcome = st
@@ -336,6 +360,8 @@ class PlayController < ApplicationController
   end
   
   def game_over
+    @page_title = "Game over!"
+    @body_id = "question"
     ep = Episode.find_by_key(session[:ep_key])
     @guess1 = params[:guess_1]
     @guess2 = params[:guess_2]
@@ -388,6 +414,9 @@ class PlayController < ApplicationController
   end
   
   def info
+    @page_title = "Jimbo Jeopardy! How-to"
+    @body_id = "info"
+    @no_script = true
   end
   
 end

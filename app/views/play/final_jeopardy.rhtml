@@ -1,17 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-<title></title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-
-<%= javascript_include_tag :defaults -%>
-<%= stylesheet_link_tag 'main' -%>
-
-</head>
-
-<body>
-
 	<script type="text/javascript">
 		function lock(n) {
 			$('guess_' + n).style.color = "#211eab";
@@ -43,7 +29,7 @@
 	display()
 	</script>
 <div id="fj_category"><%= Game.find_by_game_id(@q.game_id).categories.split('^')[-1] %></div>
-<div id="question"><%= @q.question %></div>
+<div id="q"><%= @q.question %></div>
 
 <table class="wager">
 	<tr>
@@ -74,5 +60,3 @@
 </div>
 
 <embed name="myMusic" src="/sounds/final_jeopardy.mp3" type="audio/mp3" autostart="true" mastersound width="1" height="1" style="position: absolute; left: 1px; top:1px;"></embed>
-</body>
-</html>

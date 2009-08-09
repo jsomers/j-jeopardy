@@ -1,68 +1,19 @@
-<script type="text/javascript">
-	var firstKeypress = true;
-
-	function keypress(tbox)
-	{
-	    if (firstKeypress)
-	    {
-		    if (tbox.className == "inactive")
-			    tbox.value = "";
-
-		    tbox.className = "active";
-	        firstKeypress = false;
-	    }
-
-	    return true;
-	}
-
-	function enterTextbox(tbox)
-	{
-
-		if (tbox.className == "inactive")
-			tbox.value = "";
-
-		tbox.className = "active";
-	}
-
-	function leaveTextbox(tbox, label)
-	{
-	    firstKeypress = false;
-		if (tbox.value == "")
-		{
-			tbox.value = label;
-			tbox.className = "inactive";
-		}
-	}
-</script>
-<style type="text/css">
-	input.inactive {
-		color: #aaa;
-	}
-	input {
-		font-size: 24px;
-		font-family: Georgia;
-		text-align: left;
-		padding-left: 10px;
-	}
-	#wrapper, #header div {
-		margin:0 auto;
-		width:960px;
-		margin-top: 20px;
-		font-family: Georgia;
-		font-size: 24px;
-		color: #444;
-	}
-</style>
 <div id="wrapper">
-		<% if flash[:alert] %><div style="color: #ff2244; margin-bottom: 10px; font-family: Verdana; font-size: 18px; padding: 5px; background-color: #fff; border: 1px solid #ddd; text-align: center;"><%= flash[:alert] %></div><% end %>
+	<% if (a = flash[:alert]) %>
+		<div id="flash_alert">
+			<%= a %>
+		</div>
+	<% end %>
 
-	<% form_tag(:action => "new") { %>
-		Handle: <input type="text" class="inactive" onkeypress="keypress(this)" onfocus="enterTextbox(this)" onblur="leaveTextbox(this, 'e.g., &quot;jimbo&quot;')" value="e.g., &quot;jimbo&quot;" name="player[handle]" id="player[handle]" />
+	<% form_tag(:action => "new") do %>
+		Handle: <input type="text" class="inactive" onkeypress="keypress(this)" onfocus="enterTextbox(this)" onblur="leaveTextbox(this, 'e.g., &quot;jimbo&quot;')" value="e.g., &quot;jimbo&quot;" name="player[handle]" id="player[handle]"/>
+		
 		Password: <input type="password" class="inactive" onkeypress="keypress(this)" onfocus="enterTextbox(this)" onblur="leaveTextbox(this, 'password')" value="password" name="player[password]" id="player[password]" />
+		
 		<input type="submit" value="Sign up">
-	<% } %>
+	<% end %>
 	
-	<div style="margin:0 auto; text-align: center; margin-bottom: 30px; font-family: Verdana; font-size: 13.85px; line-height: 1.3em; width: 600px;">
+	<div id="instructions">
 		Be sure to choose a handle and password that you'll <strong>remember</strong>. If you forget either one, that's it&mdash;you'll have to create another account. (Not that it's hard to do.)
 	</div>
 	

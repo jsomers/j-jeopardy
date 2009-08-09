@@ -1,43 +1,3 @@
-<%= javascript_include_tag :defaults -%>
-<%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? %>
-
-<script type="text/javascript">
-	var firstKeypress = true;
-
-	function keypress(tbox)
-	{
-	    if (firstKeypress)
-	    {
-		    if (tbox.className == "inactive")
-			    tbox.value = "";
-
-		    tbox.className = "active";
-	        firstKeypress = false;
-	    }
-
-	    return true;
-	}
-
-	function enterTextbox(tbox)
-	{
-
-		if (tbox.className == "inactive")
-			tbox.value = "";
-
-		tbox.className = "active";
-	}
-
-	function leaveTextbox(tbox, label)
-	{
-	    firstKeypress = false;
-		if (tbox.value == "")
-		{
-			tbox.value = label;
-			tbox.className = "inactive";
-		}
-	}
-</script>
-
 <script type="text/javascript">
 	<% session[:players].each_with_index do |plyr_id, i| %>
 		<% if plyr_id %>
@@ -54,73 +14,40 @@
 	}
 </script>
 
-<style type="text/css">
-	input.inactive {
-		color: #aaa;
-	}
-	
-	input {
-		font-size: 24px;
-		font-family: Georgia;
-		text-align: center;
-	}
-	
-	#wrapper, #header div {
-		margin:0 auto;
-		width:960px;
-		margin-top: 20px;
-		text-align: center;
-		font-family: Georgia;
-		font-size: 24px;
-		color: #444;
-	}
-	a {
-		color: #21759B;
-	}
-	
-	#signupnow-button {
-		margin-top: 8px;
-		width:226px;
-		height:63px;
-		font-size:24px;
-		text-align:center;
-		margin:0 auto;
-	}
-	
-	#signupnow-button a {
-		display:block;
-		color:#fff;
-		width:226px;
-		height:63px;
-		line-height:60px;
-		background:url('/images/signupbackground.gif') center top no-repeat;
-		text-shadow:#1e6c8f 2px 2px 0px;
-		letter-spacing:-1px;
-	}
-	#signupnow-button a:hover {
-		text-decoration:underline;
-		background:url('/images/signupbackground.gif') center bottom no-repeat;
-		text-shadow:#b8441c 2px 2px 0px;
-	}
-	
-	.failed_validation {
-		background-color: red;
-	}
-</style>
-
 <div id="wrapper">
-
-	<div>
-		<div style="border-bottom: 1px solid #aaa; border-top: 1px solid #aaa; padding-bottom: 10px; padding-top: 10px; background-color: #ffffee">First time here? <a href="/player/new">Sign up in seconds.</a></div>
-		
-		<div style="margin-top: 10px;">Otherwise, sign in:<br/><span style="font-size: 14.24px; color: #777;">Type in your handle and password, then <strong>hit the &#10003; button to validate.</strong><br/><strong>At least two players</strong> have to validate before you can play, so grab a friend!</span></div>
-		<% if flash[:notice] %><div style="color: green; margin-bottom: 10px; font-family: Verdana; font-size: 13px; padding: 10px; margin-top: 10px; background-color: #ccffcc; border: 1px solid #77ff88;"><%= flash[:notice] %></div><% end %>
-		<ol style="list-style: none;">
-			<li><span id="p1_spot"><%= render :partial => "start_spot", :locals => {:player => "1", :failed => false} %></span></li>
-			<li style="margin-top: -15px;"><span id="p2_spot"><%= render :partial => "start_spot", :locals => {:player => "2", :failed => false} %></span></li>
-			<li style="margin-top: -15px;"><span id="p3_spot"><%= render :partial => "start_spot", :locals => {:player => "3", :failed => false} %></span></li>
-		</ol>
+	<div id="sign_up_now">
+		First time here? <a href="/player/new">Sign up in seconds.</a>
 	</div>
-		<% if flash[:alert] %><div style="color: #ff2244; margin-bottom: 10px; font-family: Verdana; font-size: 16.54px; padding: 5px; background-color: #ffcccc; border: 1px solid #ff5566; color: #dd0000;"><%= flash[:alert] %></div><% end %>
-	<div id="signupnow-button"><a href="/play/choose_game">Ready? Play!</a></div>
+	
+	<div id="sign_in">
+		Otherwise, sign in: <br/>
+		<span id="instructions">
+			Type in your handle and password, then <strong>hit the &#10003; button to validate.</strong> <br/>
+			<strong>At least two players</strong> have to validate before you can play, so grab a friend!
+		</span>
+	</div>
+	
+	<% if (n = flash[:notice]) %>
+		<div id="flash_notice">
+			<%= n %>
+		</div>
+	<% end %>
+	
+	<ol>
+		<% (1..3).each do |n| %>
+			<li id="p<%= n %>_spot">
+				<%= render :partial => "start_spot", :locals => {:player => n.to_s, :failed => false} %>
+			</li>
+		<% end %>
+	</ol>
+	
+	<% if (a = flash[:alert]) %>
+		<div id="flash_alert">
+			<%= a %>
+		</div>
+	<% end %>
+	
+	<div id="play_now_button">
+		<a href="/play/choose_game">Ready? Play!</a>
+	</div>
 </div>

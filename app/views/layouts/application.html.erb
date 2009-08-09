@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+    	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="Play Jeopardy games online for free" />
+		<meta name="keywords" content="Jeopardy, game, online, play, free">
+	    <title><%= @page_title %></title>
+		<%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? %>
+		<% if !@no_script %>
+			<%= javascript_include_tag 'application-min' -%>
+		<% end %>
+		<% if @q %>
+			<%= javascript_include_tag 'fastest_finger' -%>
+		<% end %>
+		<% if @slick_input %>
+			<%= javascript_include_tag "slick_input" %>
+		<% end %>
+		<%= stylesheet_link_tag 'main' -%>
+	</head>
+	<% if @q %>
+		<body id="<%= @body_id %>" onkeydown="getArrows(event, '<%= if p1 then p1.handle else "Player 1" end %>', '<%= if p2 then p2.handle else "Player 2" end %>', '<%= if p3 then p3.handle else "Player 3" end %>');">
+	<% elsif @q and @wager %>
+		<body onkeydown="getArrows(event)">
+	<% else %>
+		<body id="<%= @body_id %>">
+	<% end %>
+			<%= yield %>
+		</body>
+</html>

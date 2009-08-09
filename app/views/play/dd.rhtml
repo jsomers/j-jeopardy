@@ -1,37 +1,13 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-<title></title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<%= render :partial => 'standings' %>
+<% form_tag(:action => 'daily_double', :controller => 'play') { %>
+	<div id="double">DAILY DOUBLE!</div>
+	<input id="ffinger" name="ffinger" value="<%= ((pl = Player.find(session[:current].to_i)) ? pl.handle : "Player") %> ($<%=  ep.points[session[:players].index(session[:current])] %>)" type="text"><br/>
+	<input id="wager" name="wager" type="text" style="text-align: center;"><br/><br/>
+	<input type="hidden" name="q_id" value="<%= params[:id] %>">
+	<input type="Submit" value="Submit your wager">
+<% } %>
 
-<%= javascript_include_tag :defaults -%>
-<%= stylesheet_link_tag 'main' -%>
-
-<style type="text/css">
-body {background-color: #aa0011;}
-#score1 {background-color: #aa0011;}
-#score2 {background-color: #aa0011;}
-#score3 {background-color: #aa0011;}
-#double_link {display: none;}
-#single_link {display: none;}
-#double {color:white; font-family: Optima; font-size:60px}
-</style>
-
-</head>
-
-<body>
-		<%= render :partial => 'standings' %>
-		<% form_tag(:action => 'daily_double', :controller => 'play') { %>
-		<div id="double">DAILY DOUBLE!</div>
-		<input style="background-color:#aa0011;" id="ffinger" name="ffinger" value="<%= Player.find(session[:current].to_i).handle %> ($<%=  ep.points[session[:players].index(session[:current])] %>)" type="text"><br/>
-		<input id="wager" name="wager" type="text" style="text-align: center;"><br/><br/>
-		<input type="hidden" name="q_id" value="<%= params[:id] %>">
-		<input type="Submit" value="Submit your wager">
-		<% } %>
-		<embed name="myMusic" src="/sounds/jdaily2x.wav" type="audio/wav" autostart="true" mastersound width="1" height="1" style="position: absolute; left: 1px; top:1px;"></embed>
-		<script type="text/javascript">
-			$('wager').focus();
-		</script>
-	</body>
-	</html>
+<embed name="myMusic" src="/sounds/jdaily2x.wav" type="audio/wav" autostart="true" mastersound width="1" height="1" style="position: absolute; left: 1px; top:1px;"></embed>
+<script type="text/javascript">
+	$('wager').focus();
+</script>

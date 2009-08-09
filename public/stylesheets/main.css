@@ -1,160 +1,143 @@
-body {
-	margin:140px; padding:0px;
-	text-align:center;
-	background-color: #211eab;
-}
-
-/* Board */
-#category_title {
-	font-family: Optima;
-	color: white;
-	font-size: 18px;
-}
-
-#category_title a {
-	color: white;
-}
-
-#board a {
-	text-decoration: none;
-}
-
-#board a.dollar {
-	font-family: Optima;
-	font-size: 30px;
-	color: #ffdb60;
-	font-weight: bold;
-}
-
-#board a.dollar:hover {
-	text-decoration: underline;
-}
-
-
-#board a.final {
-	font-size: 40px;
-	font-variant: small-caps;
-	font-family: Optima; 
-	color: white; 
-	padding-top: 20px;
-}
-
-/* Question */
-#question {
-	width:500px;
-	margin:0px auto;
-	text-align:center;
-	padding:15px;
-	color: white;
-	font-family: Optima;
-	font-variant: small-caps;
-	font-size: 45px;
-	line-height: 100%;
-}
-
-#question a {
-	color: white;
-	color: #ffdb60;
-}
-#value {
-	font-size: 30px;
-	font-weight: bold;
-	font-family: Optima;
-	color: #ffdb60;
-}
-
-#ffinger {
-	background-color: #211eab; 
-	border: none; 
-	text-align: center; 
-	color: #ffdb60; 
-	font-family: Optima;
-	font-variant: small-caps;
-	font-size: 30px;
-}
-
-#outcome {
-	margin-top: 15px;
-	font-family: Optima;
-	color: white;
-}
-
-#stumper {
-	font-family: Optima;
-	font-size: 25px;
-	font-variant: small-caps;
-}
-
-#stumper a {
-	color: white;
-}
-
-.wager {
-	color: white;
-	font-family: Optima;
-	font-variant: small-caps;
-	width:500px;
-	margin:0px auto;
-}
-
-.wager a {
-	color: white;
-}
-
-#out {
-	border: 5px solid #211eab;
-	margin-bottom: 5px;
-	width: 1000px;
-}
-
-#d2 {
-	background-color: #211eab;
-	border: none;
-	color: #211eab;
-	font-size: 20px;
-	font-family: Optima;
-	font-variant: small-caps;
-	text-align: center;
-}
-
-.fj {
-	background-color: #211eab;
-	color: white;
-	font-family: Optima;
-	font-weight: bold;
-	border: 1px dashed white;
-	font-size: 16px;
-	text-align: center;
-	padding: 7px;
-}
-
-#fj_category {
-	font-family: Optima;
-	color: #ffdb60;
-}
-
-#edit_value {
-	color: white;
-	border: none;
-	background-color: #211eab;
-	font-size: 10px;
-	text-align:center;
-}
-
-#edit_question {
-	color: white;
-	border: 1px solid gray;
-	background-color: #211eab;
-	font-family: sans-serif;
-	padding: 5px;
-	font-size: 10px;
-	height: 100px;
-}
-
-#edit_answer {
-	color: white;
-	border: 1px solid gray;
-	background-color: #211eab;
-	font-size: 10px;
-	text-align: center;
-}
+/*=================
+	GENERAL
+==================*/
+#flash_notice{color:green;margin-bottom:10px;font-family:Verdana;font-size:13px;padding:10px;margin-top:10px;background-color:#ccffcc;border:1px solid #77ff88;}
+#flash_alert{color:#ff2244;margin-bottom:10px;font-family:Verdana;font-size:16.54px;padding:5px;background-color:#ffcccc;border:1px solid #ff5566;color:#dd0000;text-align:center;}
+/*=================
+	LANDING
+==================*/
+#landing{font-size:62.5%;background:#fff;font-family:Georgia,"Times New Roman",serif;}
+#landing img{margin-top:100px;vertical-align:middle;}
+#landing #wrapper,#header div{margin:0 auto;text-align:center;width:960px;margin-top:20px;}
+#landing #banner{margin:0 0 0px 12px;background:#fffbcc;border:1px solid #e6db55;min-height:86px;padding-top:13px;}
+#landing #banner_text a{color:#21759B;border-bottom:1px solid #DFDFDF;text-decoration:none;font-size:14px;font-style:italic;line-height:1em;text-align:center;}
+#landing #banner h2{font-weight:normal;font-size:24px;color:#444444;text-align:center;}
+#landing #banner_text{width:61%;float:left;}
+#landing #banner_text em{font-style:italic;color:#555;}
+#landing #banner_text sup{font-size:13px;}
+#landing #banner_text #more_info{font-size:16px;color:#999;line-height:1.2em;}
+#landing #message{margin:0 auto;text-align:center;margin-top:10px;font-family:Verdana;font-size:11.23px;color:black;}
+#landing #message a{color:#4183C4;text-decoration:none;}
+#landing #play_now_button{margin-top:8px;width:226px;height:63px;float:left;font-size:24px;text-align:center;}
+#landing #play_now_button a{display:block;color:#fff;width:226px;height:63px;line-height:60px;background:url('/images/signupbackground.gif') center top no-repeat;text-shadow:#1e6c8f 2px 2px 0px;letter-spacing:-1px;}
+#landing #play_now_button a:hover{text-decoration:underline;background:url('/images/signupbackground.gif') center bottom no-repeat;text-shadow:#b8441c 2px 2px 0px;}
+#landing #banner h2{margin-top:2px;}
+#landing #banner h4{margin-left:0;font-size:14px;line-height:1em;font-weight:bold;font-style:italic;text-align:center;}
+/*=================
+	START PAGE
+==================*/
+#start input.inactive{color:#aaa;}
+#start input{font-size:24px;font-family:Georgia;text-align:center;}
+#start a{color:#21759B;}
+#start ol{list-style:none;}
+#start #wrapper,#header div{margin:0 auto;width:960px;margin-top:20px;text-align:center;font-family:Georgia;font-size:24px;color:#444;}
+#start #sign_up_now{border-bottom:1px solid #aaa;border-top:1px solid #aaa;padding-bottom:10px;padding-top:10px;background-color:#ffffee;}
+#start #sign_in{margin-top:10px;}
+#start #sign_in #instructions{font-size:14.24px;color:#777;}
+#start #play_now_button{margin-top:8px;width:226px;height:63px;font-size:24px;text-align:center;margin:0 auto;}
+#start #play_now_button a{display:block;color:#fff;width:226px;height:63px;line-height:60px;background:url('/images/signupbackground.gif') center top no-repeat;text-shadow:#1e6c8f 2px 2px 0px;letter-spacing:-1px;}
+#start #play_now_button a:hover{text-decoration:underline;background:url('/images/signupbackground.gif') center bottom no-repeat;text-shadow:#b8441c 2px 2px 0px;}
+#start #validated{padding:10px;border:1px solid #eee;background:#ffffee;font-weight:bold;margin-top:10px;margin-bottom:5px;}
+#start #validated #key{color:#999;font-size:20px;font-weight:normal;}
+#start #validated a{float:right;vertical-align:middle;text-decoration:none;}
+/*=================
+	NEW PLAYER
+==================*/
+#new_player input.inactive{color:#aaa;}
+#new_player input{font-size:24px;font-family:Georgia;padding-left:5px;}
+#new_player #wrapper,#header div{margin:0 auto;width:960px;margin-top:20px;font-family:Georgia;font-size:24px;color:#444;}
+#new_player #instructions{margin:0 auto;margin-top:10px;text-align:center;margin-bottom:30px;font-family:Verdana;font-size:13.85px;line-height:1.3em;width:600px;}
+/*=================
+	CHOOSE GAME
+==================*/
+#choose_game #header{margin:0 auto;text-align:center;margin-bottom:10px;font-family:Verdana;font-size:11.85px;}
+#choose_game #instructions{font-size:18px;font-family:Georgia;line-height:1.2em;}
+#choose_game #instructions #highlight{font-size:18px;background-color:#ffcccc;padding:2px;}
+#choose_game a{text-decoration:none;font-family:Verdana;color:#21759B;}
+#choose_game a.info{font-family:Georgia;text-decoration:underline;}
+#choose_game a.game_link{padding:3px;padding-bottom:0;color:#222;font-size:11.85px;}
+#choose_game a.game_link:hover{color:black;text-decoration:underline;}
+#choose_game a.game_link.played{color:#aaa;}
+#choose_game a.game_link.in_progress{color:green;}
+#choose_game a.game_link.college{color:#1e6c8f;}
+#choose_game a.game_link.toc{color:#b8441c;}
+#choose_game h3{margin:0 auto;width:750px;padding:10px;background:#fffbcc;border:1px solid #e6db55;border-bottom:none;text-align:center;font-family:Georgia;}
+#choose_game a.season_link{color:#444;font-weight:bold;text-decoration:none;}
+#choose_game a.season_link:hover{background-color:#fffbcc;}
+#choose_game .season{margin:0 auto;width:750px;padding:10px;background:#fffbee;border:1px solid #e6db55;border-top:none;line-height:1em;text-align:center;}
+#choose_game table{padding-left:32px;}
+#choose_game .airdate{opacity:0.6;filter:alpha(opacity = 60);font-size:10.34px;text-align:center;}
+#choose_game .airdate:hover{text-decoration:underline;}
+#choose_game #loader{margin:0 auto;text-align:center;}
+/*=================
+	INFO PAGE
+==================*/
+#info #readme{font:13.34px helvetica,arial,clean,sans-serif;}
+#info #readme.announce{margin:1em 0;}
+#info #readme span.name{font-size:140%;padding:.8em 0;}
+#info #readme div.plain,#readme div.wikistyle{background-color:#f8f8f8;padding:.7em;}
+#info #readme.announce div.plain,#readme.announce div.wikistyle{border:1px solid #e9e9e9;}
+#info #readme.blob div.plain,#readme.blob div.wikistyle{border-top:none;}
+#info #readme div.plain pre{font-family:'Bitstream Vera Sans Mono','Courier',monospace;font-size:85%;color:#444;}
+#info .wikistyle h1{font-size:170%!important;border-top:4px solid #aaa!important;padding-top:.5em!important;margin-top:1.5em!important;}
+#info .wikistyle h1:first-child{margin-top:0!important;padding-top:.25em!important;border-top:none!important;}
+#info .wikistyle h2{font-size:150%!important;margin-top:1.5em!important;border-top:4px solid #e0e0e0!important;padding-top:.5em!important;}
+#info .wikistyle h3{margin-top:1em!important;}
+#info .wikistyle p{margin:1em 0!important;line-height:1.5em!important;}
+#info .wikistyle ul{margin:1em 0 1em 1.3em!important;}
+#info .wikistyle ul{margin-top:0!important;margin-bottom:0!important;}
+#info .wikistyle ol{margin:1em 0 1em 1.5em!important;}
+#info .wikistyle ol ol{margin-top:0!important;margin-bottom:0!important;}
+#info .wikistyle blockquote{margin:1em 0!important;border-left:5px solid #ddd!important;padding-left:.6em!important;color:#555!important;}
+#info .wikistyle dt{font-weight:bold!important;margin-left:1em!important;}
+#info .wikistyle dd{margin-left:2em!important;margin-bottom:1em!important;}
+#info .wikistyle table{margin:1em 0!important;}
+#info .wikistyle table th{border-bottom:1px solid #bbb!important;padding:.2em 1em!important;}
+#info .wikistyle table td{border-bottom:1px solid #ddd!important;padding:.2em 1em!important;}
+#info .wikistyle pre{margin:1em 0!important;font-size:90%!important;background-color:#f8f8ff!important;border:1px solid #dedede!important;padding:.5em!important;line-height:1.5em!important;color:#444!important;overflow:auto!important;}
+#info .wikistyle pre code{padding:0!important;font-size:100%!important;background-color:#f8f8ff!important;border:none!important;}
+#info .wikistyle code{font-size:90%!important;background-color:#f8f8ff!important;color:#444!important;padding:0 .2em!important;border:1px solid #dedede!important;}
+#info .wikistyle pre.console{margin:1em 0!important;font-size:90%!important;background-color:black!important;padding:.5em!important;line-height:1.5em!important;color:white!important;}
+#info .wikistyle pre.console code{padding:0!important;font-size:100%!important;background-color:black!important;border:none!important;color:white!important;}
+#info .wikistyle pre.console span{color:#888!important;}
+#info .wikistyle pre.console span.command{color:yellow!important;}
+#info a{color:#4183C4;text-decoration:none;}
+#info a:hover{text-decoration:underline;}
+/*=================
+	BOARD
+==================*/
+#board{margin:40px;padding:0px;text-align:center;background-color:#211eab;}
+#board #category_title{font-family:Optima;color:white;font-size:18px;}
+#board #category_title a{color:white;}
+#board a{text-decoration:none;}
+#board a.dollar{font-family:Optima;font-size:30px;color:#ffdb60;font-weight:bold;}
+#board a.dollar:hover{text-decoration:underline;}
+#board a.final{font-size:40px;font-variant:small-caps;font-family:Optima;color:white;padding-top:20px;}
+/*=================
+	QUESTION
+==================*/
+#question{margin:140px;padding:0px;text-align:center;background-color:#211eab;}
+#question #q{width:500px;margin:0px auto;text-align:center;padding:15px;color:white;font-family:Optima;font-variant:small-caps;font-size:45px;line-height:100%;}
+#question a{color:white;color:#ffdb60;}
+#question #value{font-size:30px;font-weight:bold;font-family:Optima;color:#ffdb60;}
+#question #ffinger{background-color:#211eab;border:none;text-align:center;color:#ffdb60;font-family:Optima;font-variant:small-caps;font-size:30px;}
+#question #outcome{margin-top:15px;font-family:Optima;color:white;}
+#question #stumper{font-family:Optima;font-size:25px;font-variant:small-caps;}
+#question #stumper a{color:white;}
+#question .wager{color:white;font-family:Optima;font-variant:small-caps;width:500px;margin:0px auto;}
+#question .wager a{color:white;}
+#dd{margin:140px;padding:0px;text-align:center;background-color:#aa0011;}
+#dd #score1{background-color:#aa0011;}
+#dd #score2{background-color:#aa0011;}
+#dd #score3{background-color:#aa0011;}
+#dd #double_link{display:none;}
+#dd #single_link{display:none;}
+#dd #double{color:white;font-family:Optima;font-size:60px}
+#dd #ffinger{background-color:#aa0011;border:none;text-align:center;color:#ffdb60;font-family:Optima;font-variant:small-caps;font-size:30px;}
+#out{border:5px solid #211eab;margin-bottom:5px;width:1000px;}
+#d2{background-color:#211eab;border:none;color:#211eab;font-size:20px;font-family:Optima;font-variant:small-caps;text-align:center;}
+.fj{background-color:#211eab;color:white;font-family:Optima;font-weight:bold;border:1px dashed white;font-size:16px;text-align:center;padding:7px;}
+#fj_category{font-family:Optima;color:#ffdb60;}
+#edit_value{color:white;border:none;background-color:#211eab;font-size:10px;text-align:center;}
+#edit_question{color:white;border:1px solid gray;background-color:#211eab;font-family:sans-serif;padding:5px;font-size:10px;height:100px;}
+#edit_answer{color:white;border:1px solid gray;background-color:#211eab;font-size:10px;text-align:center;}

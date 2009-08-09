@@ -100,10 +100,9 @@ class Game < ActiveRecord::Base
     return true
   end
   
-  # Return true if any one of the current players has answered 15 or more questions in the given game.
   def played?(players)
     my_eps = Episode.find_all_by_game_id(self.game_id)
-    return my_eps.select {|ep| !(ep.key.split('_')[0..2].reject {|x| x == '0'} & players.reject {|y| y.nil?}).empty? and ep.answered >= 15}.length > 0
+    return my_eps.select {|ep| !(ep.key.split('_')[0..2].reject {|x| x == '0'} & players.reject {|y| y.nil?}).empty? and ep.answered >= 59}.length > 0
   end
   
   def in_progress?(players)

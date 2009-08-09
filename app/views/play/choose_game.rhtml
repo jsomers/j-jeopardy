@@ -1,6 +1,5 @@
 <%= javascript_include_tag "jquery-1.3.2.min.js" %>
 <%= javascript_include_tag "jquery-ui-1.7.2.custom.min" %>
-
 <script type="text/javascript">
 	$(function() {
 			$("#accordion").accordion({
@@ -16,62 +15,36 @@
 			});
 		});
 </script>
-<style type="text/css">
 
-a { text-decoration: none; font-family: Verdana; color: #21759B;}
-a.info { font-family: Georgia; text-decoration: underline; }
-a.game_link { padding: 3px; padding-bottom: 0; color: #222; font-size: 11.85px;} 
-a.game_link:hover { color: black; text-decoration: underline;}
-a.game_link.played { color: #aaa; }
-a.game_link.in_progress { color: green; }
-a.game_link.college { color: #1e6c8f; }
-a.game_link.toc { color: #b8441c; }
-h3 {
-	margin:0 auto;
-	width: 750px;
-	padding: 10px;
-	background:#fffbcc;
-	border:1px solid #e6db55;
-	border-bottom: none;
-	text-align: center;
-	font-family: Georgia;
-}
-a.season_link {
-	color: #444;
-	font-weight: bold;
-	text-decoration: none;
-}
-a.season_link:hover {
-	background-color: #fffbcc;
-}
-
-.season {
-	margin:0 auto;
-	width: 750px;
-	padding: 10px;
-	background:#fffbee;
-	border:1px solid #e6db55;
-	border-top: none;
-	line-height: 1.5em;
-}
-
-table {
-	padding-left: 32px;
-}
-
-</style>
-
-<div style="margin:0 auto; text-align: center; margin-bottom: 10px; font-family: Verdana; font-size: 11.85px;">
-	<span style="font-size: 18px; font-family: Georgia;">Before choosing a game, <span style="font-size: 18px; background-color: #ffcccc; padding: 2px;">I strongly suggest you <a class="info" href="/play/info">read this page first.</a></span><br/> <div style="padding: 2px;"></div><span style="font-size: 14px;">It's got a lot of information about how to play, some of which may not be obvious.</span></span></span><br/><br/> <span style="color:#222">Normal game</span> &nbsp; <span style="color: green;">In-progress</span> &nbsp; <span style="color: #aaa">Already played</span> &nbsp; <span style="color: #1e6c8f">College Championship</span> &nbsp; <span style="color: #b8441c">Tournament of Champions</span>
+<div id="header">
+	<div id="instructions">
+		Before choosing a game,
+		<span id="highlight">
+			I strongly suggest you <a class="info" href="/play/info">read this page first.</a>
+		</span>
+	<br/>
+		<span style="font-size: 14px;">
+			It's got a lot of information about how to play, some of which may not be obvious.
+		</span>
+	</div>
+	<br/>
+	<span style="color:#222">Normal game</span> &nbsp; <span style="color: green;">In-progress</span> &nbsp; <span style="color: #aaa">Already played</span> &nbsp; <span style="color: #1e6c8f">College Championship</span> &nbsp; <span style="color: #b8441c">Tournament of Champions</span>
 </div>
+
 <div id="accordion">
 	<% for n in (1..25).to_a.reverse %>
-		<a href="#" class="season_link"><h3 <% if n == 1 %> style="border-bottom: 1px solid #e6db55;"<% end %>>Season <span style=""><%= n %></span></h3></a>
+		<a href="#" class="season_link">
+			<h3>Season <%= n %></h3>
+		</a>
 		<div id="season_<%= n %>_shell" class="season" season:id="<%= n %>">
 			<% if n == 25 %>
 				<%= render :partial => "season", :locals => {:n => n} %>
 			<% else %>
-				<div id="season_<%= n %>_shell" season:id="<%= n %>"><div style="margin:0 auto; text-align: center;;"><img src="/images/loader.gif"/></div></div>
+				<div id="season_<%= n %>_shell" season:id="<%= n %>">
+					<div id="loader">
+						<img src="/images/loader.gif"/>
+					</div>
+				</div>
 			<% end %>
 		</div>
 	<% end %>
