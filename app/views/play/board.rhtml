@@ -57,7 +57,7 @@
 				<!-- DJ Question Link -->
 				<% q_neighbor = begin @questions.select {|a| a.coord == "DJ,#{(i + 1).to_s},#{j.to_s}"}[0].value rescue @questions.select {|a| a.coord == "DJ,#{(i - 1).to_s},#{j.to_s}"}[0].value end %>
 				<% the_q = @questions.select {|a| a.coord == 'DJ,' + i.to_s + ',' + j.to_s}[0] %>
-				<a href="/play/question/<%= the_q.id %>" class="dollar">$<%= if the_q.value != 'DD' then the_q.value else q_neighbor end %></a>				
+				<a href="/play/question/<%= the_q.id %>" class="dollar" style="display: <%= (ep.double_table[i - 1][j - 1][3].to_i > 0 ? 'none' : '') %>">$<%= if the_q.value != 'DD' then the_q.value else q_neighbor end %></a>				
 				<!-- END DJ Question Link -->
 		
 				<!-- Begin DJ Corrector -->
