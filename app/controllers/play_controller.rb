@@ -323,7 +323,7 @@ class PlayController < ApplicationController
     elsif session[:current] == session[:players][1]
       ep_points[1] += (t ? value.to_i : value.to_i * -1)
       p = session[:players][1]
-    elsif $session[:current] == session[:players][2]
+    elsif session[:current] == session[:players][2]
       ep_points[2] += (t ? value.to_i : value.to_i * -1)
       p = session[:players][2]
     end
