@@ -61,7 +61,7 @@ class PlayerController < ApplicationController
       bins[@bid] = @bin.push(me.id)
       Rails.cache.write("bins", bins)
     else # Otherwise...
-      if (avail = bins.to_a.select {|x| x[1].length < 3}) and !avail.empty? # If there *are* bins available, put me in the emptiest.
+      if (avail = bins.to_a.select {|x| x[1].length < 2}) and !avail.empty? # FIXME 3=2; If there *are* bins available, put me in the emptiest.
         raw_bin = avail.sort {|a, b| a[1].length <=> b[1].length}.first
         @bin = raw_bin[1].push(me.id)
         @bid = raw_bin[0]
@@ -78,6 +78,7 @@ class PlayerController < ApplicationController
 
   def check_bin
     bin = Rails.cache.read("bins")[params[:bid]]
+    session[:players] = bin + [3] # FIXME
     render :json => bin.collect {|x| Player.find(x).handle}
   end
 end

@@ -2,6 +2,7 @@
 <%= javascript_include_tag "jquery-ui-1.7.2.custom.min" %>
 Current bin (<%= @bid %>): <span id="players_in_bin"><%= @bin.collect {|x| Player.find(x).handle}.join(", ") %></span>
 
+<%= session[:ep_key] = nil %>
 <script type="text/javascript">
 	var players = 1
 	function check_bin() {
@@ -9,10 +10,11 @@ Current bin (<%= @bid %>): <span id="players_in_bin"><%= @bin.collect {|x| Playe
 			function(resp) {
 				resp = JSON.parse(resp);
 				$("#players_in_bin").text(resp.join(", "));
-				if (resp.length < 3) {
+				if (resp.length < 2) {
 					setTimeout("check_bin()", 1000);
 				} else {
-					
+					// FIXME: make this a real function to choose a random game that none of the players has played.
+					window.location = "/play/board/3014";
 				};
 		});
 	};

@@ -57,6 +57,7 @@ class PlayController < ApplicationController
       @finished = double?
       @final = final?
     else
+      logger.info "Creating new Episode"
       points = [0, 0, 0]
       session[:current] = session[:players].rand
       charts = [[], [], []]
@@ -79,6 +80,7 @@ class PlayController < ApplicationController
       new_ep = Episode.new(:key => ep_key, :game_id => params[:id].to_i, :answered => 0, :single_table => single_table, :double_table => double_table, :points => points, :charts => charts)
       new_ep.save
       session[:ep_key] = ep_key
+      Rails.cache.write(session[:ep_key], {:current => session[:players].first})
       @finished = false
       @final = false
     end

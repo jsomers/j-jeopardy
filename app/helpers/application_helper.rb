@@ -28,4 +28,12 @@ module ApplicationHelper
     @games ||= Game.find(:all)
     return @games
   end
+  
+  def current_player
+    if session[:multi]
+      return Rails.cache.read(session[:ep_key])[:current]
+    else
+      return session[:current]
+    end
+  end
 end

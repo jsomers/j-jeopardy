@@ -2,6 +2,9 @@
 
 <%= render :partial => 'standings' %>
 
+<% if Player.find(current_player).handle == session[:my_handle] %>
+	<span style="color: white">You're it!</span>
+<% end %>
 <div id="single_jeopardy" style="display:<%= (@finished ? 'none' : '') %>">
 <table align="center">
 	<tr>

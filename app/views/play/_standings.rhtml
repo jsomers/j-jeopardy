@@ -10,14 +10,14 @@
 	border-bottom: 1px solid #777;
 }
 .name1 {
-	border-bottom: <%= (session[:current] == session[:players][0] ? '1px solid white;' : 'none;'); %>
+	border-bottom: <%= (current_player == session[:players][0] ? '1px solid white;' : 'none;'); %>
 }
 
 .name2 {
-		border-bottom: <%= (session[:current] == session[:players][1] ? '1px solid white;' : 'none;'); %>
+		border-bottom: <%= (current_player == session[:players][1] ? '1px solid white;' : 'none;'); %>
 }
 .name3 {
-		border-bottom: <%= (session[:current] == session[:players][2] ? '1px solid white;' : 'none;'); %>
+		border-bottom: <%= (current_player == session[:players][2] ? '1px solid white;' : 'none;'); %>
 }
 .score1 {
 	font-weight: bold;
