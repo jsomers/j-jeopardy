@@ -3,6 +3,7 @@ class PlayController < ApplicationController
   protect_from_forgery :except => [:load_season]
   
   def landing
+    Rails.cache.write("bins", {}) # FIXME
     @page_title = "Jimbo Jeopardy! Play nearly every Jeopardy game ever aired, free."
     @body_id = "landing"
     @no_script = true

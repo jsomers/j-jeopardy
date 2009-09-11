@@ -1,0 +1,22 @@
+<%= javascript_include_tag "jquery-1.3.2.min.js" %>
+<%= javascript_include_tag "jquery-ui-1.7.2.custom.min" %>
+Current bin (<%= @bid %>): <span id="players_in_bin"><%= @bin.collect {|x| Player.find(x).handle}.join(", ") %></span>
+
+<script type="text/javascript">
+	var players = 1
+	function check_bin() {
+		$.post("/player/check_bin", {authenticity_token: AUTH_TOKEN, bid: "<%= @bid %>"},
+			function(resp) {
+				resp = JSON.parse(resp);
+				$("#players_in_bin").text(resp.join(", "));
+				if (resp.length < 3) {
+					setTimeout("check_bin()", 1000);
+				} else {
+					
+				};
+		});
+	};
+	$(document).ready(function() {
+		check_bin();
+	});
+</script>
