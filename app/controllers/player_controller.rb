@@ -46,4 +46,12 @@ class PlayerController < ApplicationController
     session[:players][i.to_i] = nil
     render :partial => "play/start_spot", :locals => {:player => (i.to_i + 1).to_s, :failed => false}
   end
+  
+  def match
+    if session[:players].compact.length < 1
+      flash[:alert] = "<strong>At least one player</strong> must be signed in before you can play. Duh!"
+      redirect_to "/play/start"
+    end
+    
+  end
 end
