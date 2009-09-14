@@ -98,6 +98,11 @@ class PlayController < ApplicationController
   end
   
   def question
+    if session[:ep_key]
+      cp = Rails.cache.read(session[:ep_key])
+      if cp[:choice] then cp[:choice] = nil end
+      Rails.cache.write(session[:ep_key], cp)
+    end
     ep = Episode.find_by_key(session[:ep_key])
     @q = Question.find(params[:id])
     @page_title = "$#{@q.value} | #{@q.my_category}"
