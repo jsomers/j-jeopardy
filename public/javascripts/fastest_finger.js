@@ -16,11 +16,6 @@ function getArrows(ev, p, place) {
 	}
     //ev = false;
     if (ct > 0 || seconds > 5.0) {
-		switch(arrows) {
-			case p_key:
-				nope1 = true;
-				break;
-		}
         return '0'
     } else {
         //ev = false;
@@ -29,18 +24,29 @@ function getArrows(ev, p, place) {
 				if (nope1 && time_to_n > 55) {
 					return '0'
 				} else {
-                $('ffinger').value = p + ':'; // Change these to the current player
-                $('player').value = place;
-                $('answer').style.display = '';
-                $('guess').style.display = '';
-                $('d2').style.color = '#211eab';
-				$('out').style.width = '120px';
-				$('out').style.borderColor = 'red';
-				seconds = 3;
-				milisec = 6;
-				ct = ct + 1;
-                break;
-			}
+					// Time bin and buzz logic.
+					var tt = 40 - time_to_n;
+					new Ajax.Request("/play/buzz/" + p + "?tt=" + tt, {
+						onComplete: function(resp) {
+							if (resp.responseText == "win") {
+								// Give me the opportunity to answer.
+								$('ffinger').value = p + ':'; // Change these to the current player
+				                $('player').value = place;
+				                $('answer').style.display = '';
+				                $('guess').style.display = '';
+				                $('d2').style.color = '#211eab';
+								$('out').style.width = '120px';
+								$('out').style.borderColor = 'red';
+								seconds = 3;
+								milisec = 6;
+								ct = ct + 1;
+							} else {
+								// Someone beat me to it.
+								return '0';
+							}
+						}
+					});
+				}
         }
         //document.getElementById('answer').focus();
 		//$('answer').value = '';

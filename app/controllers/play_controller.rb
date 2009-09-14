@@ -1,6 +1,6 @@
 class PlayController < ApplicationController
   require 'cgi'
-  protect_from_forgery :except => [:load_season]
+  protect_from_forgery :except => [:load_season, :buzz]
   
   def landing
     Rails.cache.write("bins", {}) # FIXME
@@ -38,6 +38,12 @@ class PlayController < ApplicationController
   end
   
   def board
+    if session[:ep_key]
+      cp = Rails.cache.read(session[:ep_key])
+      if cp[:time_bin] then cp[:time_bin] = [] end
+      if cp[:winner] then cp[:winner] = false end
+      Rails.cache.write(session[:ep_key], cp)
+    end
     if (old_ep = Episode.find_all_by_game_id(params[:id]).select {|e| (e.key.split('_')[0..2].reject {|x| x == '0'} & session[:players].reject {|y| y.nil?}).length == session[:players].reject {|y| y.nil?}.length}.first)
       ep_key = old_ep.key
       session[:players] = old_ep.key.split('_')[0..2].collect {|x| if x == '0' then nil else x end}
@@ -251,6 +257,35 @@ class PlayController < ApplicationController
     @wager3 = params[:wager_3]
     @page_title = "Final Jeopardy!"
     @body_id = "question"
+  end
+  
+  def buzz
+    tt = params[:tt].to_i
+    player_handle = params[:id]
+    while true
+      cp = Rails.cache.read(session[:ep_key])
+      time_bin = cp[:time_bin]
+      if time_bin.nil? or time_bin.empty?
+        cp[:time_bin] = [[tt, player_handle]]
+        Rails.cache.write(session[:ep_key], cp)
+        sleep(2)
+        redo
+      else
+        if !time_bin.collect {|x| x[1]}.include? player_handle # If I'm not in there
+          time_bin << [tt, player_handle]
+        end
+        winner_handle = time_bin.sort.first[1]
+        if session[:my_handle] == winner_handle and !cp[:winner]
+          cp[:winner] = true
+          Rails.cache.write(session[:ep_key], cp)
+          render :text => "win"
+          return
+        else
+          render :text => "lose"
+          return
+        end
+      end
+    end
   end
   
   def validate
