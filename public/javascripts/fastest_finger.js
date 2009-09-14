@@ -1,6 +1,4 @@
 nope1 = false;
-nope2 = false;
-nope3 = false;
 
 function playMusic(nm) {
 	obj = document.embeds[nm];
@@ -9,7 +7,7 @@ function playMusic(nm) {
 }
 var ct = 0;
 
-function getArrows(ev, p1, p2, p3) {
+function getArrows(ev, p, place) {
 	time_to_n = (seconds * 10) + milisec
     arrows = ((ev.which) || (ev.keyCode));
     
@@ -19,58 +17,20 @@ function getArrows(ev, p1, p2, p3) {
     //ev = false;
     if (ct > 0 || seconds > 5.0) {
 		switch(arrows) {
-			case p1_key:
+			case p_key:
 				nope1 = true;
-				break;
-			case p2_key:
-				nope2 = true;
-				break;
-			case p3_key:
-				nope3 = true;
 				break;
 		}
         return '0'
     } else {
         //ev = false;
         switch(arrows) {
-            case p1_key:
+            case p_key:
 				if (nope1 && time_to_n > 55) {
 					return '0'
 				} else {
-                $('ffinger').value = p1 + ':';
-                $('player').value = '1';
-                $('answer').style.display = '';
-                $('guess').style.display = '';
-                $('d2').style.color = '#211eab';
-				$('out').style.width = '120px';
-				$('out').style.borderColor = 'red';
-				seconds = 3;
-				milisec = 6;
-				ct = ct + 1;
-                break;
-			}
-            case p2_key:
-				if (nope2 && time_to_n > 55) {
-					return '0'
-				} else {
-                $('ffinger').value = p2 + ':';
-                $('player').value = '2';
-                $('answer').style.display = '';
-                $('guess').style.display = '';
-                $('d2').style.color = '#211eab';
-				$('out').style.width = '120px';
-				$('out').style.borderColor = 'red';
-				seconds = 3;
-				milisec = 6;
-				ct = ct + 1;
-                break;
-			}
-            case p3_key:
-				if (nope3 && time_to_n > 55) {
-					return '0'
-				} else {
-                $('ffinger').value = p3 + ':';
-                $('player').value = '3';
+                $('ffinger').value = p + ':'; // Change these to the current player
+                $('player').value = place;
                 $('answer').style.display = '';
                 $('guess').style.display = '';
                 $('d2').style.color = '#211eab';

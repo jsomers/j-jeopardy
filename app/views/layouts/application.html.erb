@@ -19,7 +19,7 @@
 		<%= stylesheet_link_tag 'main' -%>
 	</head>
 	<% if @q %>
-		<body id="<%= @body_id %>" onkeydown="getArrows(event, '<%= if p1 then p1.handle else "Player 1" end %>', '<%= if p2 then p2.handle else "Player 2" end %>', '<%= if p3 then p3.handle else "Player 3" end %>');">
+		<body id="<%= @body_id %>" onkeydown="getArrows(event, '<%= session[:my_handle] %>', '<%= session[:players].collect {|x| Player.find(x.to_i).handle}.index(session[:my_handle]) + 1 %>');">
 	<% elsif @q and @wager %>
 		<body onkeydown="getArrows(event)">
 	<% else %>
