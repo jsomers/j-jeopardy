@@ -1,0 +1,21 @@
+Loaded.
+
+<span id="status"></span>
+
+<%= juggernaut(:channels => [params[:game]]) %>
+
+<script type="text/javascript">
+	
+	function status(msg, plyrs) {
+		$("status").update(msg);
+		console.log(plyrs);
+	}
+	
+	function announce() {
+		new Ajax.Request("/player/announce?chnl=<%= params[:game] %>");
+	}
+	
+	document.observe("juggernaut:connected", function() {
+		announce();
+	});
+</script>

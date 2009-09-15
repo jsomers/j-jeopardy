@@ -1,166 +1,150 @@
 <%= if params[:answer] then '<font color="white">(The answer was <b>' + params[:answer] + '</b>)</font>' end %>
 
-<script type="text/javascript">
-	<% if Player.find(current_player).handle != session[:my_handle] %>
-	function check_choice() {
-		new Ajax.Request('/player/check_choice', {
-			onComplete: function(resp) {
-				var q = resp.responseText;
-				if (q == "nothing") {
-					setTimeout("check_choice()", 1000);
-				} else {
-					window.location = "/play/question/" + q;
-				}
-			}
-		});
-	};
-	
-	check_choice();
-	<% else %>
-	
-		function choose_question(event) {
-			var el = event.element();
-			var qid = el.readAttribute("q:id");
-			new Ajax.Request("/player/choose_question?question_id=" + qid, {
-				onComplete: function(resp) {
-					window.location = "/play/question/" + qid;
-				}
-			});
-			event.stop();
-		};
-	
-		document.observe("dom:loaded", function() {
-			$$("a.dollar").each(function(e, i) {
-				e.observe("click", choose_question);
-			});
-		});
-	<% end %>
-	
-</script>
-
-<span style="color: white;" id="response"></span>
-<%= render :partial => 'standings' %>
-
-<% if Player.find(current_player).handle == session[:my_handle] %>
-	<span style="color: white">You're it!</span>
-<% end %>
-<div id="single_jeopardy" style="display:<%= (@finished ? 'none' : '') %>">
-<table align="center">
-	<tr>
-	<% for cat in @single %>
-		<td width="250px;"><span id="category_title"><%= cat %></span></td>
-	<% end %>
-	</tr>
-	<% for j in (1..5) %>
-		<tr height="50px">
-		<% for i in (1..6) %>
-			<% begin %>
-				<td>
-					<!-- Question Link -->
-					<% q_neighbor = begin @questions.select {|a| a.coord == "J,#{(i + 1).to_s},#{j.to_s}"}[0].value rescue @questions.select {|a| a.coord == "J,#{(i - 1).to_s},#{j.to_s}"}[0].value end %>
-					<% the_q = @questions.select {|a| a.coord == 'J,' + i.to_s + ',' + j.to_s}[0] %>
-					<a href="/play/question/<%= the_q.id %>" class="dollar" q:id="<%= the_q.id %>" style="display: <%= (ep.single_table[i - 1][j - 1][3].to_i > 0 ? 'none' : '') %>">$<%= if the_q.value != 'DD' then the_q.value else q_neighbor end %></a>				
-					<!-- END Question Link -->
-			
-					<!-- Begin Corrector -->
-					<% answered = ep.single_table[i - 1][j - 1][3] %>				
-					<table align="center" style="display: <%= (answered == 1 ? "''" : "none") %>;"><tr>
-						<% for pl in (0..2) %>
-						<td>
-							<% p1_outcome = ep.single_table[i - 1][j - 1][pl].to_i %>
-							<% char = @chars[p1_outcome] %>
-							<% self_id = i.to_s + '-' + j.to_s + '-' + pl.to_s %>
-							<span id="<%= self_id %>"><%= link_to_remote(char, :update => self_id, :url =>{ :action => :change_scores, :value => the_q.value, :type => p1_outcome, :my_id => self_id}) %></span>
-						<% end %>
-					</tr></table>
-					<!-- END Corrector -->
-				</td>
-			<% rescue %>
-				"></a><font color="white"><b>???</b></font><% ep.single_table[i - 1][j - 1][3] = 1 %>
-			<% end %>
-		<% end %>
-
-		</tr>
-	<% end %>
-</table></div>
-
-<div id="double_jeopardy" style="display:<%= (@finished ? '' : 'none') %>;">
-<table align="center">
-	<tr>
-	<% for cat in @double %>
-		<td width="250px;"><span id="category_title"><%= cat %></span></td>
-	<% end %>
-	</tr>
-	<% for j in (1..5) %>
-		<tr height="50px;">
-		<% for i in (1..6) %>
-			<% begin %>
-			<td>
-				<!-- DJ Question Link -->
-				<% q_neighbor = begin @questions.select {|a| a.coord == "DJ,#{(i + 1).to_s},#{j.to_s}"}[0].value rescue @questions.select {|a| a.coord == "DJ,#{(i - 1).to_s},#{j.to_s}"}[0].value end %>
-				<% the_q = @questions.select {|a| a.coord == 'DJ,' + i.to_s + ',' + j.to_s}[0] %>
-				<a href="/play/question/<%= the_q.id %>" class="dollar" q:id="<%= the_q.id %>" style="display: <%= (ep.double_table[i - 1][j - 1][3].to_i > 0 ? 'none' : '') %>">$<%= if the_q.value != 'DD' then the_q.value else q_neighbor end %></a>				
-				<!-- END DJ Question Link -->
-		
-				<!-- Begin DJ Corrector -->
-				<% answered = ep.double_table[i - 1][j - 1][3] %>				
-				<table align="center" style="display: <%= (answered == 1 ? "''" : "none") %>;"><tr>
-					<% for pl in (0..2) %>
-					<td>
-						<% p1_outcome = ep.double_table[i - 1][j - 1][pl].to_i %>
-						<% char = @chars[p1_outcome] %>
-						<% self_id = 'DJ' + i.to_s + '-' + j.to_s + '-' + pl.to_s %>
-						<span id="<%= self_id %>"><%= link_to_remote(char, :update => self_id, :url =>{ :action => :change_scores, :value => the_q.value, :type => p1_outcome, :my_id => self_id}) %></span>
-					<% end %>
-				</tr></table>
-				<!-- END DJ Corrector -->
-			</td>
-			<% rescue %>
-			"></a><font color="white"><b>???</b></font><% if @finished then ep.double_table[i - 1][j - 1][3] = 1 end %>
-			<% end %>
-		<% end %>
-		</tr>
-	<% end %>
-</table></div>
-
-<br/><br/>
-
-<div id="final" align="center" style="display:<%= (@final ? '' : 'none') %>;">
-	<a class="final" href="/play/wager/<%= @game_id %>">Final Jeopardy!</a>
+<style type="text/css">
+	.inactive {
+		opacity: 0.1;
+	}
+	body {
+		color: white;
+	}
+</style>
+<div style="text-align: center;">
+	<span id="progress">0</span>/60 questions answered.<br/>
 </div>
 
-<script type="text/javascript">
-	// updates the standings when a player clicks a corrector.
-	function upd(amt, player, cur) {
-		old_score = parseInt($('score' + player).value.replace('$', ''))
-		new_score = old_score + amt
-		$('score' + player).value = '$' + new_score
-		if(new_score >= 0) {
-			$('score' + player).style.color = '#33ff33';
-		} else {
-			$('score' + player).style.color = 'red';
-		}
-		// highlight the correct person's name.
-		if(cur == 1) {
-			$('name' + player).style.borderBottom = '1px solid white';
-			ps = [1, 2, 3]
-			ps.splice(player - 1, 1)
-			for(i = 0; i <= 1 ; i = i + 1) {
-				$('name' + ps[i]).style.borderBottom = 'none';
-			}
-		}
-	}
+<div id="it_instructions" style="display: none;">YOU ARE IT--CHOOSE A QUESTION</div>
+<%= render :partial => "standings" %>
+<%= juggernaut(:channels => [session[:chnl]], :client_id => session[:me]) %>
 
-</script>
+<div id="container" style="position: absolute;">
+	<div id="single_jeopardy">
+	<table align="center">
+		<tr>
+		<% for cat in @single %>
+			<td width="250px;"><span id="category_title"><%= cat %></span></td>
+		<% end %>
+		</tr>
+		<% for j in (1..5) %>
+			<tr height="50px">
+			<% for i in (1..6) %>
+				<td>
+					<!-- Question Link -->
+					<% the_q = @questions.select {|a| a.coord == "J,#{i},#{j}"}[0] %>
+					<a href="/play/question/<%= the_q.id %>" class="dollar" q:id="<%= the_q.id %>">$<%= the_q.value %></a>				
+					<!-- END Question Link -->
+				</td>
+			<% end %>
 
-<% if @finished and session[:ct] == 0 %>
-	<% scores = [[ep.points[0], session[:players][0]], [ep.points[1], session[:players][1]], [ep.points[2], session[:players][2]]] %>
-	<% loser = scores.index(scores.min) + 1 %>
-	<% ts = scores[loser - 1][0] %>
-	<script type="text/javascript">
-		// update current player after single jeopardy.
-		upd(<%= ts %>, <%= loser %>, 1);
-	</script>
-	<% session[:ct] = 1 %>
+			</tr>
+		<% end %>
+	</table></div>
+
+	<div id="double_jeopardy" style="display:none;">
+	<table align="center">
+		<tr>
+		<% for cat in @double %>
+			<td width="250px;"><span id="category_title"><%= cat %></span></td>
+		<% end %>
+		</tr>
+		<% for j in (1..5) %>
+			<tr height="50px;">
+			<% for i in (1..6) %>
+				<td>
+					<!-- DJ Question Link -->
+					<% the_q = @questions.select {|a| a.coord == "DJ,#{i},#{j}"}[0] %>
+					<a href="/play/question/<%= the_q.id %>" class="dollar" q:id="<%= the_q.id %>">$<%= the_q.value %></a>				
+					<!-- END DJ Question Link -->
+				</td>
+			<% end %>
+			</tr>
+		<% end %>
+	</table></div>
+
+	<br/><br/>
+
+	<div id="final" align="center" style="display:none;">
+		<a class="final" href="/play/wager/<%= @game_id %>">Final Jeopardy!</a>
+	</div>
+</div>
+
+<% @questions.each do |q| %>
+	<div id="question_<%= q.id %>" style="display: none; width:500px;margin:0px auto;text-align:center; color:white;font-family:Optima;font-size:45px;line-height:1.2em;">
+		<div style="color:#ffdb60; margin-bottom:20px; font-size: 26px; font-variant:small-caps;"><%= q.my_category.downcase %></div>
+		<%= q.question %>
+	<% form_remote_tag :url => { :action => 'validate', :controller => 'play'}, :update => "question_#{q.id}" do -%>
+		<input type="hidden" name="value_<%= q.id %>" id="value_<%= q.id %>" value="<%= q.value %>">
+		<input id="question_id_<%= q.id %>" name="question_id" type="hidden" value="<%= q.id %>">
+		<input id="answer_<%= q.id %>" name="answer_<%= q.id %>" type="text" tabindex='1' style="text-align: center; font-size: 14px; padding: 3px; margin-top: 15px;">
+		<%= submit_tag 'Guess', :id => "guess_#{q.id}", :style => 'display: none;' %>
+	<% end -%>
+	</div>
 <% end %>
 
+<script type="text/javascript">
+	// Stats.
+	function set_scores(a, b, c) {
+		$("score1").value = "$" + a;
+		if (a >= 0) { $("score1").style.color = "#33ff33" } else { $("score1").style.color = "red" }
+		$("score2").value = "$" + b;
+		if (b >= 0) { $("score2").style.color = "#33ff33" } else { $("score2").style.color = "red" }
+		//$("score3").value = "$" + c;
+		//if (c >= 0) { $("score3").style.color = "#33ff33" } else { $("score3").style.color = "red" }
+	}
+	
+	function questions_answered(n) {
+		$("progress").update(n);
+	}
+
+	// Question choosing and delegation.
+	function active(it) {
+		console.log(it);
+		$("container").show();
+		if (it) {
+			if ($("container").hasClassName("inactive")) {
+				$("container").removeClassName("inactive");
+			}
+			$("it_instructions").show();
+		} else {
+			// Actually deactivate links
+			if (!$("container").hasClassName("inactive")) {
+				$("container").addClassName("inactive")
+			}
+			$("it_instructions").hide();
+		}
+	};
+	
+	function display_question(qid) {
+		$("container").hide();
+		$("question_" + qid).show();
+		$("answer_" + qid).focus();
+	};
+	
+	function choose_question(event) {
+		var el = event.element();
+		var qid = el.readAttribute("q:id");
+		new Ajax.Request("/player/choose_question?question_id=" + qid);
+		event.stop();
+	};
+	
+	document.observe("dom:loaded", function() {
+		$$("a.dollar").each(function(e, i) {
+			e.observe("click", choose_question);
+		});
+	});
+	
+	// After question.
+	function back_to_board(qid) {
+		$("question_" + qid).hide();
+		$("container").show();
+		$$('.dollar[q:id="' + qid + '"]').style.color = "white";
+	};
+	
+</script>
+
+<script type="text/javascript">
+	// Onload.
+	$("container").hide();
+	document.observe("juggernaut:connected", function() {
+		new Ajax.Request("/player/ready");
+	});
+</script>

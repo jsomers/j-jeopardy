@@ -1,39 +1,20 @@
 <center><div id="out"></div></center><!-- the orange bar -->
 
-<form name="counter"><input type="text" name="d2" id="d2"></form><!-- the timer -->
-<script type="text/javascript">
-	var milisec = <%= time(@q.question.split(" ").length)[1] %>;
-	var seconds = <%= (!params[:time].nil? ? time(@q.question.split(" ").length)[0] - 2 : time(@q.question.split(" ").length)[0]) %>;
-	var home_url = '/play/board/<%= Question.find_by_id(params[:id]).game_id %>';
-	var p_key = 32;
-</script>
-
-<%= javascript_include_tag 'timer' %>
-
 <% begin image = @q.question.scan(/<a href="(.*?)"/)[0] rescue image = false end %>
+	
 <% if image %>
 	<img src="<%= image %>" width="250px">
 <% end %>
 
 <div id="q"><%= @q.question %></div>
 
-<% form_remote_tag :url => { :action => 'validate', :controller => 'play'}, :update => 'outcome' do -%>
-	<input id="ffinger" name="ffinger" type="text"><br/>
-	<input type="hidden" name="value" id="value" value="<%= @q.value %>">
-	<input id="question_id" name="question_id" type="hidden" value="<%= params[:id] %>">
-	<input type="hidden" name="player" id="player" value="">
-	<input id="answer" name="answer" type="text" style="display: none;" tabindex='1'>
-	<%= submit_tag 'Guess', :id => 'guess', :style => 'display: none;' %>
-<% end -%>
-
-<div id="outcome"><%= @outcome %></div>
-
-<div id="stumper" style="display:none;">
-	<small>
-		<a id="home" href="/play/board/<%= Question.find_by_id(params[:id]).game_id %>">(Back to the board!)</a>
-	</small><br/>
-	<small>
-		<span style="color: white; font-variant: normal;">The correct answer was</span>
-		<font color="#33ff33"><%= Question.find_by_id(params[:id]).answer %></font>
-	</small>
+<div id="outcome">
+	<% form_remote_tag :url => { :action => 'validate', :controller => 'play'}, :update => 'outcome' do -%>
+		<input type="hidden" name="value" id="value" value="<%= @q.value %>">
+		<input id="question_id" name="question_id" type="hidden" value="<%= params[:id] %>">
+		<input type="hidden" name="player" id="player" value="">
+		<input id="answer" name="answer" type="text" tabindex='1' style="text-align: center; font-size: 14px; padding: 3px;">
+		<script type="text/javascript">   document.getElementById('answer').focus(); </script>
+		<%= submit_tag 'Guess', :id => 'guess', :style => 'display: none;' %>
+	<% end -%>
 </div>

@@ -1,9 +1,15 @@
 class PlayController < ApplicationController
   require 'cgi'
   protect_from_forgery :except => [:load_season, :buzz]
+  before_filter :preload_models
+  
+  def preload_models
+    Question
+    Game
+    Player
+  end
   
   def landing
-    Rails.cache.write("bins", {}) # FIXME
     @page_title = "Jimbo Jeopardy! Play nearly every Jeopardy game ever aired, free."
     @body_id = "landing"
     @no_script = true
@@ -13,6 +19,12 @@ class PlayController < ApplicationController
     @page_title = "Jimbo Jeopardy! Player sign-in"
     @body_id = "start"
     @slick_input = true
+    
+    my_handle = "guest " + (Player.count + 1).to_s # TODO: sweep old guest accounts. TODO: allow already-signed in users.
+    me = Player.new(:handle => my_handle, :password => "jeopardy")
+    me.save
+    session[:me] = me.id
+    session[:chnl] = params[:game]
     
     session[:ct] = 0
     if !session[:players] or session[:players].empty?
@@ -38,58 +50,6 @@ class PlayController < ApplicationController
   end
   
   def board
-    if session[:ep_key]
-      cp = Rails.cache.read(session[:ep_key])
-      if cp[:time_bin] then cp[:time_bin] = [] end
-      if cp[:winner] then cp[:winner] = false end
-      Rails.cache.write(session[:ep_key], cp)
-    end
-    if (old_ep = Episode.find_all_by_game_id(params[:id]).select {|e| (e.key.split('_')[0..2].reject {|x| x == '0'} & session[:players].reject {|y| y.nil?}).length == session[:players].reject {|y| y.nil?}.length}.first)
-      ep_key = old_ep.key
-      session[:players] = old_ep.key.split('_')[0..2].collect {|x| if x == '0' then nil else x end}
-      ep = old_ep
-    else
-      ep_key = session[:players].collect {|p| p.to_i}.join('_') + '_' + params[:id]
-      ep = Episode.find_by_key(ep_key)
-    end
-    if ep
-      session[:ep_key] = ep_key
-      ep_charts = ep.charts.dclone
-      ep_charts[0] << ep.points[0]
-      ep_charts[1] << ep.points[1]
-      ep_charts[2] << ep.points[2]
-      ep.charts = ep_charts
-      ep.save
-      @finished = double?
-      @final = final?
-    else
-      logger.info "Creating new Episode"
-      points = [0, 0, 0]
-      session[:current] = session[:players].rand
-      charts = [[], [], []]
-      single_table = []
-      for i in (1..6)
-        a = []
-        for j in (1..5)
-          a << [2, 2, 2, 0, 0]
-        end
-        single_table << a
-      end
-      double_table = []
-      for i in (1..6)
-        a = []
-        for j in (1..5)
-          a << [2, 2, 2, 0, 0]
-        end
-        double_table << a
-      end
-      new_ep = Episode.new(:key => ep_key, :game_id => params[:id].to_i, :answered => 0, :single_table => single_table, :double_table => double_table, :points => points, :charts => charts)
-      new_ep.save
-      session[:ep_key] = ep_key
-      Rails.cache.write(session[:ep_key], {:current => session[:players].first})
-      @finished = false
-      @final = false
-    end
     @game_id = params[:id]
     @game = Game.find_by_game_id(@game_id)
     @page_title = "Jeopardy! Game #{@game.game_id} (#{@game.airdate})"
@@ -97,43 +57,22 @@ class PlayController < ApplicationController
     
     @single = CGI.unescapeHTML(@game.categories).split('^')[1..6]
     @double = CGI.unescapeHTML(@game.categories).split('^')[7..-2]
-  
+
+    #@questions = Rails.cache.fetch("questions_for_game_#{@game_id}") do
+    #  Question.find(:all, :conditions => 'game_id = ' + @game_id)
+    #end
     @questions = Question.find(:all, :conditions => 'game_id = ' + @game_id)
     
     @chars = ['<font color="red">&#10007;</font>', '<font color="#33ff33">&#10003;</font>', '<font color="white" size="1">&#9679;</font>']
   end
   
   def question
-    if session[:ep_key]
-      cp = Rails.cache.read(session[:ep_key])
-      if cp[:choice] then cp[:choice] = nil end
-      Rails.cache.write(session[:ep_key], cp)
-    end
-    ep = Episode.find_by_key(session[:ep_key])
     @q = Question.find(params[:id])
     @page_title = "$#{@q.value} | #{@q.my_category}"
     @body_id = "question"
     if @q.value == 'DD'
       redirect_to '/play/dd/' + params[:id]
     end
-    coords = @q.coord
-    col = coords.split(',')[1].to_i - 1
-    row = coords.split(',')[2].to_i - 1
-    if (ep.single_table[col][row][4].zero? and ep.double_table[col][row][4].zero?) # First time here.
-      ep.answered += 1
-    end
-    if coords.split(',')[0] == 'J'
-      ep_single_table = ep.single_table.dclone
-      ep_single_table[col][row][3] = 1
-      ep_single_table[col][row][4] = @q.id
-      ep.single_table = ep_single_table
-    else
-      ep_double_table = ep.double_table.dclone
-      ep_double_table[col][row][3] = 1
-      ep_double_table[col][row][4] = @q.id
-      ep.double_table = ep_double_table
-    end
-    ep.save
   end
   
   def change_scores

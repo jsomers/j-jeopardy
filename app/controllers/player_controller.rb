@@ -1,5 +1,14 @@
 class PlayerController < ApplicationController
-  protect_from_forgery :except => [:check_choice, :choose_question]
+  protect_from_forgery :except => [:check_choice, :choose_question, :announce, :ready]
+  
+  before_filter :preload_models
+  
+  def preload_models
+    Question
+    Game
+    Player
+  end
+  
   def new
     @page_title = "Jimbo Jeopardy! Sign up as a new player"
     @body_id = "new_player"
@@ -97,6 +106,31 @@ class PlayerController < ApplicationController
     cp = Rails.cache.read(session[:ep_key])
     cp[:choice] = qid
     Rails.cache.write(session[:ep_key], cp)
+    render :nothing => true
+  end
+  
+  def announce
+    players = Rails.cache.read(params[:chnl])
+    if players.nil? then players = [session[:me]] else players << session[:me] end
+    Rails.cache.write(params[:chnl], players)
+    if players.length < 2
+      Juggernaut.send_to_channel("status('" + players.collect {|x| Player.find(x).handle}.join(', ') + "', " + players.length.to_s + ")", params[:chnl])
+    else
+      Rails.cache.write(params[:chnl], {:players => players, :current_player => players.rand, :scores => [0, 0, 0], :answered => 0})
+      Juggernaut.send_to_channel("window.location = '/play/board/3014'", params[:chnl])
+    end
+    render :nothing => true
+  end
+  
+  def ready
+    cp = Rails.cache.read(session[:chnl])
+    if cp[:ready].nil? then cp[:ready] = [session[:me]] else cp[:ready] << session[:me] end
+    Rails.cache.write(session[:chnl], cp)
+    if cp[:ready].length >= 2
+      it = Rails.cache.read(session[:chnl])[:current_player]
+      Juggernaut.send_to_client("active(true)", it);
+      Juggernaut.send_to_clients("active(false)", Rails.cache.read(session[:chnl])[:players] - [it]);
+    end
     render :nothing => true
   end
 end

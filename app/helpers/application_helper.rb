@@ -8,20 +8,34 @@ module ApplicationHelper
     return [[1 + t.to_i, 10].min, ((t - t.to_i) * 10).to_i]
   end
   
-  def ep
-    return Episode.find_by_key(session[:ep_key])
-  end
-  
   def p1
-    if (s = session[:players][0]) and (p = Player.find(s)) then return p end
+    @p1 ||= Player.find(Rails.cache.read(session[:chnl])[:players][0]).handle
+    return @p1
   end
   
   def p2
-    if (s = session[:players][1]) and (p = Player.find(s)) then return p end
+    @p2 ||= Player.find(Rails.cache.read(session[:chnl])[:players][1]).handle
+    return @p2
   end
   
   def p3
-    if (s = session[:players][2]) and (p = Player.find(s)) then return p end
+    return ""
+    #return Player.find(Rails.cache.read(session[:chnl])[:players][2]).handle
+  end
+  
+  def p1pts
+    @p1pts ||= Rails.cache.read(session[:chnl])[:scores][0]
+    return @p1pts
+  end
+  
+  def p2pts
+    @p2pts ||= Rails.cache.read(session[:chnl])[:scores][1]
+    return @p2pts
+  end
+  
+  def p3pts
+    @p3pts ||= Rails.cache.read(session[:chnl])[:scores][2]
+    return @p3pts
   end
   
   def games
@@ -30,10 +44,6 @@ module ApplicationHelper
   end
   
   def current_player
-    if session[:multi]
-      return Rails.cache.read(session[:ep_key])[:current]
-    else
-      return session[:current]
-    end
+    return Player.find(Rails.cache.read(session[:chnl])[:current_player]).handle
   end
 end

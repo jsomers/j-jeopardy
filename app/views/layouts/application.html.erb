@@ -10,7 +10,6 @@
 		<% if !@no_script %>
 			<%= javascript_include_tag 'application-min' -%>
 			<%= javascript_include_tag :juggernaut %>
-			<%= juggernaut %>
 		<% end %>
 		<% if @q %>
 			<%= javascript_include_tag 'fastest_finger' -%>
@@ -20,13 +19,7 @@
 		<% end %>
 		<%= stylesheet_link_tag 'main' -%>
 	</head>
-	<% if @q %>
-		<body id="<%= @body_id %>" onkeydown="getArrows(event, '<%= session[:my_handle] %>', '<%= session[:players].collect {|x| Player.find(x.to_i).handle}.index(session[:my_handle]) + 1 %>');">
-	<% elsif @q and @wager %>
-		<body onkeydown="getArrows(event)">
-	<% else %>
-		<body id="<%= @body_id %>">
-	<% end %>
+	<body id="<%= @body_id %>">
 			<%= yield %>
-		</body>
+	</body>
 </html>
