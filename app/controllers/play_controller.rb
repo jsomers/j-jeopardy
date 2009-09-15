@@ -228,60 +228,47 @@ class PlayController < ApplicationController
   end
   
   def validate
-    ep = Episode.find_by_key(session[:ep_key])
+    qid = params[:question_id]
     guess = params[:answer]
-    player = params[:player]
     value = params[:value]
-    the_question = Question.find_by_id(params[:question_id])
+    seen_at = params[:seen_at]
+    submit_time = params[:submit_time]
+    the_question = Question.find(qid)
     answer = the_question.answer.gsub('\\', '')
     game_id = the_question.game_id
     guess_words = guess.split(' ')
-    coords = the_question.coord
-    col = coords.split(',')[1].to_i - 1
-    row = coords.split(',')[2].to_i - 1
+    thresh = (answer.length < 5 ? answer.length : [(answer.length / 2).to_i + 1, 5].max)
+    ct = 0
     t = true
     for word in guess_words
       if !answer.downcase.include? word.downcase
         t = false
+      else
+        ct += word.length
       end
     end
-    font_color = (t ? '#33ff33' : 'red')
-    ep_points = ep.points.dclone
-    if player == '1'
-      ep_points[0] += (t ? value.to_i : value.to_i * -1)
-      p = session[:players][0]
-    elsif player == '2'
-      ep_points[1] += (t ? value.to_i : value.to_i * -1)
-      p = session[:players][1]
-    elsif player == '3'
-      ep_points[2] += (t ? value.to_i : value.to_i * -1)
-      p = session[:players][2]
+    if guess.strip.empty? then t = false end
+    if ct >= thresh then t = true else t = false end
+    cp = Rails.cache.read(session[:chnl])
+    if cp[:answer_pit].nil? then cp[:answer_pit] = [[submit_time.to_i - seen_at.to_i, session[:me], t]] else cp[:answer_pit] << [submit_time.to_i - seen_at.to_i, session[:me], t] end
+    Rails.cache.write(session[:chnl], cp)
+    if cp[:answer_pit].length >= 2
+      rights, wrongs = cp[:answer_pit].partition {|x| x[2]}
+      
+      Juggernaut.send_to_channel("winner('" + winner + "', " + qid + ")", session[:chnl])
+      Juggernaut.send_to_client("active(true)", winner);
+      Juggernaut.send_to_clients("active(false)", Rails.cache.read(session[:chnl])[:players] - [winner])
     end
-    ep.points = ep_points
-    if coords.split(',')[0] == 'J'
-      ep_single_table = ep.single_table.dclone
-      ep_single_table[col][row][player.to_i - 1] = (t ? 1 : 0)
-      ep.single_table = ep_single_table
-    elsif coords.split(',')[0] == 'DJ' 
-      ep_double_table = ep.double_table.dclone
-      ep_double_table[col][row][player.to_i - 1] = (t ? 1 : 0)
-      ep.double_table = ep_double_table
-    end
-    if t then session[:current] = p end
-
-    answer_color = (t ? '#33ff33' : '#211eab')
-    st = ''
-    st += '<script type="text/javascript">seconds += 100; $(\'out\').style.borderColor="#211eab";</script>'
-    st += '<b><font color="' + answer_color + '">' + answer + '</font></b><br/>'
-    st += '<small>' + '<font color="' + font_color + '">' + '[' + (!p.nil? ? Player.find(p.to_i).handle : 'Player ' + player) + (t ? ' +' : ' -') + '$' + value.to_s + ']</font><br/>'
-    if t
-      st += '<a href="/play/board/' + game_id.to_s + '" style="color: white;">&lt;&lt; Go back</a>'
-    else
-      st += '<a href="?time=7" style="color: white;">Anyone else?</a> &nbsp; &nbsp;'
-      st += '<a href="/play/board/' + game_id.to_s + '?answer=' + CGI.escapeHTML(answer) + '" style="color: white;">No, go back</a>'
-    end
-    ep.save
-    @outcome = st
+    st = "<strong>#{guess}</strong> is " + (t ? "correct" : "incorrect") + ". "
+    if !t then st += "The correct answer is <span style='color: #33ff33'>" + answer + "</span>" end
+    st += "<div style='color: white; font-size: 11px;'>(It took you <strong>#{(submit_time.to_i - seen_at.to_i) / 1000.to_f}</strong> seconds to answer.)</div>"
+    render :text => "<div style='color: " + (t ? "#33ff33" : "red") + "; font-size: 14px; margin-bottom: 0px; line-height: 20px;'>" + st + "</div>"
+    # Collect answers and tts.
+    # Determine outcome.
+    # Pick the winner. (Render the results)
+    # Change scores appropriately.
+    # Assign the correct current player.
+    # Wipe out the answered question, replace it with corrector icons.
   end
   
   def validate_dd

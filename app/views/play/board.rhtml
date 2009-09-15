@@ -71,10 +71,12 @@
 	<div id="question_<%= q.id %>" style="display: none; width:500px;margin:0px auto;text-align:center; color:white;font-family:Optima;font-size:45px;line-height:1.2em;">
 		<div style="color:#ffdb60; margin-bottom:20px; font-size: 26px; font-variant:small-caps;"><%= q.my_category.downcase %></div>
 		<%= q.question %>
-	<% form_remote_tag :url => { :action => 'validate', :controller => 'play'}, :update => "question_#{q.id}" do -%>
-		<input type="hidden" name="value_<%= q.id %>" id="value_<%= q.id %>" value="<%= q.value %>">
-		<input id="question_id_<%= q.id %>" name="question_id" type="hidden" value="<%= q.id %>">
-		<input id="answer_<%= q.id %>" name="answer_<%= q.id %>" type="text" tabindex='1' style="text-align: center; font-size: 14px; padding: 3px; margin-top: 15px;">
+	<% form_remote_tag :url => {:action => 'validate', :controller => 'play'}, :html => {:id => "form_question_#{q.id}"}, :before => "$('submit_time_" + q.id.to_s + "').value = new Date().getTime();", :update => "question_#{q.id}" do -%>
+		<input type="hidden" name="value" id="value_<%= q.id %>" value="<%= q.value %>">
+		<input type="hidden" name="seen_at" id="seen_at_<%= q.id %>" value="">
+		<input type="hidden" name="submit_time" id="submit_time_<%= q.id %>" value="">
+		<input id="question_id" name="question_id" type="hidden" value="<%= q.id %>">
+		<input id="answer_<%= q.id %>" name="answer" type="text" tabindex='1' style="text-align: center; font-size: 14px; padding: 3px; margin-top: 15px;">
 		<%= submit_tag 'Guess', :id => "guess_#{q.id}", :style => 'display: none;' %>
 	<% end -%>
 	</div>
@@ -97,7 +99,6 @@
 
 	// Question choosing and delegation.
 	function active(it) {
-		console.log(it);
 		$("container").show();
 		if (it) {
 			if ($("container").hasClassName("inactive")) {
@@ -116,6 +117,7 @@
 	function display_question(qid) {
 		$("container").hide();
 		$("question_" + qid).show();
+		$("seen_at_" + qid).value = new Date().getTime();
 		$("answer_" + qid).focus();
 	};
 	
@@ -126,13 +128,29 @@
 		event.stop();
 	};
 	
+	function append_submit_time(event) {
+		var el = event.element();
+		var qid = el.readAttribute("id").replace("form_question_", "");
+		console.log(qid);
+		$("submit_time_" + qid).value = new Date();
+	}
+	
 	document.observe("dom:loaded", function() {
 		$$("a.dollar").each(function(e, i) {
 			e.observe("click", choose_question);
 		});
+		
+		$$("form").each(function(e, i) {
+			e.observe("submit", append_submit_time);
+		});
 	});
 	
 	// After question.
+	function winner(handle, qid) {
+		console.log(handle + " won.");
+		back_to_board(qid);
+	};
+	
 	function back_to_board(qid) {
 		$("question_" + qid).hide();
 		$("container").show();

@@ -101,11 +101,8 @@ class PlayerController < ApplicationController
   end
   
   def choose_question
-    sleep(1)
     qid = params[:question_id]
-    cp = Rails.cache.read(session[:ep_key])
-    cp[:choice] = qid
-    Rails.cache.write(session[:ep_key], cp)
+    Juggernaut.send_to_channel("display_question(" + qid + ")", session[:chnl])
     render :nothing => true
   end
   
