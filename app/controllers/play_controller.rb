@@ -247,15 +247,18 @@ class PlayController < ApplicationController
         ct += word.length
       end
     end
-    if guess.strip.empty? then t = false end
     if ct >= thresh then t = true else t = false end
+    if guess.strip.empty? then t = nil end
     cp = Rails.cache.read(session[:chnl])
     if cp[:answer_pit].nil? then cp[:answer_pit] = [[submit_time.to_i - seen_at.to_i, session[:me], t]] else cp[:answer_pit] << [submit_time.to_i - seen_at.to_i, session[:me], t] end
     Rails.cache.write(session[:chnl], cp)
     if cp[:answer_pit].length >= 2
-      rights, wrongs = cp[:answer_pit].partition {|x| x[2]}
-      
-      Juggernaut.send_to_channel("winner('" + winner + "', " + qid + ")", session[:chnl])
+      rights, nots = cp[:answer_pit].partition {|x| x[2]}
+      wrongs, neuts = nots.partition {|x| x[2] == false}
+      # wrongs not penalized if they have a right in front of them.
+      # rights only score if they're first.
+      outcome = "Blah blah blah."
+      Juggernaut.send_to_channel("outcome('" + outcome + "', " + qid + ")", session[:chnl])
       Juggernaut.send_to_client("active(true)", winner);
       Juggernaut.send_to_clients("active(false)", Rails.cache.read(session[:chnl])[:players] - [winner])
     end
@@ -263,8 +266,8 @@ class PlayController < ApplicationController
     if !t then st += "The correct answer is <span style='color: #33ff33'>" + answer + "</span>" end
     st += "<div style='color: white; font-size: 11px;'>(It took you <strong>#{(submit_time.to_i - seen_at.to_i) / 1000.to_f}</strong> seconds to answer.)</div>"
     render :text => "<div style='color: " + (t ? "#33ff33" : "red") + "; font-size: 14px; margin-bottom: 0px; line-height: 20px;'>" + st + "</div>"
-    # Collect answers and tts.
     # Determine outcome.
+      # Make sure empty strings are neutral (not counted as incorrect answers)
     # Pick the winner. (Render the results)
     # Change scores appropriately.
     # Assign the correct current player.
