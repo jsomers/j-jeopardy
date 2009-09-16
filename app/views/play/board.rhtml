@@ -147,8 +147,7 @@
 	
 	// After question.
 	function outcome(info, qid) {
-		console.log(info);
-		back_to_board(qid);
+		$("question_" + qid).update(info);
 	};
 	
 	function back_to_board(qid) {

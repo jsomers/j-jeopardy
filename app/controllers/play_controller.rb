@@ -230,7 +230,7 @@ class PlayController < ApplicationController
   def validate
     qid = params[:question_id]
     guess = params[:answer]
-    value = params[:value]
+    value = params[:value].to_i
     seen_at = params[:seen_at]
     submit_time = params[:submit_time]
     the_question = Question.find(qid)
@@ -249,29 +249,48 @@ class PlayController < ApplicationController
     end
     if ct >= thresh then t = true else t = false end
     if guess.strip.empty? then t = nil end
+    plyr = "<span id='#{Player.find(session[:me]).handle}' style='font-weight: bold'>#{Player.find(session[:me]).handle}</span>"
+    gs = (t.nil? ? "didn't guess anything." : "guessed #{guess} in <strong>#{(submit_time.to_i - seen_at.to_i) / 1000.to_f}</strong> seconds.")
+    clr = (t.nil? ? "white" : (t ? "#33ff33" : "red"))
+    #cr = "The correct answer is <span style='color: #33ff33'>" + answer + "</span>"
+    outcome = "<div style='color:#{clr}; font-size: 14px; margin-bottom: 0px; line-height: 20px;'>#{plyr} #{gs}</div>"
     cp = Rails.cache.read(session[:chnl])
     if cp[:answer_pit].nil? then cp[:answer_pit] = [[submit_time.to_i - seen_at.to_i, session[:me], t]] else cp[:answer_pit] << [submit_time.to_i - seen_at.to_i, session[:me], t] end
+    if cp[:q_outcomes].nil? then cp[:q_outcomes] = [outcome] else cp[:q_outcomes] << outcome end
     Rails.cache.write(session[:chnl], cp)
+    Juggernaut.send_to_client("outcome('#{cp[:q_outcomes].join("<br/>").gsub("'", "\\\\'")}', #{qid})", session[:me])
     if cp[:answer_pit].length >= 2
+      deltas = cp[:answer_pit].collect {|x| [x[1], 0]}.to_hash
       rights, nots = cp[:answer_pit].partition {|x| x[2]}
       wrongs, neuts = nots.partition {|x| x[2] == false}
-      # wrongs not penalized if they have a right in front of them.
-      # rights only score if they're first.
-      outcome = "Blah blah blah."
-      Juggernaut.send_to_channel("outcome('" + outcome + "', " + qid + ")", session[:chnl])
-      Juggernaut.send_to_client("active(true)", winner);
+      winner = cp[:current_player]
+      final = (rights.sort | wrongs.sort)
+      final.each do |pl|
+        if pl[2]
+          deltas[pl[1]] += value
+          winner = pl[1]
+          break
+        else
+          deltas[pl[1]] -= value
+        end
+      end
+      cp = Rails.cache.read(session[:chnl])
+      cp[:current_player] = winner
+      cp[:answer_pit] = nil
+      cp[:q_outcomes] = nil
+      Rails.cache.write(session[:chnl], cp)
+      Juggernaut.send_to_channel("back_to_board(#{qid});set_scores(#{deltas.to_a.collect {|x| x[1]}.join(',')})", session[:chnl])
       Juggernaut.send_to_clients("active(false)", Rails.cache.read(session[:chnl])[:players] - [winner])
+      Juggernaut.send_to_client("active(true)", winner);
     end
-    st = "<strong>#{guess}</strong> is " + (t ? "correct" : "incorrect") + ". "
-    if !t then st += "The correct answer is <span style='color: #33ff33'>" + answer + "</span>" end
-    st += "<div style='color: white; font-size: 11px;'>(It took you <strong>#{(submit_time.to_i - seen_at.to_i) / 1000.to_f}</strong> seconds to answer.)</div>"
-    render :text => "<div style='color: " + (t ? "#33ff33" : "red") + "; font-size: 14px; margin-bottom: 0px; line-height: 20px;'>" + st + "</div>"
+    render :nothing => true
     # Determine outcome.
       # Make sure empty strings are neutral (not counted as incorrect answers)
     # Pick the winner. (Render the results)
     # Change scores appropriately.
     # Assign the correct current player.
     # Wipe out the answered question, replace it with corrector icons.
+    # Name-editing box at the player's leisure.
   end
   
   def validate_dd
