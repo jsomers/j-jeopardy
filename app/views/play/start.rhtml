@@ -2,8 +2,8 @@
 
 <div id="wrapper">
 	
-	<div id="sign_in">
-		Hello, there!<br/>
+	<div id="sign_in" style="margin-top: 140px;">
+		<div style="margin-bottom: 5px;">Hello, there! You're playing game "<strong><%= params[:game] %></strong>"</div>
 		<span id="instructions">
 			We're looking for other players to join your game. Once everyone has arrived, <br/><strong>you'll be redirected to the main game page.</strong>
 		</span>
@@ -17,7 +17,7 @@
 		<% end %>
 	</ol>
 </div>
-<%= juggernaut(:channels => [params[:game]]) %>
+<%= juggernaut(:channels => [params[:game].gsub(" ", "_")]) %>
 
 <script type="text/javascript">
 	

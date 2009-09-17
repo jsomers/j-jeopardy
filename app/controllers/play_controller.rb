@@ -24,7 +24,7 @@ class PlayController < ApplicationController
     me = Player.new(:handle => my_handle, :password => "jeopardy")
     me.save
     session[:me] = me.id
-    session[:chnl] = params[:game]
+    session[:chnl] = params[:game].gsub(" ", "_")
     
     session[:ct] = 0
     if !session[:players] or session[:players].empty?

@@ -113,17 +113,18 @@ class PlayerController < ApplicationController
   end
   
   def announce
-    cp = Rails.cache.read(params[:chnl])
+    channel = params[:chnl].gsub(" ", "_")
+    cp = Rails.cache.read(channel)
     if cp.nil? then cp = {} end
     if cp[:players].nil? then cp[:players] = [session[:me]] else cp[:players] << session[:me] end
     if cp[:ips].nil? then cp[:ips] = [request.remote_ip] else cp[:ips] << request.remote_ip end
-    Rails.cache.write(params[:chnl], cp)
+    Rails.cache.write(channel, cp)
     peeps = cp[:players].collect {|x| Player.find(x).handle}.zip(cp[:ips]) # [["jimbo", "192.168.1.109"], ...] 
     if cp[:players].length <= 2
-      Juggernaut.send_to_channel("status(" + peeps.to_json + ")", params[:chnl])
+      Juggernaut.send_to_channel("status(" + peeps.to_json + ")", channel)
     else
-      Rails.cache.write(params[:chnl], {:players => players, :current_player => players.rand, :scores => [0, 0, 0], :answered => 0})
-      Juggernaut.send_to_channel("window.location = '/play/board/3014'", params[:chnl])
+      Rails.cache.write(channel, {:players => players, :current_player => players.rand, :scores => [0, 0, 0], :answered => 0})
+      Juggernaut.send_to_channel("window.location = '/play/board/3014'", channel)
     end
     render :nothing => true
   end
