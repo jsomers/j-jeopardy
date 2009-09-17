@@ -1,5 +1,5 @@
 class PlayerController < ApplicationController
-  protect_from_forgery :except => [:check_choice, :choose_question, :announce, :ready]
+  protect_from_forgery :except => [:check_choice, :choose_question, :announce, :ready, :validated]
   
   before_filter :preload_models
   
@@ -106,12 +106,20 @@ class PlayerController < ApplicationController
     render :nothing => true
   end
   
+  def validated
+    msg = params[:handle] == Player.find(session[:me]).handle
+    render :partial => "validated", :locals => {:handle => params[:handle], :key => params[:ip], :msg => msg}
+  end
+  
   def announce
-    players = Rails.cache.read(params[:chnl])
-    if players.nil? then players = [session[:me]] else players << session[:me] end
-    Rails.cache.write(params[:chnl], players)
-    if players.length < 2
-      Juggernaut.send_to_channel("status('" + players.collect {|x| Player.find(x).handle}.join(', ') + "', " + players.length.to_s + ")", params[:chnl])
+    cp = Rails.cache.read(params[:chnl])
+    if cp.nil? then cp = {} end
+    if cp[:players].nil? then cp[:players] = [session[:me]] else cp[:players] << session[:me] end
+    if cp[:ips].nil? then cp[:ips] = [request.remote_ip] else cp[:ips] << request.remote_ip end
+    Rails.cache.write(params[:chnl], cp)
+    peeps = cp[:players].collect {|x| Player.find(x).handle}.zip(cp[:ips]) # [["jimbo", "192.168.1.109"], ...] 
+    if cp[:players].length <= 2
+      Juggernaut.send_to_channel("status(" + peeps.to_json + ")", params[:chnl])
     else
       Rails.cache.write(params[:chnl], {:players => players, :current_player => players.rand, :scores => [0, 0, 0], :answered => 0})
       Juggernaut.send_to_channel("window.location = '/play/board/3014'", params[:chnl])

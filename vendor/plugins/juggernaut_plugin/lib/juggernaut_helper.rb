@@ -16,7 +16,7 @@ module Juggernaut # :nodoc:
         :flash_color          => "#fff",
         :swf_name             => "juggernaut_flash",
         :bridge_name          => "juggernaut",
-        :debug                => (RAILS_ENV == 'development'),
+        :debug                => true,#(RAILS_ENV == 'development'),
         :reconnect_attempts   => 3,
         :reconnect_intervals  => 3
       }.merge(options)

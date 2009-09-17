@@ -1,4 +1,3 @@
 <div id="validated">
-	<%= handle %> <span id="key">(use the <strong><%= key %></strong> key to buzz in)</span>
-	<a href="#" onclick="remove_player(<%= rm %>)">[X]</a>
+	<%= handle %> <span id="key"><% if msg %>(this is <strong>you</strong>)<% else %>(a player from  <strong><%= key %></strong>)<% end %></span>
 </div>

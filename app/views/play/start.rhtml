@@ -1,14 +1,23 @@
-Loaded.
-
 <span id="status"></span>
 
+<div id="wrapper">
+	<ol>
+		<% (1..3).each do |n| %>
+			<li id="p<%= n %>_spot">
+				<img src="/images/loader.gif"/>
+			</li>
+		<% end %>
+	</ol>
+</div>
 <%= juggernaut(:channels => [params[:game]]) %>
 
 <script type="text/javascript">
 	
-	function status(msg, plyrs) {
-		$("status").update(msg);
-		console.log(plyrs);
+	function status(lst) {
+		lst.each(function(plyr, i) {
+			new Ajax.Updater("p" + (i + 1) + "_spot", "/player/validated?handle=" + plyr[0] + "&ip=" + plyr[1]);
+		});
+		//new Ajax.Updater("p" + plyrs + "_spot", "/player/validated?handle=" + msg + "&ip=" + ip);
 	}
 	
 	function announce() {
