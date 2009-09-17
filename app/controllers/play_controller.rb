@@ -260,37 +260,41 @@ class PlayController < ApplicationController
     Rails.cache.write(session[:chnl], cp)
     Juggernaut.send_to_client("outcome('#{cp[:q_outcomes].join("<br/>").gsub("'", "\\\\'")}', #{qid})", session[:me])
     if cp[:answer_pit].length >= 2
-      deltas = cp[:answer_pit].collect {|x| [x[1], 0]}.to_hash
+      scores = cp[:players].zip(cp[:scores]).to_hash
       rights, nots = cp[:answer_pit].partition {|x| x[2]}
       wrongs, neuts = nots.partition {|x| x[2] == false}
       winner = cp[:current_player]
       final = (rights.sort | wrongs.sort)
       final.each do |pl|
         if pl[2]
-          deltas[pl[1]] += value
+          scores[pl[1]] += value
           winner = pl[1]
           break
         else
-          deltas[pl[1]] -= value
+          scores[pl[1]] -= value
         end
       end
+      scores = cp[:players].collect {|x| scores[x]}
       cp = Rails.cache.read(session[:chnl])
       cp[:current_player] = winner
       cp[:answer_pit] = nil
       cp[:q_outcomes] = nil
+      cp[:scores] = scores
       Rails.cache.write(session[:chnl], cp)
-      Juggernaut.send_to_channel("back_to_board(#{qid});set_scores(#{deltas.to_a.collect {|x| x[1]}.join(',')})", session[:chnl])
+      Juggernaut.send_to_channel("back_to_board(#{qid}, #{scores.join(', ')});", session[:chnl])
       Juggernaut.send_to_clients("active(false)", Rails.cache.read(session[:chnl])[:players] - [winner])
       Juggernaut.send_to_client("active(true)", winner);
     end
     render :nothing => true
-    # Determine outcome.
-      # Make sure empty strings are neutral (not counted as incorrect answers)
-    # Pick the winner. (Render the results)
-    # Change scores appropriately.
-    # Assign the correct current player.
-    # Wipe out the answered question, replace it with corrector icons.
-    # Name-editing box at the player's leisure.
+    # TODO: Let players choose 2 or 3 player game (param to /play/start). Make work with either. 
+    # TODO: (subsumes ^) "Create game" interface. Options: 2-or-3 players; choose game!
+    # TODO: Add upper bound time limits.
+    # TODO: Add loaders and instructions.
+    # TODO: Prettify.
+    # TODO: Quickify.
+    # TODO: Wipe out the answered question, replace it with corrector icons.
+    # TODO: Name-editing box at the player's leisure.
+    # TODO: Chat / kibbutz.
   end
   
   def validate_dd

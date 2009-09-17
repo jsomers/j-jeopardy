@@ -1,22 +1,19 @@
 <%= if params[:answer] then '<font color="white">(The answer was <b>' + params[:answer] + '</b>)</font>' end %>
 
 <style type="text/css">
-	.inactive {
-		opacity: 0.1;
-	}
 	body {
 		color: white;
 	}
 </style>
-<div style="text-align: center;">
-	<span id="progress">0</span>/60 questions answered.<br/>
+<div style="text-align: center; font-family: Optima; font-size: 24.29px; padding-bottom: 15px; border-bottom: 3px inset #070D5C; margin-bottom: 25px;">
+	<%= render :partial => "standings" %>
 </div>
-
-<div id="it_instructions" style="display: none;">YOU ARE IT--CHOOSE A QUESTION</div>
-<%= render :partial => "standings" %>
 <%= juggernaut(:channels => [session[:chnl]], :client_id => session[:me]) %>
 
-<div id="container" style="position: absolute;">
+<div id="main_loader" style="margin-top: 200px">
+	<img src="/images/ajax-loader.gif"/>
+</div>
+<div id="container">
 	<div id="single_jeopardy">
 	<table align="center">
 		<tr>
@@ -30,7 +27,7 @@
 				<td>
 					<!-- Question Link -->
 					<% the_q = @questions.select {|a| a.coord == "J,#{i},#{j}"}[0] %>
-					<a href="/play/question/<%= the_q.id %>" class="dollar" q:id="<%= the_q.id %>">$<%= the_q.value %></a>				
+					<a style="display: none" href="/play/question/<%= the_q.id %>" class="dollar" q:id="<%= the_q.id %>">$<%= the_q.value %></a>				
 					<!-- END Question Link -->
 				</td>
 			<% end %>
@@ -52,7 +49,7 @@
 				<td>
 					<!-- DJ Question Link -->
 					<% the_q = @questions.select {|a| a.coord == "DJ,#{i},#{j}"}[0] %>
-					<a href="/play/question/<%= the_q.id %>" class="dollar" q:id="<%= the_q.id %>">$<%= the_q.value %></a>				
+					<a style="display: none;" href="/play/question/<%= the_q.id %>" class="dollar" q:id="<%= the_q.id %>">$<%= the_q.value %></a>				
 					<!-- END DJ Question Link -->
 				</td>
 			<% end %>
@@ -68,18 +65,7 @@
 </div>
 
 <% @questions.each do |q| %>
-	<div id="question_<%= q.id %>" style="display: none; width:500px;margin:0px auto;text-align:center; color:white;font-family:Optima;font-size:45px;line-height:1.2em;">
-		<div style="color:#ffdb60; margin-bottom:20px; font-size: 26px; font-variant:small-caps;"><%= q.my_category.downcase %></div>
-		<%= q.question %>
-	<% form_remote_tag :url => {:action => 'validate', :controller => 'play'}, :html => {:id => "form_question_#{q.id}"}, :before => "$('submit_time_" + q.id.to_s + "').value = new Date().getTime();", :update => "question_#{q.id}" do -%>
-		<input type="hidden" name="value" id="value_<%= q.id %>" value="<%= q.value %>">
-		<input type="hidden" name="seen_at" id="seen_at_<%= q.id %>" value="">
-		<input type="hidden" name="submit_time" id="submit_time_<%= q.id %>" value="">
-		<input id="question_id" name="question_id" type="hidden" value="<%= q.id %>">
-		<input id="answer_<%= q.id %>" name="answer" type="text" tabindex='1' style="text-align: center; font-size: 14px; padding: 3px; margin-top: 15px;">
-		<%= submit_tag 'Guess', :id => "guess_#{q.id}", :style => 'display: none;' %>
-	<% end -%>
-	</div>
+	<%= render :partial => "question", :locals => {:q => q} %>
 <% end %>
 
 <script type="text/javascript">
@@ -96,21 +82,27 @@
 	function questions_answered(n) {
 		$("progress").update(n);
 	}
+	
+	function reveal_questions() {
+			$$("a.dollar").each(function(e, i) {
+				e.appear({duration: 0.3});
+		});
+	};
 
 	// Question choosing and delegation.
 	function active(it) {
-		$("container").show();
+		$("main_loader").hide();
+		$("container").appear();
+		setTimeout("reveal_questions()", 2000);
 		if (it) {
 			if ($("container").hasClassName("inactive")) {
 				$("container").removeClassName("inactive");
 			}
-			$("it_instructions").show();
 		} else {
 			// Actually deactivate links
 			if (!$("container").hasClassName("inactive")) {
 				$("container").addClassName("inactive")
 			}
-			$("it_instructions").hide();
 		}
 	};
 	
@@ -150,7 +142,8 @@
 		$("question_" + qid).update(info);
 	};
 	
-	function back_to_board(qid) {
+	function back_to_board(qid, a, b, c) {
+		set_scores(a, b, c);
 		$("question_" + qid).hide();
 		$("container").show();
 		$$('.dollar[q:id="' + qid + '"]').style.color = "white";

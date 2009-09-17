@@ -106,7 +106,7 @@
 /*=================
 	BOARD
 ==================*/
-#board{margin:40px;padding:0px;text-align:center;background-color:#211eab;}
+#board{margin: 20px 40px 40px 40px;padding:0px;text-align:center;background-color:#211eab;}
 #board #category_title{font-family:Optima;color:white;font-size:18px;}
 #board #category_title a{color:white;}
 #board a{text-decoration:none;}
