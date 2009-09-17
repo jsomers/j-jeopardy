@@ -61,5 +61,5 @@
 			<span id="name<%= i %>" class="name<%= i %>"><%= Player.find(pl).handle %></span>
 			(<span id="score<%= i %>" class="score<%= i %>" type="text">$<%= Rails.cache.read(session[:chnl])[:scores][i - 1] %></span>)</span> <% if i != Rails.cache.read(session[:chnl])[:players].length %>&nbsp; <span style="color: white; font-size: 8px; vertical-align: middle">&#9679;</span> &nbsp;<% end %>
 	<% end %>
-	<span style="position: absolute; bottom: 15px; right: 10px; font-size: 14.34px; font-family: Optima;"><em>Jeopardy!</em> Episode #3014 (aired 2009-05-19)</span>
+	<span id="game_num" style="display: none; position: absolute; bottom: 15px; right: 10px; font-size: 14.34px; font-family: Optima;"><%= @page_title %></span>
 </div>

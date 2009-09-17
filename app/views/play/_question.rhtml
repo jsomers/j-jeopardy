@@ -6,7 +6,7 @@
 	<input type="hidden" name="seen_at" id="seen_at_<%= q.id %>" value="">
 	<input type="hidden" name="submit_time" id="submit_time_<%= q.id %>" value="">
 	<input id="question_id" name="question_id" type="hidden" value="<%= q.id %>">
-	<input id="answer_<%= q.id %>" name="answer" type="text" tabindex='1' style="text-align: center; font-size: 14px; padding: 3px; margin-top: 15px;">
+	<input id="answer_<%= q.id %>" name="answer" type="text" tabindex='1' style="text-align: center; font-size: 14px; padding: 3px; margin-top: 15px;"> <form name="counter"><input type="text" name="d2" id="d2_<%= q.id %>" style="background-color: #211eab; font-family: Optima; font-size: 15px; color: white; width: 25px; border: none;"></form><!-- the timer -->
 	<%= submit_tag 'Guess', :id => "guess_#{q.id}", :style => 'display: none;' %>
 <% end -%>
 </div>

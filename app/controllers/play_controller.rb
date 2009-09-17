@@ -250,7 +250,7 @@ class PlayController < ApplicationController
     if ct >= thresh then t = true else t = false end
     if guess.strip.empty? then t = nil end
     plyr = "<span id='#{Player.find(session[:me]).handle}' style='font-weight: bold'>#{Player.find(session[:me]).handle}</span>"
-    gs = (t.nil? ? "didn't guess anything." : "guessed #{guess} in <strong>#{(submit_time.to_i - seen_at.to_i) / 1000.to_f}</strong> seconds.")
+    gs = (t.nil? ? "didn't guess anything." : "guessed \"<strong>#{guess}</strong>\" in <strong>#{(submit_time.to_i - seen_at.to_i) / 1000.to_f}</strong> seconds.")
     clr = (t.nil? ? "white" : (t ? "#33ff33" : "red"))
     #cr = "The correct answer is <span style='color: #33ff33'>" + answer + "</span>"
     outcome = "<div style='color:#{clr}; font-size: 14px; margin-bottom: 0px; line-height: 20px;'>#{plyr} #{gs}</div>"

@@ -5,13 +5,16 @@
 		color: white;
 	}
 </style>
+
+<%= javascript_include_tag 'timer' %>
 <div style="text-align: center; font-family: Optima; font-size: 24.29px; padding-bottom: 15px; border-bottom: 3px inset #070D5C; margin-bottom: 25px;">
 	<%= render :partial => "standings" %>
 </div>
 <%= juggernaut(:channels => [session[:chnl]], :client_id => session[:me]) %>
 
-<div id="main_loader" style="margin-top: 200px">
+<div id="main_loader" style="margin-top: 200px; font-family: Optima;">
 	<img src="/images/ajax-loader.gif"/>
+	<div style="margin-top: 10px;">Loading game data...</div>
 </div>
 <div id="container">
 	<div id="single_jeopardy">
@@ -27,7 +30,7 @@
 				<td>
 					<!-- Question Link -->
 					<% the_q = @questions.select {|a| a.coord == "J,#{i},#{j}"}[0] %>
-					<a style="display: none" href="/play/question/<%= the_q.id %>" class="dollar" q:id="<%= the_q.id %>">$<%= the_q.value %></a>				
+					<a style="background-color: #211eab; padding: 4px;" href="/play/question/<%= the_q.id %>" class="dollar" q:id="<%= the_q.id %>">$<%= the_q.value %></a>				
 					<!-- END Question Link -->
 				</td>
 			<% end %>
@@ -49,7 +52,7 @@
 				<td>
 					<!-- DJ Question Link -->
 					<% the_q = @questions.select {|a| a.coord == "DJ,#{i},#{j}"}[0] %>
-					<a style="display: none;" href="/play/question/<%= the_q.id %>" class="dollar" q:id="<%= the_q.id %>">$<%= the_q.value %></a>				
+					<a href="/play/question/<%= the_q.id %>" class="dollar" q:id="<%= the_q.id %>">$<%= the_q.value %></a>				
 					<!-- END DJ Question Link -->
 				</td>
 			<% end %>
@@ -82,18 +85,12 @@
 	function questions_answered(n) {
 		$("progress").update(n);
 	}
-	
-	function reveal_questions() {
-			$$("a.dollar").each(function(e, i) {
-				e.appear({duration: 0.3});
-		});
-	};
 
 	// Question choosing and delegation.
 	function active(it) {
 		$("main_loader").hide();
-		$("container").appear();
-		setTimeout("reveal_questions()", 2000);
+		$("container").appear({duration: 0.3});
+		$("game_num").appear({duration: 0.3});
 		if (it) {
 			if ($("container").hasClassName("inactive")) {
 				$("container").removeClassName("inactive");
@@ -107,10 +104,15 @@
 	};
 	
 	function display_question(qid) {
+		//$$("a.dollar[q:id='" + qid + "']")[0].highlight({ startcolor: '#ffff99', endcolor: '#211eab' });
 		$("container").hide();
+		//$("question_" + qid).appear({duration: 0.1});
 		$("question_" + qid).show();
 		$("seen_at_" + qid).value = new Date().getTime();
 		$("answer_" + qid).focus();
+		var seconds = 10;
+		var milisec = 0;
+		step_timer(qid, seconds, milisec);
 	};
 	
 	function choose_question(event) {
