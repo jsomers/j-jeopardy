@@ -108,7 +108,8 @@ class PlayerController < ApplicationController
   
   def validated
     msg = params[:handle] == Player.find(session[:me]).handle
-    render :partial => "validated", :locals => {:handle => params[:handle], :key => params[:ip], :msg => msg}
+    geo = `curl -s http://api.hostip.info/get_html.php?ip=#{params[:ip]}`.split("\n")[-1]
+    render :partial => "validated", :locals => {:handle => params[:handle], :key => geo, :msg => msg}
   end
   
   def announce
