@@ -290,6 +290,7 @@ class PlayController < ApplicationController
     # TODO: (subsumes ^) "Create game" interface. Options: 2-or-3 players; choose game!
     # TODO: Add upper bound time limits.
     # TODO: Add loaders and instructions.
+    # TODO: Store data. SimpleDB?
     # TODO: Prettify.
     # TODO: Quickify.
     # TODO: Wipe out the answered question, replace it with corrector icons.
