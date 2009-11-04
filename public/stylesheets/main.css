@@ -63,6 +63,7 @@
 #choose_game a.game_link.toc{color:#b8441c;}
 #choose_game a.game_link.miss{color:#ff9988;}
 #choose_game h3{margin:0 auto;width:750px;padding:10px;background:#fffbcc;border:1px solid #e6db55;border-bottom:none;text-align:center;font-family:Georgia;}
+#choose_game h3.unselected:hover {background: #cceeff;}
 #choose_game a.season_link{color:#444;font-weight:bold;text-decoration:none;}
 #choose_game a.season_link:hover{background-color:#fffbcc;}
 #choose_game .season{margin:0 auto;width:750px;padding:10px;background:#fffbee;border:1px solid #e6db55;border-top:none;line-height:1em;text-align:center;}
