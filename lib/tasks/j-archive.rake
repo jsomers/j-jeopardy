@@ -4,16 +4,14 @@ require 'hpricot'
 Hpricot.buffer_size = 262144 # http://justsoftwareconsulting.com/blog/?p=123
 
 namespace :fetch do
+  def doc(url)
+    return open(url) {|f| Hpricot(f)}
+  end
+  
+  def clean(str)
+    return HTMLEntities.new.decode(str).gsub("\\", "")
+  end
   task :games => :environment do
-    
-    def doc(url)
-      return open(url) {|f| Hpricot(f)}
-    end
-    
-    def clean(str)
-      return HTMLEntities.new.decode(str).gsub("\\", "")
-    end
-    
     # For each season, grab the list of game URLs:
     game_urls_to_get = {}
     (1..26).each do |season|
@@ -98,6 +96,23 @@ namespace :fetch do
   end
   
   task :metadata => :environment do
-    # TODO: Get "college tournament..." strings for each game we have.
+    (1..26).each do |season|
+      season_page = doc("http://j-archive.com/showseason.php?season=#{season}")
+      content = Hpricot((season_page/"#content").inner_html)
+      puts "Fetching metadata for season #{season}."
+      (content/"tr").each do |game_row|
+        tr = Hpricot(game_row.inner_html)
+        game_id = (tr/"a").first.attributes["href"].split("game_id=")[-1].to_i
+        puts "  > #{game_id}"
+        begin
+          g = Game.find_by_game_id(game_id)
+          metadata = clean((tr/"td.left_padded").first.inner_html.strip)
+          g.metadata = metadata unless metadata.nil? or metadata.empty?
+          g.save
+        rescue
+          puts "Couldn't set metadata for game #{game_id}."
+        end
+      end
+    end
   end
 end

@@ -3,7 +3,7 @@ class PlayController < ApplicationController
   protect_from_forgery :except => [:load_season]
   
   def landing
-    @page_title = "Jimbo Jeopardy! Play nearly every Jeopardy game ever aired, free."
+    @page_title = "Jimbo Jeopardy! Play thousands of Jeopardy games, free."
     @body_id = "landing"
     @no_script = true
   end

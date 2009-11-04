@@ -3,9 +3,6 @@
 		<tr>
 	<% Game.find(:all, :conditions => ['season = ?', n]).each_with_index do |game, i| %>
 		<% cl = nil %>
-		<% if game.q_count <= 60 %>
-			<% cl = "miss" %>
-		<% end %>
 		<% if (m = game.metadata) %>
 			<% if m.include? "College Championship" %>
 				<% cl = "college" %>
@@ -19,8 +16,11 @@
 		<% if game.played?(session[:players]) %>
 			<% cl = "played" %>
 		<% end %>
+		<% if game.q_count <= 60 %>
+			<% cl = "miss" %>
+		<% end %>
 		<td>
-			<a class="game_link <%= cl %>" href="/play/board/<%= game.game_id %>">Episode #<%= game.game_id %> <div class="airdate">(<%= game.airdate %>)</div>
+			<a class="game_link <%= cl %>" href="/play/board/<%= game.game_id %>">Episode #<%= game.game_id %> <div class="airdate">(<%= game.airdate %>) <% if cl == "miss" %>[<%= 61 - game.q_count %>]<% end %></div>
 			</a>
 		</td>
 		<% if (i - 6).modulo(7) == 0 and i > 1 %>
