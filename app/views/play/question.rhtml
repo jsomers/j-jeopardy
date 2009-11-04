@@ -14,7 +14,7 @@
 
 <% begin image = @q.question.scan(/<a href="(.*?)"/)[0] rescue image = false end %>
 <% if image %>
-	<img src="<%= image %>" width="250px">
+	<img src="<%= image %>" width="500px"/>
 <% end %>
 
 <div id="q"><%= @q.question %></div>
