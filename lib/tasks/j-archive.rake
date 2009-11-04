@@ -1,10 +1,11 @@
 require 'open-uri'
 require 'htmlentities'
 require 'hpricot'
+Hpricot.buffer_size = 262144 # http://justsoftwareconsulting.com/blog/?p=123
 
 namespace :fetch do
   task :games => :environment do
-    # Get parsed HTML document for the given URL.
+    
     def doc(url)
       return open(url) {|f| Hpricot(f)}
     end
@@ -15,7 +16,8 @@ namespace :fetch do
     
     # For each season, grab the list of game URLs:
     game_urls_to_get = {}
-    (1..1).each do |season|
+    (1..25).each do |season|
+      puts "Checking season #{season} for new games..."
       season_page = doc("http://j-archive.com/showseason.php?season=#{season}")
       games_we_have_for_this_season = Game.find_all_by_season(season).collect(&:game_id)
       (season_page/"a").each do |a|
@@ -29,17 +31,31 @@ namespace :fetch do
           end
         end
       end
+      if game_urls_to_get[season]
+        puts "  #{game_urls_to_get[season].length} found.\n"
+      end
     end
-
+    
     game_urls_to_get.each_pair do |season, game_urls|
-      game_urls[1..2].each do |game_url|
+      puts "\n\n---------------------------------------"
+      puts "     FETCHING #{game_urls.length} GAMES IN SEASON #{season}."
+      puts "---------------------------------------\n\n"
+      game_urls.each do |game_url|
+        game_id = game_url.split("game_id=")[-1].to_i
+        puts "Fetching clues for game #{game_id}..."
+        # Edge cases...
+        if !game_url.include? "j-archive.com" then game_url = "http://www.j-archive.com/" + game_url end
+        if Game.find_by_game_id(game_id)
+          puts "  already have it?"
+          next
+        end
         game_page = doc(game_url)
         game_params = {}
         game_params[:categories] = (game_page/"td.category_name").collect {|td| clean(td.inner_html)}
         game_params[:airdate] = (game_page/"title").inner_html.split(" aired ")[-1]
-        game_params[:game_id] = game_url.split("game_id=")[-1].to_i
+        game_params[:game_id] = game_id
         game_params[:season] = season
-        
+
         (game_page/"td.clue").each do |clue|
           clue = Hpricot(clue.inner_html)
           clue_params = {}
@@ -66,7 +82,7 @@ namespace :fetch do
           end
           # Get the question and coord:
           clue_params[:question] = clean((clue/"td.clue_text").inner_html)
-          clue_params[:coord] = (clue/"td.clue_text").first.attributes["id"].split("clue_")[-1]
+          clue_params[:coord] = (clue/"td.clue_text").first.attributes["id"].split("clue_")[-1].gsub("_", ",")
           
           # Get the answer:
           answer = Hpricot((clue/"div").first.attributes["onmouseover"])
@@ -76,6 +92,7 @@ namespace :fetch do
         end
         g = Game.new(game_params)
         g.save
+        puts "  done."
       end
     end
   end

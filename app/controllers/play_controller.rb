@@ -90,7 +90,6 @@ class PlayController < ApplicationController
     @double = @game.categories[6..-2]
   
     @questions = @game.questions
-    debugger
     
     @chars = ['<font color="red">&#10007;</font>', '<font color="#33ff33">&#10003;</font>', '<font color="white" size="1">&#9679;</font>']
   end
@@ -100,7 +99,7 @@ class PlayController < ApplicationController
     @q = Question.find(params[:id])
     @page_title = "$#{@q.value} | #{@q.my_category}"
     @body_id = "question"
-    if @q.value == 'DD'
+    if @q.value.include? 'DD'
       redirect_to '/play/dd/' + params[:id]
     end
     coords = @q.coord
