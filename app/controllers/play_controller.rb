@@ -32,7 +32,7 @@ class PlayController < ApplicationController
       redirect_to "/play/start"
     else
       # Grab list of games
-      @games = Game.find(:all, :conditions => 'season = 25')
+      @games = Game.find_all_by_season(26)
     end
   end
   

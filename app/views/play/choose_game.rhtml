@@ -28,16 +28,16 @@
 		</span>
 	</div>
 	<br/>
-	<span style="color:#222">Normal game</span> &nbsp; <span style="color: green;">In-progress</span> &nbsp; <span style="color: #aaa">Already played</span> &nbsp; <span style="color: #1e6c8f">College Championship</span> &nbsp; <span style="color: #b8441c">Tournament of Champions</span>
+	<span style="color:#222">Normal game</span> &nbsp; <span style="color: green;">In-progress</span> &nbsp; <span style="color: #aaa">Already played</span> &nbsp; <span style="color: #1e6c8f">College Championship</span> &nbsp; <span style="color: #b8441c">Tournament of Champions</span> &nbsp; <span style="color: #ff9988">Missing questions</span>
 </div>
 
 <div id="accordion">
-	<% for n in (1..25).to_a.reverse %>
+	<% for n in (1..26).to_a.reverse %>
 		<a href="#" class="season_link">
 			<h3>Season <%= n %></h3>
 		</a>
 		<div id="season_<%= n %>_shell" class="season" season:id="<%= n %>">
-			<% if n == 25 %>
+			<% if n == 26 %>
 				<%= render :partial => "season", :locals => {:n => n} %>
 			<% else %>
 				<div id="season_<%= n %>_shell" season:id="<%= n %>">

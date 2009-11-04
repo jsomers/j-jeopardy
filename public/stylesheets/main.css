@@ -61,6 +61,7 @@
 #choose_game a.game_link.in_progress{color:green;}
 #choose_game a.game_link.college{color:#1e6c8f;}
 #choose_game a.game_link.toc{color:#b8441c;}
+#choose_game a.game_link.miss{color:#ff9988;}
 #choose_game h3{margin:0 auto;width:750px;padding:10px;background:#fffbcc;border:1px solid #e6db55;border-bottom:none;text-align:center;font-family:Georgia;}
 #choose_game a.season_link{color:#444;font-weight:bold;text-decoration:none;}
 #choose_game a.season_link:hover{background-color:#fffbcc;}

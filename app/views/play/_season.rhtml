@@ -1,8 +1,11 @@
 <div id="season_<%= n %>" season:id="<%= n %>">
 	<table>
 		<tr>
-	<% Game.find(:all, :conditions => ['season = ?', n]).reverse.each_with_index do |game, i| %>
+	<% Game.find(:all, :conditions => ['season = ?', n]).each_with_index do |game, i| %>
 		<% cl = nil %>
+		<% if game.q_count <= 60 %>
+			<% cl = "miss" %>
+		<% end %>
 		<% if (m = game.metadata) %>
 			<% if m.include? "College Championship" %>
 				<% cl = "college" %>
