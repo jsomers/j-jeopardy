@@ -86,10 +86,11 @@ class PlayController < ApplicationController
     @page_title = "Jeopardy! Game #{@game.game_id} (#{@game.airdate})"
     @body_id = "board"
     
-    @single = CGI.unescapeHTML(@game.categories).split('^')[1..6]
-    @double = CGI.unescapeHTML(@game.categories).split('^')[7..-2]
+    @single = @game.categories.first(6)
+    @double = @game.categories[6..-2]
   
-    @questions = Question.find(:all, :conditions => 'game_id = ' + @game_id)
+    @questions = @game.questions
+    debugger
     
     @chars = ['<font color="red">&#10007;</font>', '<font color="#33ff33">&#10003;</font>', '<font color="white" size="1">&#9679;</font>']
   end
@@ -230,7 +231,7 @@ class PlayController < ApplicationController
   
   def wager
     @q = Question.find_by_game_id(params[:id], :conditions => ['fj = ?', true])
-    @category = Game.find_by_game_id(params[:id]).categories.split('^')[-1]
+    @category = Game.find_by_game_id(params[:id]).categories.last
     @page_title = "Final Jeopardy! (#{@category})"
     @body_id = "question"
   end

@@ -1,9 +1,9 @@
 class EditController < ApplicationController
   def board
     @game = Game.find_by_game_id(params[:id])
-    @single = CGI.unescapeHTML(@game.categories).split('^')[1..6]
-    @double = CGI.unescapeHTML(@game.categories).split('^')[7..-2]
-    @questions = Question.find_all_by_game_id(params[:id])
+    @single = @game.categories.first(6)
+    @double = @game.categories[6..-2]
+    @questions = @game.questions
   end
   
   def update

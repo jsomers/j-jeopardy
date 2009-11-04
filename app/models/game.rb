@@ -1,7 +1,11 @@
 class Game < ActiveRecord::Base
-  has_many :questions;
+  has_many :questions, :primary_key => "game_id";
   has_many :players;
   has_many :episodes;
+  
+  serialize :categories;
+  
+  after_create :set_question_categories
   
   def self.add_season(n)
     for game_id in Dir.entries('/users/jsomers/Desktop/season ' + n.to_s + '/')[2..-1]
@@ -108,6 +112,12 @@ class Game < ActiveRecord::Base
   def in_progress?(players)
     my_eps = Episode.find_all_by_game_id(self.game_id)
     return my_eps.select {|ep| (ep.key.split('_')[0..2].reject {|x| x == '0'} & players.reject {|y| y.nil?}).length == players.reject {|y| y.nil?}.length and ep.answered >= 5}.length > 0
+  end
+  
+  def set_question_categories
+    self.questions.each do |q|
+      q.set_category
+    end
   end
 
 end

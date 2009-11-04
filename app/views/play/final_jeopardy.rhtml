@@ -28,7 +28,7 @@
 	}
 	display()
 	</script>
-<div id="fj_category"><%= Game.find_by_game_id(@q.game_id).categories.split('^')[-1] %></div>
+<div id="fj_category"><%= Game.find_by_game_id(@q.game_id).categories.last %></div>
 <div id="q"><%= @q.question %></div>
 
 <table class="wager">
