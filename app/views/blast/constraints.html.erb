@@ -16,6 +16,7 @@
 			#demo-frame > div.demo { padding: 10px !important; };
 		</style>
 		<script type="text/javascript">
+		var category_ids = [];
 		$(function() {
 			$("#slider-range").slider({
 				range: true,
@@ -25,6 +26,8 @@
 				values: [300, 800],
 				slide: function(event, ui) {
 					$("#amount").val('$' + ui.values[0] + ' - $' + ui.values[1]);
+					$("#value_min").attr("value", ui.values[0]);
+					$("#value_max").attr("value", ui.values[1]);
 				}
 			});
 			$("#amount").val('$' + $("#slider-range").slider("values", 0) + ' - $' + $("#slider-range").slider("values", 1));
@@ -37,25 +40,40 @@
 				values: [20, 26],
 				slide: function(event, ui) {
 					$("#seasons").val(ui.values[0] + ' - ' + ui.values[1]);
+					$("#season_min").attr("value", ui.values[0]);
+					$("#season_max").attr("value", ui.values[1]);
 				}
 			});
 			$("#seasons").val($("#season-slider-range").slider("values", 0) + ' - ' + $("#season-slider-range").slider("values", 1));
 		});
 		$(document).ready(function() {
+			$("#search").blur(function() {
+				$("#search_terms").attr("value", $("#search").attr("value"));
+			});
+			
 			function formatItem(row) {
-					return row[0] + " (" + row[1] + " questions)";
+				row = row[0].split(",");
+				return row[0];
 			};
-			var data = [["Word Origins", 390, 1], ["Before & After", 129, 2]];
+			var data = "/blast/get_categories";
 			$("#categories").autocomplete(data, {
 				matchContains: true,
 				multiple: false,
 				formatItem: formatItem
 			});
 			$("#categories").result(function(ev, data, formatted) {
+				data = data[0].split(",");
 				$("#categories").val("");
-				$("<li>").html(data[0]).appendTo("#chosen");
-				console.log(data);
-			})
+				$("<li id='li-" + data[1] + "'>").html(data[0] + ' <a href="#" class="rm-cat" id="cat-' + data[1] + '"> X</a>').appendTo("#chosen");
+				category_ids.push(data[1]);
+				$("#category_ids").attr("value", category_ids.join(","));
+			});
+			$(".rm-cat").live("click", function() {
+				var id = $(this).attr("id").split("-")[1];
+				category_ids.splice(category_ids.indexOf(id), 1);
+				$("#category_ids").attr("value", category_ids.join(","));
+				$("#li-" + id).remove();
+			});
 		})
 		</script>
 
@@ -91,6 +109,16 @@
 	</p>
 
 	</div><!-- End demo -->
+	
+	<% form_tag({:controller => "blast", :action => "play"}) do -%>
+		<input type="hidden" id="value_min" name="value_min" value="100"/>
+		<input type="hidden" id="value_max" name="value_max" value="2000"/>
+		<input type="hidden" id="season_min" name="season_min" value="20"/>
+		<input type="hidden" id="season_max" name="season_max" value="26"/>
+		<input type="hidden" id="category_ids" name="category_ids" value=""/>
+		<input type="hidden" id="search_terms" name="search_terms" value=""/>
+		<input type="submit" value="Construct game from these constraints"/>
+	<% end %>
 
 </body>
 </html>
