@@ -14,7 +14,6 @@ class ApplicationController < ActionController::Base
   # filter_parameter_logging :password
   def double?
     ep = Episode.find_by_key(session[:ep_key])
-    debugger
     return ep.answered >= Game.find_by_game_id(ep.game_id).questions.select {|q| !q.coord.include? "DJ" and !(q.coord == "N/A")}.length
   end
   
