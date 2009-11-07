@@ -358,6 +358,7 @@ $.Autocompleter = function(input, options) {
 				extraParams[key] = typeof param == "function" ? param() : param;
 			});
 			
+			$("#loader").show();
 			$.ajax({
 				// try to leverage ajaxQueue plugin to abort previous requests
 				mode: "abort",
@@ -370,6 +371,7 @@ $.Autocompleter = function(input, options) {
 					limit: options.max
 				}, extraParams),
 				success: function(data) {
+					$("#loader").hide();
 					var parsed = options.parse && options.parse(data) || parse(data);
 					cache.add(term, parsed);
 					success(term, parsed);
