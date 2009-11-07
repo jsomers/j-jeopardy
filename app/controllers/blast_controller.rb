@@ -51,6 +51,16 @@ class BlastController < ApplicationController
   end
   
   def game_over
+    @no_script = true
+    @time = params[:time]
+    @score = params[:score]
+    if @score.index("-")
+      color = "red"
+    else
+      color = "#33ff33"
+    end
+    @final_score = "<span style=\"color:#{color};\">#{@score}</span>"
+    @game_id = params[:game_id]
     @body_id = "question"
   end
   

@@ -1,5 +1,15 @@
+<%= javascript_include_tag "jquery-1.3.2.min.js" -%>
+<script language="javascript" src="/javascripts/simpleswap.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#start").click(function() {
+			window.location = "/blast";
+		});
+	});
+</script>
 <div id="instructions">
 	<div id="ffinger"><small><span id="question_value">thanks for playing</span></small><br/><span id="question_category">GAME OVER!</span></div>
-	<div id="q" style="font-variant: normal; font-size: 18px; line-height: 1.2em;"><p>Your 2 questions have been loaded. Once you click the "Start" button below, your game will begin. <br/><br/>To answer a question, <a href="#" id="type-help">type</a> your answer into the box and hit ENTER. Leave the space blank if you'd like to pass.<br/><br/></div>
-		<input type="image" src="/images/start-hover.png" oversrc="/images/start.png" id="start"/>
+	<div id="q" style="font-variant: normal; font-size: 18px; line-height: 1.2em; width: 650px">
+		<p>You ended up with <strong><%= @final_score %></strong>, and it took you <span style="border-bottom: 1px solid white;"><%= @time %></span>.<br/><br/>To share this game with friends, or to play it again later, remember this url: <br/><br/><span style="font-size: 24px;">jimbojeopardy.com/blast/play?game_id=<%= @game_id %></span>. <br/><br/>Or click below to start a new game!<br/><br/></div>
+		<input type="image" src="/images/newgame.png" oversrc="/images/newgame-hover.png" id="start"/>
 </div>

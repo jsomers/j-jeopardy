@@ -2,6 +2,7 @@ default_run_options[:pty] = true
 set :application, "jeopardy"
 set :repository,  "git@github.com:jsomers/j-jeopardy.git"
 set :scm, "git"
+# Command to load new code: touch /home/james/public_html/jeopardy/current/tmp/restart.txt
 # set :scm_passphrase, "D0nkeyB0nkers!" # This is your custom user's password
 set :branch, "master"
 set :user, "james"

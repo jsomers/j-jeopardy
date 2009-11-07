@@ -34,8 +34,9 @@ ActionController::Routing::Routes.draw do |map|
   map.root :controller => "play", :action => "landing"
 
   # See how all your routes lay out with "rake routes"
-
+  map.connect '/blast', :controller => "blast", :action => "constraints"
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
+
 end
