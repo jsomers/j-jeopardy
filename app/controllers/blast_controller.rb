@@ -37,6 +37,11 @@ class BlastController < ApplicationController
     @body_id = "question"
   end
   
+  def fetch_question
+    @q = Question.find(params[:q_id].to_i)
+    render :json => {:category => @q.category.name, :answer => @q.answer, :question => @q.question, :value => @q.value}
+  end
+  
   private
   
   def refine_by_categories(category_ids)

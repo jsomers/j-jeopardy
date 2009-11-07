@@ -1,4 +1,5 @@
 <%= javascript_include_tag "jquery-1.3.2.min.js" -%>
+<script language="javascript" src="/javascripts/simpleswap.js"></script>
 <style type="text/css">
 	#tooltip {
 		position: absolute;
@@ -24,8 +25,61 @@
 	var decasec = 0;
 	var seconds = 0;
 	var mins = 0;
+	function timer() {
+		if (seconds >= 59 && decasec >= 9) {
+			seconds = -1
+			mins += 1
+		}
+		if (decasec >= 9) {
+			decasec = -1
+			seconds += 1
+		}
+		decasec += 1
+		$("#timer").attr("value", (mins <= 9 ? "0" + mins : mins) + ":" + (seconds <= 9 ? "0" + seconds : seconds));
+		setTimeout("timer()", 100);
+	};
+	var nil = function() {
+		return null
+	}
+	
+	var validate = function(guess, answer, value) {
+		if (guess == "") {
+			$("#outcome_container").css("color", "white");
+			$("#outcome").text(answer);
+			setTimeout("load_question(" + position + ")", 1000);
+		} else {
+			console.log(guess, answer, value);
+		};
+	};
+	
 	var question_ids = [<%= @question_ids %>];
+	var position = 0;
+	var load_question = function(index) {
+		q_id = question_ids[index];
+		position += 1;
+		$.get("/blast/fetch_question", 
+			{ authencity_token: AUTH_TOKEN, q_id: q_id },
+			function(ret) {
+				$("#q").text(ret["question"]);
+				$("#answer").attr("value", ret["answer"]);
+				$("#question_value").html(ret["value"]);
+				$("#question_category").html(ret["category"]);
+				$("#guess").focus();
+				$("#outcome").text("");
+				$("#progress").text(position);
+			}, 
+			"json"
+		)
+	}
 	$(document).ready(function() {
+		
+		$("#start").click(function() {
+			$("#instructions").remove();
+			$("#game_area").show();
+			timer();
+			load_question(position);
+		});
+		
 		$("#type-help").live("mouseover",
 			function(ev) {
 				$("#tooltip").show();
@@ -44,42 +98,38 @@
 				$("#tooltip").css("left", ev.pageX + 20 + "px");
 			}
 		);
+		$("#guess").keydown(function(e) {
+			if (e.keyCode == 13) {
+				validate($("#guess").attr("value"), $("#answer").attr("value"), $("#question_value").html())
+			}
+		});
 	});
-	
-	function timer() {
-		if (seconds >= 59 && decasec >= 9) {
-			seconds = -1
-			mins += 1
-		}
-		if (decasec >= 9) {
-			decasec = -1
-			seconds += 1
-		}
-		decasec += 1
-		$("#timer").attr("value", (mins <= 9 ? "0" + mins : mins) + ":" + (seconds <= 9 ? "0" + seconds : seconds));
-		setTimeout("timer()", 100);
-	}
-		//timer()
+
 </script>
 
-<div style="margin:0px; border-bottom: 1px solid white; width: 400px; text-align: center; margin:0 auto; margin-bottom: 40px;">
+<div style="margin:0px; border-bottom: 1px solid white; width: 500px; text-align: center; margin:0 auto; margin-bottom: 40px;">
 	<input type="text" id="timer" value="00:00" style="color: white; font-family: Optima; font-size: 26px; margin-left: 60px; text-align: center; background: #211EAB; border:none; width: 80px;"/>
-	<span id="score_container" style="color: white; font-family: Optima; font-size: 26px; color: #33ff33;">&raquo; $<span style="score">900</span></span>
-	<span id="progress_container" style="color: white; font-family: Optima; font-size: 20px; color: white; padding-top: 5px; float: right; vertical-align: bottom;"> (<span style="progress">0</span> of <%= @question_ids.split(",").length %>)</span>
+	<span id="score_container" style="color: white; font-family: Optima; font-size: 26px; color: #33ff33;">&raquo; $<span style="score">0</span></span>
+	<span id="progress_container" style="color: white; font-family: Optima; font-size: 20px; color: white; padding-top: 5px; float: right; vertical-align: bottom;"> (<span id="progress">0</span> of <%= @question_ids.split(",").length %>)</span>
+</div>
+<div id="instructions">
+
+	<div id="ffinger"><small><span id="question_value">welcome to</span></small><br/><span id="question_category">JEOPARDY BLAST!</span></div>
+	<div id="q" style="font-variant: normal; font-size: 18px; line-height: 1.2em;"><p>Your <%= @question_ids.split(",").length %> questions have been loaded. Once you click the "Start" button below, your game will begin. <br/><br/>To answer a question, <a href="#" id="type-help">type</a> your answer into the box and hit ENTER. Leave the space blank if you'd like to pass.<br/><br/></div>
+		<input type="image" src="/images/start-hover.png" oversrc="/images/start.png" id="start"/>
+</div>	
+	
+	
+<div id="game_area" style="display: none;">
+	<div id="ffinger"><small>$<span id="question_value"></span></small><br/><span id="question_category"></span></div>
+	<div id="q"></div>
+		<input id="guess" name="guess" type="text" style="font-size: 25px; text-align: center; padding: 4px;" tabindex="1">
+		<span id="outcome_container" style="color: white; font-family: Optima; font-size: 26px;"><span id="outcome"></span></span>
+		<input id="answer" name="answer" type="hidden" value=""/>
 </div>
 
-<div id="ffinger"><small><span id="question_value">welcome to</span></small><br/><span id="question_category">JEOPARDY BLAST!</span></div>
-<div id="q" style="font-variant: normal; font-size: 18px; line-height: 1.2em;"><p>Your <%= @question_ids.split(",").length %> questions have been loaded. Once you click the "Start" button below, your game will begin. <br/><br/>To answer a question, <a href="#" id="type-help">type</a> your answer into the box and hit ENTER. Leave the space blank if you'd like to pass.<br/><br/></div>
-<div id="game_area" style="display: none;">
-	<div id="ffinger"><small>$<span id="question_value">200</span></small><br/><span id="question_category">WORD ORIGINS</span></div>
-	<div id="q">This guy...</div>
-		<input type="hidden" name="value" id="value" value="200">
-		<input id="question_id" name="question_id" type="hidden" value="1337">
-		<input type="hidden" name="blast" id="blast" value="yes">
-		<input id="answer" name="answer" type="text" style="" tabindex="1">
-		<script type="text/javascript">   document.getElementById('answer').focus(); </script>
-		<%= submit_tag 'Guess', :id => 'guess', :style => 'display: none;' %>
-</div>
+
+
 
 <div id="tooltip" style="display: none; right: auto; text-align: left; font-weight: normal; font-family: Arial;">
 	<div class="contain" style="font-weight: normal;">
