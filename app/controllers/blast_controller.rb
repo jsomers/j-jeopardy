@@ -10,17 +10,21 @@ class BlastController < ApplicationController
       Rails.cache.write("cats", Category.find(:all).collect {|c| [c.name, c.q_count, c.id]})
       Rails.cache.write("has_cats", "true")
     end
-    query = params[:q].upcase
+    query = params[:q].strip.upcase
     words = query.split(' ').sort {|a, b| b.length <=> a.length}
-    garbage = ['THIS', 'THE', 'A', 'AN', 'OF', 'IN', 'ABOUT', 'TO', 'FROM', 'AM', 'AS']
-    garbage.each {|g| words.delete(g) { words }}
-    @categories = Rails.cache.read("cats").select {|c| begin c[0].include? words[0] rescue false end}
-    if words.length > 1
-      for word in words[1..-1]
-        @categories = @categories.select {|c| c[0].include? word}
+    if words.nil? or words.empty?
+      @categories = []
+    else
+      garbage = ['THIS', 'THE', 'A', 'AN', 'OF', 'IN', 'ABOUT', 'TO', 'FROM', 'AM', 'AS']
+      garbage.each {|g| words.delete(g) { words }}
+      @categories = Rails.cache.read("cats").select {|c| begin c[0].include? words[0] rescue false end}
+      if words.length > 1
+        for word in words[1..-1]
+          @categories = @categories.select {|c| c[0].include? word}
+        end
       end
+      @categories =  @categories.collect {|cat| "#{cat[0]},#{cat[1]},#{cat[2]}"}
     end
-    @categories =  @categories.collect {|cat| "#{cat[0]},#{cat[1]},#{cat[2]}"}
     render :layout => false
   end
   
