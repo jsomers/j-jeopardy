@@ -38,6 +38,7 @@
 		$("#timer").attr("value", (mins <= 9 ? "0" + mins : mins) + ":" + (seconds <= 9 ? "0" + seconds : seconds));
 		setTimeout("timer()", 100);
 	};
+	
 	var nil = function() {
 		return null
 	}
@@ -45,10 +46,15 @@
 	var validate = function(guess, answer, value) {
 		if (guess == "") {
 			$("#outcome_container").css("color", "white");
-			$("#outcome").text(answer);
+			$("#outcome").html(answer);
 			setTimeout("load_question(" + position + ")", 1000);
 		} else {
-			console.log(guess, answer, value);
+			correct = true;
+			words = guess.toLowerCase().split(" ");
+			for (i = 0; i <= words.length, i++) {
+				word = words[i];
+				
+			};
 		};
 	};
 	
@@ -65,7 +71,7 @@
 				$("#question_value").html(ret["value"]);
 				$("#question_category").html(ret["category"]);
 				$("#guess").focus();
-				$("#outcome").text("");
+				$("#outcome").html("");
 				$("#progress").text(position);
 			}, 
 			"json"
