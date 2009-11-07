@@ -39,10 +39,16 @@ class BlastController < ApplicationController
       search_terms = params[:search_terms].split(",").collect {|term| term.strip.downcase}.sort {|a, b| b.length <=> a.length}
     
       @questions = refine_by_categories(category_ids)
-      @questions = refine_by_search_terms(@questions, search_terms)
-      @questions = refine_by_seasons(@questions, season_min, season_max)
+      search_results = refine_by_search_terms(@questions, search_terms)
+      @questions = search_results[0]
+      flag = search_results[1]
+      @questions = refine_by_seasons(@questions, season_min, season_max, flag)
       @questions = refine_by_values(@questions, value_min, value_max)
       @question_ids = @questions.collect {|q| q.id.to_s}.join(",")
+      if @question_ids.empty?
+        flash[:alert] = "We couldn't find any questions using the criteria you specified. Try a broader search."
+        redirect_to "/blast"
+      end
       qs = Questionset.new_if_needed(@question_ids)
       qs.save
       @game_id = qs.id
@@ -75,6 +81,7 @@ class BlastController < ApplicationController
   end
   
   def refine_by_search_terms(questions, search_terms)
+    flag = false
     if !search_terms.empty?
       garbage = ['this', 'the', 'a', 'an', 'of', 'in', 'about', 'to', 'from', 'am', 'as']
       garbage.each {|g| search_terms.delete(g) { search_terms }}
@@ -88,12 +95,13 @@ class BlastController < ApplicationController
       search_terms.each do |search_term|
         questions = questions.select { |q| q.question.downcase.include? search_term or q.answer.downcase.include? search_term }
       end
+      if questions.empty? then flag = true end
     end
-    return questions
+    return [questions, flag]
   end
   
-  def refine_by_seasons(questions, season_min, season_max)
-    if questions.empty?
+  def refine_by_seasons(questions, season_min, season_max, flag)
+    if questions.empty? and !flag
       questions = Game.find(
         :all, 
         :conditions => ["season >= ? and season <= ?", season_min, season_max],
@@ -107,15 +115,6 @@ class BlastController < ApplicationController
   end
   
   def refine_by_values(questions, value_min, value_max)
-    if questions.empty?
-      questions = Question.find(
-        :all,
-        :order => :random,
-        :limit => 200
-      ).reject {|q| q.value == "N/A" or q.value == "DD" or q.value.to_i < value_min or q.value.to_i > value_max}
-    else
-      questions = questions.reject {|q| q.value == "N/A" or q.value == "DD" or q.value.to_i < value_min or q.value.to_i > value_max}
-    end
-    return questions
+    return questions.reject {|q| q.value == "N/A" or q.value == "DD" or q.value.to_i < value_min or q.value.to_i > value_max}
   end
 end
