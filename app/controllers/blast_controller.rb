@@ -7,8 +7,8 @@ class BlastController < ApplicationController
   
   def get_categories
     if Rails.cache.read("has_cats").nil?
-      Rails.cache.write("cats", Category.find(:all).collect {|c| [c.name, c.q_count, c.id]})
-      Rails.cache.write("has_cats", "true")
+      Rails.cache.write("cats", Category.find(:all).collect {|c| [c.name, c.q_count, c.id]}, :expires_in => 24.hours)
+      Rails.cache.write("has_cats", "true", :expires_in => 24.hours)
     end
     query = params[:q].strip.upcase
     words = query.split(' ').sort {|a, b| b.length <=> a.length}
@@ -46,8 +46,10 @@ class BlastController < ApplicationController
       search_results = refine_by_search_terms(@questions, search_terms)
       @questions = search_results[0]
       flag = search_results[1]
-      @questions = refine_by_seasons(@questions, season_min, season_max, flag)
-      @questions = refine_by_values(@questions, value_min, value_max)
+      if !flag
+        @questions = refine_by_seasons(@questions, season_min, season_max)
+        @questions = refine_by_values(@questions, value_min, value_max)
+      end
       @question_ids = @questions.collect {|q| q.id.to_s}.join(",")
       if @question_ids.empty?
         flash[:alert] = "We couldn't find any questions using the criteria you specified. Try a broader search."
@@ -92,7 +94,7 @@ class BlastController < ApplicationController
       if questions.empty?
         questions = Question.find(
           :all, 
-          :conditions => ["question like '%%" + search_terms[0] + "%%' or answer like '%%" + search_terms[0] + "%%'"], 
+          :conditions => ["question like \"%%" + search_terms[0] + "%%\" or answer like \"%%" + search_terms[0] + "%%\""], 
           :limit => 3000
         )
       end
@@ -104,8 +106,8 @@ class BlastController < ApplicationController
     return [questions, flag]
   end
   
-  def refine_by_seasons(questions, season_min, season_max, flag)
-    if questions.empty? and !flag
+  def refine_by_seasons(questions, season_min, season_max)
+    if questions.empty?
       questions = Game.find(
         :all, 
         :conditions => ["season >= ? and season <= ?", season_min, season_max],
