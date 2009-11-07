@@ -9,4 +9,9 @@ class Category < ActiveRecord::Base
     end
     return c
   end
+  
+  def count_questions
+    self.q_count = self.questions.length
+    self.save
+  end
 end

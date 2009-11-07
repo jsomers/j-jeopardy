@@ -9,12 +9,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091107014736) do
+ActiveRecord::Schema.define(:version => 20091107042903) do
 
   create_table "categories", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "name"
+    t.integer  "q_count"
   end
 
   create_table "completeness", :force => true do |t|

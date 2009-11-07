@@ -10,7 +10,7 @@
 <%= stylesheet_link_tag 'main', "jquery-ui-slider.css", "jquery.autocomplete.css" -%>
 
 </head>
-<body>
+<body id="question">
 
 	<style type="text/css">
 			#demo-frame > div.demo { padding: 10px !important; };
@@ -53,7 +53,7 @@
 			
 			function formatItem(row) {
 				row = row[0].split(",");
-				return row[0];
+				return row[0] + " (" + row[1] + " questions)";
 			};
 			var data = "/blast/get_categories";
 			$("#categories").autocomplete(data, {
@@ -64,8 +64,8 @@
 			$("#categories").result(function(ev, data, formatted) {
 				data = data[0].split(",");
 				$("#categories").val("");
-				$("<li id='li-" + data[1] + "'>").html(data[0] + ' <a href="#" class="rm-cat" id="cat-' + data[1] + '"> X</a>').appendTo("#chosen");
-				category_ids.push(data[1]);
+				$("<li id='li-" + data[2] + "'>").html(data[0] + ' <a href="#" class="rm-cat" id="cat-' + data[2] + '"> X</a>').appendTo("#chosen");
+				category_ids.push(data[2]);
 				$("#category_ids").attr("value", category_ids.join(","));
 			});
 			$(".rm-cat").live("click", function() {
@@ -76,49 +76,50 @@
 			});
 		})
 		</script>
+	<div style="text-align: center;">
+		<h2>Set question constraints</h2>
+		<p>We will set up your game with the intersection of the question sets specified by the constraints below. Leave #3 or #4 blank for the most generality.</p>
 
-	<h2>Set question constraints</h2>
-	<p>We will set up your game with the intersection of the question sets specified by the constraints below. Leave #3 or #4 blank for the most generality.</p>
+		<div class="demo" style="margin-left: 40px;">
 
-	<div class="demo" style="margin-left: 40px;">
+		<p>
+		<label for="amount">1. Only include questions worth:</label>
+		<input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;" />
+		</p>
+	
+		<div id="slider-range" style="width: 500px"></div>
+	
+		<p>
+		<label for="seasons">2. Only include questions from seasons:</label>
+		<input type="text" id="seasons" style="border:0; color:#f6931f; font-weight:bold;" />
+		</p>
+	
+		<div id="season-slider-range" style="width: 500px"></div>
+	
+		<p>
+		<label for="categories">3. Only include questions in these categories (leave blank for all):</label>
+		<input type="text" id="categories" style="width: 300px;"/>
+		</p>
+		<ol id="chosen">
+		</ol>
+	
+		<p>
+		<label for="search">4. Only include questions that have these terms (separate with commas):</label>
+		<input type="text" id="search" style="width: 300px;"/>
+		</p>
 
-	<p>
-	<label for="amount">1. Only include questions worth:</label>
-	<input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;" />
-	</p>
-	
-	<div id="slider-range" style="width: 500px"></div>
-	
-	<p>
-	<label for="seasons">2. Only include questions from seasons:</label>
-	<input type="text" id="seasons" style="border:0; color:#f6931f; font-weight:bold;" />
-	</p>
-	
-	<div id="season-slider-range" style="width: 500px"></div>
-	
-	<p>
-	<label for="categories">3. Only include questions in these categories (leave blank for all):</label>
-	<input type="text" id="categories" style="width: 300px;"/>
-	</p>
-	<ol id="chosen">
-	</ol>
-	
-	<p>
-	<label for="search">4. Only include questions that have these terms (separate with commas):</label>
-	<input type="text" id="search" style="width: 300px;"/>
-	</p>
-
-	</div><!-- End demo -->
-	
-	<% form_tag({:controller => "blast", :action => "play"}) do -%>
-		<input type="hidden" id="value_min" name="value_min" value="100"/>
-		<input type="hidden" id="value_max" name="value_max" value="2000"/>
-		<input type="hidden" id="season_min" name="season_min" value="20"/>
-		<input type="hidden" id="season_max" name="season_max" value="26"/>
-		<input type="hidden" id="category_ids" name="category_ids" value=""/>
-		<input type="hidden" id="search_terms" name="search_terms" value=""/>
-		<input type="submit" value="Construct game from these constraints"/>
-	<% end %>
-
+		</div><!-- End demo -->
+		
+		<script language="javascript" src="/javascripts/simpleswap.js"></script>
+		<% form_tag({:controller => "blast", :action => "play"}) do -%>
+			<input type="hidden" id="value_min" name="value_min" value="100"/>
+			<input type="hidden" id="value_max" name="value_max" value="2000"/>
+			<input type="hidden" id="season_min" name="season_min" value="20"/>
+			<input type="hidden" id="season_max" name="season_max" value="26"/>
+			<input type="hidden" id="category_ids" name="category_ids" value=""/>
+			<input type="hidden" id="search_terms" name="search_terms" value=""/>
+			<input type="image" src="/images/submit_constraints.png" oversrc="/images/submit_constraints-hover.png"/>
+		<% end %>
+	</style>
 </body>
 </html>
