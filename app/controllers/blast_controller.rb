@@ -1,6 +1,6 @@
 class BlastController < ApplicationController
   def constraints
-    
+    render :layout => false
   end
   
   def play

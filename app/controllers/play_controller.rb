@@ -19,10 +19,6 @@ class PlayController < ApplicationController
     end
   end
   
-  def blast
-    @q = Question.find_all_by_category("word origins", :limit => 1, :order => :random)[0]
-  end
-  
   def choose_game
     @page_title = "Jimbo Jeopardy! Choose a game to play"
     @body_id = "choose_game"
@@ -97,7 +93,7 @@ class PlayController < ApplicationController
   def question
     ep = Episode.find_by_key(session[:ep_key])
     @q = Question.find(params[:id])
-    @page_title = "$#{@q.value} | #{@q.my_category}"
+    @page_title = "$#{@q.value} | #{@q.category.name}"
     @body_id = "question"
     if @q.value.include? 'DD'
       redirect_to '/play/dd/' + params[:id]
@@ -191,7 +187,7 @@ class PlayController < ApplicationController
   def daily_double
     @q = Question.find_by_id(params[:q_id])
     @wager = params[:wager]
-    @page_title = "Daily Double in #{@q.category} for $#{@wager}"
+    @page_title = "Daily Double in #{@q.category.name} for $#{@wager}"
     @body_id = "question"
   end
   

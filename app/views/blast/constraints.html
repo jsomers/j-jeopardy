@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<%= javascript_include_tag "jquery-1.3.2.min.js", "jquery-ui-slider.min.js", "jquery.autocomplete.js" -%>
+<%= stylesheet_link_tag 'main', "jquery-ui-slider.css", "jquery.autocomplete.css" -%>
+
+</head>
+<body>
+
+	<style type="text/css">
+			#demo-frame > div.demo { padding: 10px !important; };
+		</style>
+		<script type="text/javascript">
+		$(function() {
+			$("#slider-range").slider({
+				range: true,
+				min: 100,
+				max: 2000,
+				step: 100,
+				values: [300, 800],
+				slide: function(event, ui) {
+					$("#amount").val('$' + ui.values[0] + ' - $' + ui.values[1]);
+				}
+			});
+			$("#amount").val('$' + $("#slider-range").slider("values", 0) + ' - $' + $("#slider-range").slider("values", 1));
+			
+			$("#season-slider-range").slider({
+				range: true,
+				min: 1,
+				max: 26,
+				step: 1,
+				values: [20, 26],
+				slide: function(event, ui) {
+					$("#seasons").val(ui.values[0] + ' - ' + ui.values[1]);
+				}
+			});
+			$("#seasons").val($("#season-slider-range").slider("values", 0) + ' - ' + $("#season-slider-range").slider("values", 1));
+		});
+		$(document).ready(function() {
+			function formatItem(row) {
+					return row[0] + " (" + row[1] + " questions)";
+			};
+			var data = [["Word Origins", 390, 1], ["Before & After", 129, 2]];
+			$("#categories").autocomplete(data, {
+				matchContains: true,
+				multiple: false,
+				formatItem: formatItem
+			});
+			$("#categories").result(function(ev, data, formatted) {
+				$("#categories").val("");
+				$("<li>").html(data[0]).appendTo("#chosen");
+				console.log(data);
+			})
+		})
+		</script>
+
+	<h2>Set question constraints</h2>
+	<p>We will set up your game with the intersection of the question sets specified by the constraints below. Leave #3 or #4 blank for the most generality.</p>
+
+	<div class="demo" style="margin-left: 40px;">
+
+	<p>
+	<label for="amount">1. Only include questions worth:</label>
+	<input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;" />
+	</p>
+	
+	<div id="slider-range" style="width: 500px"></div>
+	
+	<p>
+	<label for="seasons">2. Only include questions from seasons:</label>
+	<input type="text" id="seasons" style="border:0; color:#f6931f; font-weight:bold;" />
+	</p>
+	
+	<div id="season-slider-range" style="width: 500px"></div>
+	
+	<p>
+	<label for="categories">3. Only include questions in these categories (leave blank for all):</label>
+	<input type="text" id="categories" style="width: 300px;"/>
+	</p>
+	<ol id="chosen">
+	</ol>
+	
+	<p>
+	<label for="search">4. Only include questions that have these terms (separate with commas):</label>
+	<input type="text" id="search" style="width: 300px;"/>
+	</p>
+
+	</div><!-- End demo -->
+
+</body>
+</html>

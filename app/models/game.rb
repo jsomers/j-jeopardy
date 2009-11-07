@@ -79,19 +79,6 @@ class Game < ActiveRecord::Base
 #    return mes
   end
   
-  def self.add_categories
-    qs = Question.find(:all)
-    qs.each { |q|
-      begin
-        puts q.id
-        q.category = q.my_category.downcase
-        q.save!
-      rescue
-        p "failed"
-      end
-    }
-  end
-  
   def check_completeness
     game = Game.find_by_game_id(self.game_id)
     questions = Question.find_all_by_game_id(self.game_id)
