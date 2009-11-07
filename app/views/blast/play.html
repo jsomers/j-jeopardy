@@ -45,15 +45,43 @@
 	
 	var validate = function(guess, answer, value) {
 		if (guess == "") {
-			$("#outcome_container").css("color", "white");
+			$("#outcome").css("color", "white");
 			$("#outcome").html(answer);
 			setTimeout("load_question(" + position + ")", 1000);
 		} else {
 			correct = true;
 			words = guess.toLowerCase().split(" ");
-			for (i = 0; i <= words.length, i++) {
+			for (i = 0; i < words.length; i++) {
 				word = words[i];
-				
+				if (answer.toLowerCase().indexOf(word) == -1) {
+					correct = false;
+					break;
+				}
+			};
+			var old_score = parseFloat($("#score").html());
+			var value = parseFloat(value);
+			if (correct) {
+			   $("#outcome").css("color", "#33ff33");
+			   $("#outcome").html(answer);
+			   var new_score = old_score + value;
+			   $("#score").html(new_score);
+			   if (new_score >= 0) {
+					$("#score_container").css("color", "#33ff33");
+			   } else {
+					$("#score_container").css("color", "red");
+			   };
+			   setTimeout("load_question(" + position + ")", 1000);
+			} else {
+				$("#outcome").css("color", "red");
+				$("#outcome").html(answer);
+				var new_score = old_score - value;
+				$("#score").html(new_score);
+				if (new_score >= 0) {
+					$("#score_container").css("color", "#33ff33");
+				} else {
+					$("#score_container").css("color", "red");
+				};
+				setTimeout("load_question(" + position + ")", 1000);
 			};
 		};
 	};
@@ -66,10 +94,11 @@
 		$.get("/blast/fetch_question", 
 			{ authencity_token: AUTH_TOKEN, q_id: q_id },
 			function(ret) {
-				$("#q").text(ret["question"]);
+				$("#q").html(ret["question"]);
 				$("#answer").attr("value", ret["answer"]);
 				$("#question_value").html(ret["value"]);
 				$("#question_category").html(ret["category"]);
+				$("#guess").attr("value", "");
 				$("#guess").focus();
 				$("#outcome").html("");
 				$("#progress").text(position);
@@ -115,7 +144,7 @@
 
 <div style="margin:0px; border-bottom: 1px solid white; width: 500px; text-align: center; margin:0 auto; margin-bottom: 40px;">
 	<input type="text" id="timer" value="00:00" style="color: white; font-family: Optima; font-size: 26px; margin-left: 60px; text-align: center; background: #211EAB; border:none; width: 80px;"/>
-	<span id="score_container" style="color: white; font-family: Optima; font-size: 26px; color: #33ff33;">&raquo; $<span style="score">0</span></span>
+	<span id="score_container" style="color: white; font-family: Optima; font-size: 26px; color: #33ff33;">&raquo; $<span id="score">0</span></span>
 	<span id="progress_container" style="color: white; font-family: Optima; font-size: 20px; color: white; padding-top: 5px; float: right; vertical-align: bottom;"> (<span id="progress">0</span> of <%= @question_ids.split(",").length %>)</span>
 </div>
 <div id="instructions">
@@ -130,7 +159,7 @@
 	<div id="ffinger"><small>$<span id="question_value"></span></small><br/><span id="question_category"></span></div>
 	<div id="q"></div>
 		<input id="guess" name="guess" type="text" style="font-size: 25px; text-align: center; padding: 4px;" tabindex="1">
-		<span id="outcome_container" style="color: white; font-family: Optima; font-size: 26px;"><span id="outcome"></span></span>
+		<span id="outcome_container" style="font-family: Optima; font-size: 26px;"><span id="outcome"></span></span>
 		<input id="answer" name="answer" type="hidden" value=""/>
 </div>
 
