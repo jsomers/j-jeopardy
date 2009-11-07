@@ -36,8 +36,8 @@ class BlastController < ApplicationController
     elsif search_terms
       questions = Question.find(:all, :conditions => ["question like '%%" + search_terms[0] + "%%' or answer like '%%" + search_terms[0] + "%%'"], :limit => 3000)
       searches = true
-    elsif 
-      
+    else
+      # Do nothing
     end
   end
   

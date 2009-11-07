@@ -10,12 +10,16 @@
 <%= stylesheet_link_tag 'main', "jquery-ui-slider.css", "jquery.autocomplete.css" -%>
 
 </head>
-<body id="question">
+<body>
 
 	<style type="text/css">
-			#demo-frame > div.demo { padding: 10px !important; };
-		</style>
-		<script type="text/javascript">
+		#demo-frame > div.demo { padding: 10px !important; };
+		a {
+			
+		}
+	</style>
+	
+	<script type="text/javascript">
 		var category_ids = [];
 		$(function() {
 			$("#slider-range").slider({
@@ -64,7 +68,7 @@
 			$("#categories").result(function(ev, data, formatted) {
 				data = data[0].split(",");
 				$("#categories").val("");
-				$("<li id='li-" + data[2] + "'>").html(data[0] + ' <a href="#" class="rm-cat" id="cat-' + data[2] + '"> X</a>').appendTo("#chosen");
+				$("<li id='li-" + data[2] + "'>").html(data[0] + ' <a href="#rm" class="rm-cat" style="color: #4183C4; text-decoration: none; border-bottom: 1px solid #4183C4;" id="cat-' + data[2] + '"> [X]</a>').appendTo("#chosen");
 				category_ids.push(data[2]);
 				$("#category_ids").attr("value", category_ids.join(","));
 			});
@@ -76,50 +80,68 @@
 			});
 		})
 		</script>
-	<div style="text-align: center;">
-		<h2>Set question constraints</h2>
+	<div style="margin:0 auto; text-align: center; font-family: Optima, Arial, Verdana, sans-serif;">
+		<h1>Set question constraints</h1>
 		<p>We will set up your game with the intersection of the question sets specified by the constraints below. Leave #3 or #4 blank for the most generality.</p>
 
 		<div class="demo" style="margin-left: 40px;">
-
-		<p>
-		<label for="amount">1. Only include questions worth:</label>
-		<input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;" />
-		</p>
+		<table style="margin:0 auto;">
+			<tr>
+				<td valign="top" style="font-size: 35px; font-weight: bold; color: #555">1.</td>
+				<td><div style="border: 2px solid #ccc; width: 650px; margin: 0 auto; margin-bottom: 20px;">
+					<p>
+					<label for="amount">Only include questions <strong>worth</strong>:</label><br/>
+					<input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold; font-size: 24px; width: 190px; text-align: center;" />
+					</p>
 	
-		<div id="slider-range" style="width: 500px"></div>
+					<div id="slider-range" style="width: 500px; margin: 0 auto; margin-bottom: 20px;"></div>
+				</div></td>
+			</tr>
+			<tr>
+				<td valign="top" style="font-size: 35px; font-weight: bold; color: #555">2.</td>
+				<td><div style="border: 2px solid #ccc; width: 650px; margin: 0 auto; margin-bottom: 20px;">
+					<p>
+					<label for="seasons">Only include questions from <strong>seasons</strong>:</label><br/>
+					<input type="text" id="seasons" style="border:0; color:#f6931f; font-weight:bold; font-size: 24px; width: 100px; text-align: center;" />
+					</p>
 	
-		<p>
-		<label for="seasons">2. Only include questions from seasons:</label>
-		<input type="text" id="seasons" style="border:0; color:#f6931f; font-weight:bold;" />
-		</p>
-	
-		<div id="season-slider-range" style="width: 500px"></div>
-	
-		<p>
-		<label for="categories">3. Only include questions in these categories (leave blank for all):</label>
-		<input type="text" id="categories" style="width: 300px;"/>
-		</p>
-		<ol id="chosen">
-		</ol>
-	
-		<p>
-		<label for="search">4. Only include questions that have these terms (separate with commas):</label>
-		<input type="text" id="search" style="width: 300px;"/>
-		</p>
-
+					<div id="season-slider-range" style="width: 500px; margin: 0 auto; margin-bottom: 20px;"></div>
+				</div></td>
+			</tr>
+				<tr><td valign="top" style="font-size: 35px; font-weight: bold; color: #555">3.</td>
+				<td><div style="border: 2px solid #ccc; width: 650px; margin: 0 auto; margin-bottom: 20px;">
+					<p>
+					<label for="categories">Only include questions in these <strong>categories</strong>:<br/></label>
+					<input type="text" id="categories" style="width: 300px; margin-top: 5px; margin-left: 115px; font-size: 15px; text-align: center; padding: 4px;"/> <span style="color: #999; font-size: 12px;">(start typing to search)</span>
+					</p>
+					<ol id="chosen" style="text-align: left;">
+					</ol>
+				</div></td>
+			</tr>
+			<tr>
+				<td valign="top" style="font-size: 35px; font-weight: bold; color: #555">4.</td>
+				<td><div style="border: 2px solid #ccc; width: 650px; margin: 0 auto; margin-bottom: 20px;">
+					<p>
+					<label for="search">Only include questions that have these <strong>terms</strong>:<br/></label>
+					<input type="text" id="search" style="width: 300px; margin-top: 5px; font-size: 15px; text-align: center; padding: 4px;"/>
+					</p>
+				</div><td>
+			</tr>
 		</div><!-- End demo -->
+	</table>
 		
 		<script language="javascript" src="/javascripts/simpleswap.js"></script>
-		<% form_tag({:controller => "blast", :action => "play"}) do -%>
-			<input type="hidden" id="value_min" name="value_min" value="100"/>
-			<input type="hidden" id="value_max" name="value_max" value="2000"/>
-			<input type="hidden" id="season_min" name="season_min" value="20"/>
-			<input type="hidden" id="season_max" name="season_max" value="26"/>
-			<input type="hidden" id="category_ids" name="category_ids" value=""/>
-			<input type="hidden" id="search_terms" name="search_terms" value=""/>
-			<input type="image" src="/images/submit_constraints.png" oversrc="/images/submit_constraints-hover.png"/>
-		<% end %>
+		<div style="margin-bottom: 100px; margin-left: 40px; text-align: center;">
+			<% form_tag({:controller => "blast", :action => "play"}) do -%>
+				<input type="hidden" id="value_min" name="value_min" value="100"/>
+				<input type="hidden" id="value_max" name="value_max" value="2000"/>
+				<input type="hidden" id="season_min" name="season_min" value="20"/>
+				<input type="hidden" id="season_max" name="season_max" value="26"/>
+				<input type="hidden" id="category_ids" name="category_ids" value=""/>
+				<input type="hidden" id="search_terms" name="search_terms" value=""/>
+				<input type="image" src="/images/submit_constraints.png" oversrc="/images/submit_constraints-hover.png"/>
+			<% end %>
+		</div>
 	</style>
 </body>
 </html>
