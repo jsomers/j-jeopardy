@@ -51,10 +51,18 @@
 			$("#seasons").val($("#season-slider-range").slider("values", 0) + ' - ' + $("#season-slider-range").slider("values", 1));
 		});
 		$(document).ready(function() {
+			$("#search_terms").attr("value", "");
+			$("#search").attr("value", "");
 			$("#value_min").attr("value", "300");
 			$("#value_max").attr("value", "800");
 			$("#search").blur(function() {
 				$("#search_terms").attr("value", $("#search").attr("value"));
+			});
+			$("#search").keydown(function(ev) {
+				if (ev.keyCode == 13) {
+					$("#search_terms").attr("value", $("#search").attr("value"));
+					$("#submit-constraints").submit();
+				}
 			});
 			
 			function formatItem(row) {
@@ -84,7 +92,7 @@
 		</script>
 	<div style="margin:0 auto; text-align: center; font-family: Optima, Arial, Verdana, sans-serif;">
 		<h1>Set question constraints</h1>
-		<p>We will set up your game with the intersection of the question sets specified by the constraints below. Leave #3 or #4 blank for the most generality.</p>
+		<p>We will set up your game with the intersection of the question sets specified by the constraints below. Leave #3 or #4 blank for the broadest results.</p>
 
 		<div class="demo" style="margin-left: 40px;">
 		<table style="margin:0 auto;">
@@ -114,7 +122,7 @@
 				<td><div style="border: 2px solid #ccc; width: 650px; margin: 0 auto; margin-bottom: 20px;">
 					<p>
 					<label for="categories">Only include questions in these <strong>categories</strong>:<br/></label>
-					<input type="text" id="categories" style="width: 300px; margin-top: 5px; margin-left: 115px; font-size: 15px; text-align: center; padding: 4px;"/> <span style="color: #999; font-size: 12px;">(start typing to search)</span>
+					<input type="text" id="categories" style="width: 300px; margin-top: 5px; margin-left: 115px; font-size: 15px; text-align: center; padding: 4px;"/> <span style="color: #444; font-size: 12px;">(start typing to search)</span>
 					</p>
 					<ol id="chosen" style="text-align: left;">
 					</ol>
@@ -125,7 +133,7 @@
 				<td><div style="border: 2px solid #ccc; width: 650px; margin: 0 auto; margin-bottom: 20px;">
 					<p>
 					<label for="search">Only include questions that have these <strong>terms</strong>:<br/></label>
-					<input type="text" id="search" style="width: 300px; margin-top: 5px; margin-left: 155px; font-size: 15px; text-align: center; padding: 4px;"/> <span style="color: #999; font-size: 12px;">(separate terms with commas)</span>
+					<input type="text" id="search" style="width: 300px; margin-top: 5px; margin-left: 155px; font-size: 15px; text-align: center; padding: 4px;"/> <span style="color: #444; font-size: 12px;">(separate terms with <strong style="color: #444">commas</strong>)</span>
 					</p>
 				</div><td>
 			</tr>
@@ -134,7 +142,7 @@
 		
 		<script language="javascript" src="/javascripts/simpleswap.js"></script>
 		<div style="margin-bottom: 100px; margin-left: 40px; text-align: center;">
-			<% form_tag({:controller => "blast", :action => "play"}) do -%>
+			<% form_tag({:controller => "blast", :action => "play"}, {:id => "submit-constraints"}) do -%>
 				<input type="hidden" id="value_min" name="value_min" value="300"/>
 				<input type="hidden" id="value_max" name="value_max" value="800"/>
 				<input type="hidden" id="season_min" name="season_min" value="20"/>

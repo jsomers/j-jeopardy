@@ -109,24 +109,24 @@
 	BOARD
 ==================*/
 #board{margin:40px;padding:0px;text-align:center;background-color:#211eab;}
-#board #category_title{font-family:Optima;color:white;font-size:18px;}
+#board #category_title{font-family:Optima,Arial;color:white;font-size:18px;}
 #board #category_title a{color:white;}
 #board a{text-decoration:none;}
-#board a.dollar{font-family:Optima;font-size:30px;color:#ffdb60;font-weight:bold;}
+#board a.dollar{font-family:Optima,Arial;font-size:30px;color:#ffdb60;font-weight:bold;}
 #board a.dollar:hover{text-decoration:underline;}
-#board a.final{font-size:40px;font-variant:small-caps;font-family:Optima;color:white;padding-top:20px;}
+#board a.final{font-size:40px;font-variant:small-caps;font-family:Optima,Arial;color:white;padding-top:20px;}
 /*=================
 	QUESTION
 ==================*/
 #question{margin:140px;padding:0px;text-align:center;background-color:#211eab;}
-#question #q{width:500px;margin:0px auto;text-align:center;padding:15px;color:white;font-family:Optima;font-variant:small-caps;font-size:45px;line-height:100%;}
+#question #q{width:500px;margin:0px auto;text-align:center;padding:15px;color:white;font-family:Optima,Arial;font-variant:small-caps;font-size:45px;line-height:100%;}
 #question a{color:white;color:#ffdb60;}
-#question #value{font-size:30px;font-weight:bold;font-family:Optima;color:#ffdb60;}
-#question #ffinger{background-color:#211eab;border:none;text-align:center;color:#ffdb60;font-family:Optima;font-variant:small-caps;font-size:30px;}
-#question #outcome{margin-top:15px;font-family:Optima;color:white;}
-#question #stumper{font-family:Optima;font-size:25px;font-variant:small-caps;}
+#question #value{font-size:30px;font-weight:bold;font-family:Optima,Arial;color:#ffdb60;}
+#question #ffinger{background-color:#211eab;border:none;text-align:center;color:#ffdb60;font-family:Optima,Arial;font-variant:small-caps;font-size:30px;}
+#question #outcome{margin-top:15px;font-family:Optima,Arial;color:white;}
+#question #stumper{font-family:Optima,Arial;font-size:25px;font-variant:small-caps;}
 #question #stumper a{color:white;}
-#question .wager{color:white;font-family:Optima;font-variant:small-caps;width:500px;margin:0px auto;}
+#question .wager{color:white;font-family:Optima,Arial;font-variant:small-caps;width:500px;margin:0px auto;}
 #question .wager a{color:white;}
 #dd{margin:140px;padding:0px;text-align:center;background-color:#aa0011;}
 #dd #score1{background-color:#aa0011;}
@@ -134,12 +134,12 @@
 #dd #score3{background-color:#aa0011;}
 #dd #double_link{display:none;}
 #dd #single_link{display:none;}
-#dd #double{color:white;font-family:Optima;font-size:60px}
-#dd #ffinger{background-color:#aa0011;border:none;text-align:center;color:#ffdb60;font-family:Optima;font-variant:small-caps;font-size:30px;}
+#dd #double{color:white;font-family:Optima,Arial;font-size:60px}
+#dd #ffinger{background-color:#aa0011;border:none;text-align:center;color:#ffdb60;font-family:Optima,Arial;font-variant:small-caps;font-size:30px;}
 #out{border:5px solid #211eab;margin-bottom:5px;width:1000px;}
-#d2{background-color:#211eab;border:none;color:#211eab;font-size:20px;font-family:Optima;font-variant:small-caps;text-align:center;}
-.fj{background-color:#211eab;color:white;font-family:Optima;font-weight:bold;border:1px dashed white;font-size:16px;text-align:center;padding:7px;}
-#fj_category{font-family:Optima;color:#ffdb60;}
+#d2{background-color:#211eab;border:none;color:#211eab;font-size:20px;font-family:Optima,Arial;font-variant:small-caps;text-align:center;}
+.fj{background-color:#211eab;color:white;font-family:Optima,Arial;font-weight:bold;border:1px dashed white;font-size:16px;text-align:center;padding:7px;}
+#fj_category{font-family:Optima,Arial;color:#ffdb60;}
 #edit_value{color:white;border:none;background-color:#211eab;font-size:10px;text-align:center;}
 #edit_question{color:white;border:1px solid gray;background-color:#211eab;font-family:sans-serif;padding:5px;font-size:10px;height:100px;}
 #edit_answer{color:white;border:1px solid gray;background-color:#211eab;font-size:10px;text-align:center;}

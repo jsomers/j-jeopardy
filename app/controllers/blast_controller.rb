@@ -21,25 +21,37 @@ class BlastController < ApplicationController
   end
   
   def play
-    season_min = params[:season_min].to_i
-    season_max = params[:season_max].to_i
-    value_min = params[:value_min].to_i
-    value_max = params[:value_max].to_i
-    category_ids = params[:category_ids].split(",").collect {|id| id.strip.to_i}
-    search_terms = params[:search_terms].split(",").collect {|term| term.strip.downcase}.sort {|a, b| b.length <=> a.length}
-    
-    @questions = refine_by_categories(category_ids)
-    @questions = refine_by_search_terms(@questions, search_terms)
-    @questions = refine_by_seasons(@questions, season_min, season_max)
-    @questions = refine_by_values(@questions, value_min, value_max)
-    @question_ids = @questions.collect {|q| q.id.to_s}.join(",")
     @no_script = true
     @body_id = "question"
+    if (questionset_id = params[:game_id])
+      @question_ids = Questionset.find(questionset_id.to_i).q_ids
+      @game_id = questionset_id
+    else
+      season_min = params[:season_min].to_i
+      season_max = params[:season_max].to_i
+      value_min = params[:value_min].to_i
+      value_max = params[:value_max].to_i
+      category_ids = params[:category_ids].split(",").collect {|id| id.strip.to_i}
+      search_terms = params[:search_terms].split(",").collect {|term| term.strip.downcase}.sort {|a, b| b.length <=> a.length}
+    
+      @questions = refine_by_categories(category_ids)
+      @questions = refine_by_search_terms(@questions, search_terms)
+      @questions = refine_by_seasons(@questions, season_min, season_max)
+      @questions = refine_by_values(@questions, value_min, value_max)
+      @question_ids = @questions.collect {|q| q.id.to_s}.join(",")
+      qs = Questionset.new_if_needed(@question_ids)
+      qs.save
+      @game_id = qs.id
+    end
   end
   
   def fetch_question
     @q = Question.find(params[:q_id].to_i)
     render :json => {:category => @q.category.name, :answer => @q.answer, :question => @q.question, :value => @q.value}
+  end
+  
+  def game_over
+    @body_id = "question"
   end
   
   private

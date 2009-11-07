@@ -22,9 +22,16 @@
 	}
 </style>
 <script type="text/javascript">
-	var decasec = 0;
-	var seconds = 0;
-	var mins = 0;
+	<% if !params[:time] %>
+		var decasec = 0;
+		var seconds = 0;
+		var mins = 0;
+	<% else %>
+		var decasec = 0;
+		var seconds = <%= params[:time].split(":")[-1].to_i %>;
+		var mins = <%= params[:time].split(":")[0].to_i %>;
+	<% end %>
+	var game_id = <%= @game_id %>;
 	function timer() {
 		if (seconds >= 59 && decasec >= 9) {
 			seconds = -1
@@ -39,9 +46,14 @@
 		setTimeout("timer()", 100);
 	};
 	
-	var nil = function() {
-		return null
-	}
+	var game_over = function() {
+		var score = $("#score").html();
+		if ($("#score_container").css("color") == "red") {
+			var score = "-" + score;
+		};
+		var time = $("#timer").attr("value");
+		window.location = "/blast/game_over?game_id=" + game_id + "&score=" + score + "&time=" + time;
+	};
 	
 	var validate = function(guess, answer, value) {
 		if (guess == "") {
@@ -87,8 +99,11 @@
 	};
 	
 	var question_ids = [<%= @question_ids %>];
-	var position = 0;
+	var position = <%= params[:position] or 0 %>;
 	var load_question = function(index) {
+		if (index == question_ids.length) {
+			game_over();
+		};
 		q_id = question_ids[index];
 		position += 1;
 		$.get("/blast/fetch_question", 
@@ -107,6 +122,16 @@
 		)
 	}
 	$(document).ready(function() {
+		
+		$("#save-game").click(function() {
+			var score = $("#score").html();
+			if ($("#score_container").css("color") == "red") {
+				var score = "-" + score;
+			};
+			var time = $("#timer").attr("value");
+			var link = "jimbojeopardy.com/blast/play?game_id=" + game_id + "&score=" + score + "&time=" + time + "&position=" + Math.max(0, position - 1);
+			alert("You can get back to this game anytime from this link:\n\n" + link);
+		});
 		
 		$("#start").click(function() {
 			$("#instructions").remove();
@@ -143,9 +168,10 @@
 </script>
 
 <div style="margin:0px; border-bottom: 1px solid white; width: 500px; text-align: center; margin:0 auto; margin-bottom: 40px;">
-	<input type="text" id="timer" value="00:00" style="color: white; font-family: Optima; font-size: 26px; margin-left: 60px; text-align: center; background: #211EAB; border:none; width: 80px;"/>
-	<span id="score_container" style="color: white; font-family: Optima; font-size: 26px; color: #33ff33;">&raquo; $<span id="score">0</span></span>
-	<span id="progress_container" style="color: white; font-family: Optima; font-size: 20px; color: white; padding-top: 5px; float: right; vertical-align: bottom;"> (<span id="progress">0</span> of <%= @question_ids.split(",").length %>)</span>
+	<input type="text" id="timer" value="<%= params[:time] or "00:00" %>" style="color: white; font-family: Optima, Arial; font-size: 26px; margin-left: 10px; text-align: center; background: #211EAB; border:none; width: 80px;"/>
+	<span style="color: white; font-family: Optima, Arial; float: left; padding-top: 10px"><a href="#" id="save-game">[save]</a></span>
+	<span id="score_container" style="color: white; font-family: Optima, Arial; font-size: 26px; color: #33ff33;">&raquo; $<span id="score"><%= params[:score] or 0 %></span></span>
+	<span id="progress_container" style="color: white; font-family: Optima, Arial; font-size: 20px; color: white; padding-top: 5px; float: right; vertical-align: bottom;"> (<span id="progress"><%= params[:position] or 0 %></span> of <%= @question_ids.split(",").length %>)</span>
 </div>
 <div id="instructions">
 
@@ -159,7 +185,7 @@
 	<div id="ffinger"><small>$<span id="question_value"></span></small><br/><span id="question_category"></span></div>
 	<div id="q"></div>
 		<input id="guess" name="guess" type="text" style="font-size: 25px; text-align: center; padding: 4px;" tabindex="1">
-		<span id="outcome_container" style="font-family: Optima; font-size: 26px;"><span id="outcome"></span></span>
+		<span id="outcome_container" style="font-family: Optima, Arial; font-size: 26px;"><span id="outcome"></span></span>
 		<input id="answer" name="answer" type="hidden" value=""/>
 </div>
 
