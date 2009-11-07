@@ -97,7 +97,7 @@
 		<% end %>
 	<div style="margin:0 auto; text-align: center; font-family: Optima, Georgia, Verdana, sans-serif;">
 		<h1>First, build your game. Then play!</h1>
-		<p>Specify what kinds of questions you'd like in your game by playing with the constraints below.<br/> <small>(We use the <strong>smallest possible set of questions</strong> that satisfies all your criteria.)</small></p>
+		<p>Specify what kinds of questions you'd like in your game by playing with the constraints below.<br/> <small>(We use the <strong>smallest possible set of questions</strong> that satisfies all your criteria, and we try to <strong>randomize</strong> where possible.)</small></p>
 
 		<div class="demo" style="margin-left: 40px;">
 		<table style="margin:0 auto;">
@@ -146,7 +146,7 @@
 	</table>
 		
 		<script language="javascript" src="/javascripts/simpleswap.js"></script>
-		<div style="margin-bottom: 100px; margin-left: 40px; text-align: center;">
+		<div style="margin-bottom: 10px; margin-left: 40px; text-align: center;">
 			<% form_tag({:controller => "blast", :action => "play"}, {:id => "submit-constraints"}) do -%>
 				<input type="hidden" id="value_min" name="value_min" value="300"/>
 				<input type="hidden" id="value_max" name="value_max" value="800"/>
@@ -156,6 +156,9 @@
 				<input type="hidden" id="search_terms" name="search_terms" value=""/>
 				<input type="image" src="/images/build_game.png" oversrc="/images/build_game-hover.png"/>
 			<% end %>
+		</div>
+		<div style="margin:0 auto; margin-bottom: 100px; text-align: center;">
+			(This may take a while if you haven't added category or search-term constraints.)
 		</div>
 	</style>
 </body>

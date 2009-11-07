@@ -50,7 +50,7 @@ class BlastController < ApplicationController
         @questions = refine_by_seasons(@questions, season_min, season_max)
         @questions = refine_by_values(@questions, value_min, value_max)
       end
-      @question_ids = @questions.collect {|q| q.id.to_s}.join(",")
+      @question_ids = @questions.sort_by { rand }.collect {|q| q.id.to_s}.join(",")
       if @question_ids.empty?
         flash[:alert] = "We couldn't find any questions using the criteria you specified. Try a broader search."
         redirect_to "/blast"
@@ -121,6 +121,6 @@ class BlastController < ApplicationController
   end
   
   def refine_by_values(questions, value_min, value_max)
-    return questions.reject {|q| q.value == "N/A" or q.value == "DD" or q.value.to_i < value_min or q.value.to_i > value_max}
+    return questions.reject {|q| q.value == "N/A" or q.value == "DD" or q.value.to_i < value_min or q.value.to_i > value_max}.first(500)
   end
 end
