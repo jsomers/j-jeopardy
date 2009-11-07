@@ -28,12 +28,11 @@ class BlastController < ApplicationController
     category_ids = params[:category_ids].split(",").collect {|id| id.strip.to_i}
     search_terms = params[:search_terms].split(",").collect {|term| term.strip.downcase}.sort {|a, b| b.length <=> a.length}
     
-    questions = refine_by_categories(category_ids)
-    questions = refine_by_search_terms(questions, search_terms)
-    questions = refine_by_seasons(questions, season_min, season_max)
-    questions = refine_by_values(questions, value_min, value_max)
-    @q = questions.first
-    @question_ids = questions.collect {|q| q.id.to_s}.join(",")
+    @questions = refine_by_categories(category_ids)
+    @questions = refine_by_search_terms(@questions, search_terms)
+    @questions = refine_by_seasons(@questions, season_min, season_max)
+    @questions = refine_by_values(@questions, value_min, value_max)
+    @question_ids = @questions.collect {|q| q.id.to_s}.join(",")
     @no_script = true
     @body_id = "question"
   end

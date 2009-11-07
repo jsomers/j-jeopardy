@@ -21,6 +21,9 @@
 	}
 </style>
 <script type="text/javascript">
+	var decasec = 0;
+	var seconds = 0;
+	var mins = 0;
 	var question_ids = [<%= @question_ids %>];
 	$(document).ready(function() {
 		$("#type-help").live("mouseover",
@@ -42,10 +45,31 @@
 			}
 		);
 	});
+	
+	function timer() {
+		if (seconds >= 59 && decasec >= 9) {
+			seconds = -1
+			mins += 1
+		}
+		if (decasec >= 9) {
+			decasec = -1
+			seconds += 1
+		}
+		decasec += 1
+		$("#timer").attr("value", (mins <= 9 ? "0" + mins : mins) + ":" + (seconds <= 9 ? "0" + seconds : seconds));
+		setTimeout("timer()", 100);
+	}
+		//timer()
 </script>
 
+<div style="margin:0px; border-bottom: 1px solid white; width: 400px; text-align: center; margin:0 auto; margin-bottom: 40px;">
+	<input type="text" id="timer" value="00:00" style="color: white; font-family: Optima; font-size: 26px; margin-left: 60px; text-align: center; background: #211EAB; border:none; width: 80px;"/>
+	<span id="score_container" style="color: white; font-family: Optima; font-size: 26px; color: #33ff33;">&raquo; $<span style="score">900</span></span>
+	<span id="progress_container" style="color: white; font-family: Optima; font-size: 20px; color: white; padding-top: 5px; float: right; vertical-align: bottom;"> (<span style="progress">0</span> of <%= @question_ids.split(",").length %>)</span>
+</div>
+
 <div id="ffinger"><small><span id="question_value">welcome to</span></small><br/><span id="question_category">JEOPARDY BLAST!</span></div>
-<div id="q" style="font-variant: normal; font-size: 18px; line-height: 1.2em;"><p>Your questions have been loaded. Once you click the "Start" button below, your game will begin. <br/><br/>To answer a question, <a href="#" id="type-help">type</a> your answer into the box and hit ENTER. Leave the space blank if you'd like to pass.<br/><br/></div>
+<div id="q" style="font-variant: normal; font-size: 18px; line-height: 1.2em;"><p>Your <%= @question_ids.split(",").length %> questions have been loaded. Once you click the "Start" button below, your game will begin. <br/><br/>To answer a question, <a href="#" id="type-help">type</a> your answer into the box and hit ENTER. Leave the space blank if you'd like to pass.<br/><br/></div>
 <div id="game_area" style="display: none;">
 	<div id="ffinger"><small>$<span id="question_value">200</span></small><br/><span id="question_category">WORD ORIGINS</span></div>
 	<div id="q">This guy...</div>
