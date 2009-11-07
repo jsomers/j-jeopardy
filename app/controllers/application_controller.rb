@@ -14,29 +14,13 @@ class ApplicationController < ActionController::Base
   # filter_parameter_logging :password
   def double?
     ep = Episode.find_by_key(session[:ep_key])
-    ct = 0
-    for i in (0..5)
-      for j in (0..4)
-        ct += ep.single_table[i][j][3]
-      end
-    end
-    return ct >= 30
+    debugger
+    return ep.answered >= Game.find_by_game_id(ep.game_id).questions.select {|q| !q.coord.include? "DJ" and !(q.coord == "N/A")}.length
   end
   
   def final?
     ep = Episode.find_by_key(session[:ep_key])
-    ct = 0
-    for i in (0..5)
-      for j in (0..4)
-        ct += ep.single_table[i][j][3]
-      end
-    end
-    for i in (0..5)
-      for j in (0..4)
-        ct += ep.double_table[i][j][3]
-      end
-    end
-    return ct >= 59
+    return ep.answered >= (Game.find_by_game_id(ep.game_id).questions.length - 1)
   end
   
 #  def ep

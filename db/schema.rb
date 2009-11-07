@@ -9,7 +9,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091104232721) do
+ActiveRecord::Schema.define(:version => 20091107014736) do
+
+  create_table "categories", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "name"
+  end
 
   create_table "completeness", :force => true do |t|
     t.integer "game_id"
@@ -62,8 +68,8 @@ ActiveRecord::Schema.define(:version => 20091104232721) do
     t.text     "answer"
     t.text     "value"
     t.text     "coord"
-    t.boolean  "fj",         :default => false
-    t.text     "category"
+    t.boolean  "fj",          :default => false
+    t.integer  "category_id"
   end
 
   create_table "seasons", :force => true do |t|
