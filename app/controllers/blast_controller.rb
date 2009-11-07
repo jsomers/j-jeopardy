@@ -6,6 +6,9 @@ class BlastController < ApplicationController
   end
   
   def get_categories
+    if Rails.cache.read("cats").nil?
+      Rails.cache.write("cats", Category.find(:all).collect {|c| [c.name, c.q_count, c.id]})
+    end
     query = params[:q].upcase
     words = query.split(' ').sort {|a, b| b.length <=> a.length}
     garbage = ['THIS', 'THE', 'A', 'AN', 'OF', 'IN', 'ABOUT', 'TO', 'FROM', 'AM', 'AS']
