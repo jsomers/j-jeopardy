@@ -6,8 +6,9 @@ class BlastController < ApplicationController
   end
   
   def get_categories
-    if Rails.cache.read("cats").nil?
+    if Rails.cache.read("has_cats").nil?
       Rails.cache.write("cats", Category.find(:all).collect {|c| [c.name, c.q_count, c.id]})
+      Rails.cache.write("has_cats", "true")
     end
     query = params[:q].upcase
     words = query.split(' ').sort {|a, b| b.length <=> a.length}
