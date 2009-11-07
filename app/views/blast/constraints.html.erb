@@ -51,6 +51,8 @@
 			$("#seasons").val($("#season-slider-range").slider("values", 0) + ' - ' + $("#season-slider-range").slider("values", 1));
 		});
 		$(document).ready(function() {
+			$("#value_min").attr("value", "300");
+			$("#value_max").attr("value", "800");
 			$("#search").blur(function() {
 				$("#search_terms").attr("value", $("#search").attr("value"));
 			});
@@ -123,7 +125,7 @@
 				<td><div style="border: 2px solid #ccc; width: 650px; margin: 0 auto; margin-bottom: 20px;">
 					<p>
 					<label for="search">Only include questions that have these <strong>terms</strong>:<br/></label>
-					<input type="text" id="search" style="width: 300px; margin-top: 5px; font-size: 15px; text-align: center; padding: 4px;"/>
+					<input type="text" id="search" style="width: 300px; margin-top: 5px; margin-left: 155px; font-size: 15px; text-align: center; padding: 4px;"/> <span style="color: #999; font-size: 12px;">(separate terms with commas)</span>
 					</p>
 				</div><td>
 			</tr>
@@ -133,8 +135,8 @@
 		<script language="javascript" src="/javascripts/simpleswap.js"></script>
 		<div style="margin-bottom: 100px; margin-left: 40px; text-align: center;">
 			<% form_tag({:controller => "blast", :action => "play"}) do -%>
-				<input type="hidden" id="value_min" name="value_min" value="100"/>
-				<input type="hidden" id="value_max" name="value_max" value="2000"/>
+				<input type="hidden" id="value_min" name="value_min" value="300"/>
+				<input type="hidden" id="value_max" name="value_max" value="800"/>
 				<input type="hidden" id="season_min" name="season_min" value="20"/>
 				<input type="hidden" id="season_max" name="season_max" value="26"/>
 				<input type="hidden" id="category_ids" name="category_ids" value=""/>

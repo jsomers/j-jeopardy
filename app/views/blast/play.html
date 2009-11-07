@@ -1,31 +1,70 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-
-<title></title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-
 <%= javascript_include_tag "jquery-1.3.2.min.js" -%>
-<%= stylesheet_link_tag 'main' -%>
+<style type="text/css">
+	#tooltip {
+		position: absolute;
+		z-index: 3000;
+		border: 1px solid #86acc1;
+		background-color: #fff;
+		opacity: 0.85;
+		max-width: 450px;
+	}
+	#tooltip .contain {
+		background: #cde9f8;
+		border: 2px solid #fff;
+		color: black;
+		padding: 5px;
+	}
+	#tooltip h3, #tooltip div { 
+		margin: 0;
+		font-size: 12px;
+		font-weight: bold;
+	}
+</style>
+<script type="text/javascript">
+	var question_ids = [<%= @question_ids %>];
+	$(document).ready(function() {
+		$("#type-help").live("mouseover",
+			function(ev) {
+				$("#tooltip").show();
+			}
+		);
 
-</head>
-<div id="out" style="border: 5px solid #211eab; margin-bottom: 5px;"></div>
-<body>
+		$("#type-help").live("mouseout",
+			function(ev) {
+				$("#tooltip").hide();
+			}
+		);
 
-<div id="ffinger"><small>$<%= @q.value %></small><br/><%= @q.category.name %></div>
-<div id="question"><%= @q.question %></div>
+		$("#type-help").live("mousemove",
+			function(ev) {
+				$("#tooltip").css("top", ev.pageY - 30 + "px");
+				$("#tooltip").css("left", ev.pageX + 20 + "px");
+			}
+		);
+	});
+</script>
 
-<% form_remote_tag :url => { :action => 'validate_blast', :controller => 'play'}, :update => 'outcome' do -%>
-	<input type="hidden" name="value" id="value" value="<%= @q.value %>">
-	<input id="question_id" name="question_id" type="hidden" value="<%= @q.id %>">
-	<input type="hidden" name="blast" id="blast" value="yes">
-	<input id="answer" name="answer" type="text" style="" tabindex='1'>
-	<script type="text/javascript">   document.getElementById('answer').focus(); </script>
+<div id="ffinger"><small><span id="question_value">welcome to</span></small><br/><span id="question_category">JEOPARDY BLAST!</span></div>
+<div id="q" style="font-variant: normal; font-size: 18px; line-height: 1.2em;"><p>Your questions have been loaded. Once you click the "Start" button below, your game will begin. <br/><br/>To answer a question, <a href="#" id="type-help">type</a> your answer into the box and hit ENTER. Leave the space blank if you'd like to pass.<br/><br/></div>
+<div id="game_area" style="display: none;">
+	<div id="ffinger"><small>$<span id="question_value">200</span></small><br/><span id="question_category">WORD ORIGINS</span></div>
+	<div id="q">This guy...</div>
+		<input type="hidden" name="value" id="value" value="200">
+		<input id="question_id" name="question_id" type="hidden" value="1337">
+		<input type="hidden" name="blast" id="blast" value="yes">
+		<input id="answer" name="answer" type="text" style="" tabindex="1">
+		<script type="text/javascript">   document.getElementById('answer').focus(); </script>
+		<%= submit_tag 'Guess', :id => 'guess', :style => 'display: none;' %>
+</div>
 
-	<%= submit_tag 'Guess', :id => 'guess', :style => 'display: none;' %> <span id="outcome" style="padding:10px;font-size:20px"><%= @outcome %></span>
-<% end -%>
+<div id="tooltip" style="display: none; right: auto; text-align: left; font-weight: normal; font-family: Arial;">
+	<div class="contain" style="font-weight: normal;">
+		<span id="show-note">
+			<h2 style="margin: 0px; padding: 0px;">Typing answers</h2>
 
+			<p>The function for validating answers works by (1) assuming the guess is correct, (2) breaking the guess into words, and (3) checking whether each word is contained somewhere in the answer; if not, the player's wrong. <strong>Case doesn't matter</strong>.</p>
 
-</body>
-</html>
+			<p>One helpful rule of thumb is: if the spelling of something is ambiguous, leave it out. If you're not sure whether it's <strong>Bonnie and Clyde</strong> or <strong>Bonnie & Clyde</strong>, just type <strong>bonnie clyde</strong>. If you can't decide between <strong>Clide</strong> and <strong>Clyde</strong>, try <strong>bon cl</strong>. Go with enough to unambiguously pin down an answer, and no more.</p>
+		</span>
+	</div>
+</div>
