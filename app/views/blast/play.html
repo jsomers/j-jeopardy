@@ -167,7 +167,7 @@
 
 </script>
 
-<div style="margin:0px; border-bottom: 1px solid white; width: 500px; text-align: center; margin:0 auto; margin-bottom: 40px;">
+<div style="margin:0px; border-bottom: 1px solid white; width: 500px; text-align: center; margin:0 auto; margin-bottom: 40px; padding-bottom: 5px;">
 	<input type="text" id="timer" value="<%= params[:time] or "00:00" %>" style="color: white; font-family: Optima, Georgia; font-size: 26px; margin-left: 10px; text-align: center; background: #211EAB; border:none; width: 80px;"/>
 	<span style="color: white; font-family: Optima, Georgia; float: left; padding-top: 10px"><a href="#" id="save-game">[save]</a></span>
 	<span id="score_container" style="color: white; font-family: Optima, Georgia; font-size: 26px; color: #33ff33;">&raquo; $<span id="score"><%= params[:score] or 0 %></span></span>
