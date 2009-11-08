@@ -100,6 +100,7 @@
 	var load_question = function(index) {
 		if (index == question_ids.length) {
 			game_over();
+			return false;
 		};
 		q_id = question_ids[index];
 		position += 1;
