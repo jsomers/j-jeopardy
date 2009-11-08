@@ -66,3 +66,4 @@ Rails::Initializer.run do |config|
   # Activate observers that should always be running
   # config.active_record.observers = :cacher, :garbage_collector
 end
+CACHE = MemCache.new('127.0.0.1')

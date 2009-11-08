@@ -1,79 +1,111 @@
-<%= if params[:answer] then '<font color="white">(The answer was <b>' + params[:answer] + '</b>)</font>' end %>
+<%= javascript_include_tag "jquery-1.3.2.min.js" %>
 
+<script type="text/javascript">
+
+$(document).ready(function() {
+	$(".corrector").click(function() {
+		var my_id = $(this).attr("id");
+		var type = $(this).attr("type");
+		var value = $(this).attr("value");
+		$.post("/play/change_scores", 
+			{ authenticity_token: AUTH_TOKEN, my_id: my_id, type: type, value: value },
+			function(ret) {
+				$("#" + ret["my_id"]).html(ret["char"]);
+				$("#" + ret["my_id"]).attr("type", ret["new_type"]);
+				upd(ret["delta"], ret["player"], ret["current"]);
+				// change my character and type
+			},
+			"json"
+		)
+	});
+});
+</script>
+
+<%= if params[:answer] then '<font color="white">(The answer was <b>' + params[:answer] + '</b>)</font>' end %>
+<% ep = Episode.find_by_key(session[:ep_key]) %>
 <%= render :partial => 'standings' %>
 
-<div id="single_jeopardy" style="display:<%= (@finished ? 'none' : '') %>">
-<table align="center">
-	<tr>
-	<% for cat in @single %>
-		<td width="250px;"><span id="category_title"><%= cat %></span></td>
-	<% end %>
-	</tr>
-	<% for j in (1..5) %>
-		<tr height="50px">
-		<% for i in (1..6) %>
-			<td>
-				<% if (q = @questions.select {|a| a.coord == "J,#{i},#{j}"}.first) %>
-
-					<a href="/play/question/<%= q.id %>" class="dollar" style="display: <%= (ep.single_table[i - 1][j - 1][3].to_i > 0 ? 'none' : '') %>">$<%= q.value %></a>
+<% if !@finished %>
+	<div id="single_jeopardy">
+	<table align="center">
+		<tr>
+		<% for cat in @single %>
+			<td width="250px;"><span id="category_title"><%= cat %></span></td>
+		<% end %>
+		</tr>
+		<% for j in (1..5) %>
+			<tr height="50px">
+			<% for i in (1..6) %>
+				<% value = (@doubled ? (j * 100 * 2) : (j * 100)) %>
+				<td>
+					<% if (qid = @questions["J,#{i},#{j}"]) %>
+						<a class="dollar" style="display: <%= (ep.single_table[i - 1][j - 1][3].to_i > 0 ? 'none' : '') %>" href="/play/question/<%= qid %>">$<%= value %></a>
 		
-					<!-- Begin Corrector -->
-					<% answered = ep.single_table[i - 1][j - 1][3] %>				
-					<table align="center" style="display: <%= (answered == 1 ? "''" : "none") %>;"><tr>
-						<% for pl in (0..2) %>
-						<td>
-							<% p1_outcome = ep.single_table[i - 1][j - 1][pl].to_i %>
-							<% char = @chars[p1_outcome] %>
-							<% self_id = i.to_s + '-' + j.to_s + '-' + pl.to_s %>
-							<span id="<%= self_id %>"><%= link_to_remote(char, :update => self_id, :url =>{ :action => :change_scores, :value => q.value, :type => p1_outcome, :my_id => self_id}) %></span>
-						<% end %>
-					</tr></table>
-					<!-- END Corrector -->
-				<% else %>
-					<span style="color: white;">[missing]</span>
-				<% end %>
-			</td>
-		<% end %>
-
-		</tr>
-	<% end %>
-</table></div>
-
-<div id="double_jeopardy" style="display:<%= (@finished ? '' : 'none') %>;">
-<table align="center">
-	<tr>
-	<% for cat in @double %>
-		<td width="250px;"><span id="category_title"><%= cat %></span></td>
-	<% end %>
-	</tr>
-	<% for j in (1..5) %>
-		<tr height="50px;">
-		<% for i in (1..6) %>
-		<td>
-			<% if (q = @questions.select {|a| a.coord == "DJ,#{i},#{j}"}.first) %>
-				<a href="/play/question/<%= q.id %>" class="dollar" style="display: <%= (ep.double_table[i - 1][j - 1][3].to_i > 0 ? 'none' : '') %>">$<%= q.value %></a>		
-	
-				<!-- Begin DJ Corrector -->
-				<% answered = ep.double_table[i - 1][j - 1][3] %>				
-				<table align="center" style="display: <%= (answered == 1 ? "''" : "none") %>;"><tr>
-					<% for pl in (0..2) %>
-					<td>
-						<% p1_outcome = ep.double_table[i - 1][j - 1][pl].to_i %>
-						<% char = @chars[p1_outcome] %>
-						<% self_id = 'DJ' + i.to_s + '-' + j.to_s + '-' + pl.to_s %>
-						<span id="<%= self_id %>"><%= link_to_remote(char, :update => self_id, :url =>{ :action => :change_scores, :value => q.value, :type => p1_outcome, :my_id => self_id}) %></span>
+						<!-- Begin Corrector -->
+						<% answered = ep.single_table[i - 1][j - 1][3] %>
+						<table align="center" style="display: <%= (answered == 1 ? "''" : "none") %>;">
+							<tr>
+							<% for pl in (0..2) %>
+								<td>
+									<% p1_outcome = ep.single_table[i - 1][j - 1][pl].to_i %>
+									<% char = @chars[p1_outcome] %>
+									<% self_id = i.to_s + '-' + j.to_s + '-' + pl.to_s %>
+									<span><a id="<%= self_id %>" class="corrector" type="<%= p1_outcome %>" value="<%= value %>" href="#"><%= char %></a></span>
+								</td>
+							<% end %>
+							</tr>
+						</table>
+						<!-- END Corrector -->
+					<% else %>
+						<span style="color: white;">[missing]</span>
 					<% end %>
-				</tr></table>
-				<!-- END DJ Corrector -->
-			<% else %>
-				<span style="color: white;">[missing]</span>
+				</td>
 			<% end %>
-		</td>
+
+			</tr>
+		<% end %>
+	</table></div>
+<% else %>
+	<div id="double_jeopardy">
+	<table align="center">
+		<tr>
+		<% for cat in @double %>
+			<td width="250px;"><span id="category_title"><%= cat %></span></td>
 		<% end %>
 		</tr>
-	<% end %>
-</table></div>
+		<% for j in (1..5) %>
+			<tr height="50px">
+			<% for i in (1..6) %>
+				<% value = (@doubled ? (j * 200 * 2) : (j * 200)) %>
+				<td>
+					<% if (qid = @questions["DJ,#{i},#{j}"]) %>
+						<a class="dollar" style="display: <%= (ep.double_table[i - 1][j - 1][3].to_i > 0 ? 'none' : '') %>" href="/play/question/<%= qid %>">$<%= value %></a>
+		
+						<!-- Begin Corrector -->
+						<% answered = ep.double_table[i - 1][j - 1][3] %>
+						<table align="center" style="display: <%= (answered == 1 ? "''" : "none") %>;">
+							<tr>
+							<% for pl in (0..2) %>
+								<td>
+									<% p1_outcome = ep.double_table[i - 1][j - 1][pl].to_i %>
+									<% char = @chars[p1_outcome] %>
+									<% self_id = 'DJ' + i.to_s + '-' + j.to_s + '-' + pl.to_s %>
+									<span><a id="<%= self_id %>" class="corrector" type="<%= p1_outcome %>" value="<%= value %>" href="#"><%= char %></a></span>
+								</td>
+							<% end %>
+							</tr>
+						</table>
+						<!-- END Corrector -->
+					<% else %>
+						<span style="color: white;">[missing]</span>
+					<% end %>
+				</td>
+			<% end %>
 
+			</tr>
+		<% end %>
+	</table></div>
+<% end %>
 <br/><br/>
 
 <div id="final" align="center" style="display:<%= (@final ? '' : 'none') %>;">
@@ -83,21 +115,21 @@
 <script type="text/javascript">
 	// updates the standings when a player clicks a corrector.
 	function upd(amt, player, cur) {
-		old_score = parseInt($('score' + player).value.replace('$', ''))
-		new_score = old_score + amt
-		$('score' + player).value = '$' + new_score
+		old_score = parseInt($("#score" + player).attr("value").replace("$", ""));
+		new_score = old_score + parseInt(amt);
+		$("#score" + player).attr("value", "$" + new_score)
 		if(new_score >= 0) {
-			$('score' + player).style.color = '#33ff33';
+			$("#score" + player).css("color", "#33ff33");
 		} else {
-			$('score' + player).style.color = 'red';
+			$("#score" + player).css("color", "red");
 		}
 		// highlight the correct person's name.
 		if(cur == 1) {
-			$('name' + player).style.borderBottom = '1px solid white';
-			ps = [1, 2, 3]
-			ps.splice(player - 1, 1)
+			$("#name" + player).css("border-bottom", "1px solid white");
+			ps = [1, 2, 3];
+			ps.splice(player - 1, 1);
 			for(i = 0; i <= 1 ; i = i + 1) {
-				$('name' + ps[i]).style.borderBottom = 'none';
+				$("#name" + ps[i]).css("border-bottom", "none");
 			}
 		}
 	}

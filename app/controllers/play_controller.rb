@@ -33,6 +33,7 @@ class PlayController < ApplicationController
   end
   
   def board
+    @no_script = true
     if (old_ep = Episode.find_all_by_game_id(params[:id]).select {|e| (e.key.split('_')[0..2].reject {|x| x == '0'} & session[:players].reject {|y| y.nil?}).length == session[:players].reject {|y| y.nil?}.length}.first)
       ep_key = old_ep.key
       session[:players] = old_ep.key.split('_')[0..2].collect {|x| if x == '0' then nil else x end}
@@ -79,13 +80,14 @@ class PlayController < ApplicationController
     end
     @game_id = params[:id]
     @game = Game.find_by_game_id(@game_id)
+    @doubled = Date.parse(@game.airdate) >= Date.parse("2001-11-26")
     @page_title = "Jeopardy! Game #{@game.game_id} (#{@game.airdate})"
     @body_id = "board"
     
     @single = @game.categories.first(6)
     @double = @game.categories[6..-2]
     
-    @questions = @game.questions
+    @questions = cache("questions_#{@game.game_id}") { map = {}; @game.questions.each {|q| map[q.coord] = q.id}; map }
 
     @chars = ['<font color="red">&#10007;</font>', '<font color="#33ff33">&#10003;</font>', '<font color="white" size="1">&#9679;</font>']
   end
@@ -95,7 +97,7 @@ class PlayController < ApplicationController
     @q = Question.find(params[:id])
     @page_title = "$#{@q.value} | #{@q.category.name}"
     @body_id = "question"
-    if @q.value.include? 'DD'
+    if @q.value == "DD"
       redirect_to '/play/dd/' + params[:id]
     end
     coords = @q.coord
@@ -165,18 +167,9 @@ class PlayController < ApplicationController
         ep_points[2] += delta
     end
     ep.points = ep_points
-    st = '<script type="text/javascript">'
-    st += 'upd(' + delta.to_s + ', ' + (player + 1).to_s + ', ' + (type == 0 ? '1' : '0') + ');'
-    st += '</script>'
-    st += '<a style="text-decoration:none;" href="#" onclick="'
-    st += 'new Ajax.Updater(\'' + my_id + '\', \'/play/change_scores?'
-    st += 'my_id=' + my_id + '&value=' + value.to_s + '&type=' + (new_type).to_s + '\', ' 
-    st += '{asynchronous:true, evalScripts:true, parameters:\''
-    st += 'authenticity_token=\' + encodeURIComponent(\'' + params[:authenticity_token] + '\')}); '
-    st += 'return false;">'
-    st += char + '</a>'
     ep.save
-    render :text => st
+    
+    render :json => { :char => char, :my_id => my_id, :delta => delta.to_s, :player => player + 1, :current => (type == 0 ? "1" : "0"), :new_type => new_type.to_s}
   end
   
   def dd

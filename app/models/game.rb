@@ -5,7 +5,7 @@ class Game < ActiveRecord::Base
   
   serialize :categories;
   
-  after_create :set_question_categories, :set_dd_values, :count_questions, :set_season_count
+  after_create :set_question_categories, :count_questions, :set_season_count
   
   def self.add_season(n)
     for game_id in Dir.entries('/users/jsomers/Desktop/season ' + n.to_s + '/')[2..-1]
@@ -104,12 +104,6 @@ class Game < ActiveRecord::Base
   def set_question_categories
     self.questions.each do |q|
       q.set_category
-    end
-  end
-  
-  def set_dd_values
-    self.questions.each do |q|
-      q.set_dd_value
     end
   end
   

@@ -8,9 +8,9 @@ module ApplicationHelper
     return [[1 + t.to_i, 10].min, ((t - t.to_i) * 10).to_i]
   end
   
-  def ep
-    return Episode.find_by_key(session[:ep_key])
-  end
+  #def ep
+  #  return Episode.find_by_key(session[:ep_key])
+  #end
   
   def p1
     if (s = session[:players][0]) and (p = Player.find(s)) then return p end

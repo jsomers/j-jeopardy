@@ -1,3 +1,4 @@
+<% ep = Episode.find_by_key(session[:ep_key]) %>
 <style type="text/css">
 
 #standings {
@@ -53,42 +54,7 @@
 	
 }
 
-#single_link {
-	margin-top: 15px;
-	float:left;
-	color:white;
-	font-size: 12px;
-	font-family: Optima;
-}
-
-#double_link {
-	margin-top: 15px;
-	float: right;
-	color: white;
-	font-size: 12px;
-	font-family: Optima;
-}
-
 </style>
-
-<script type="text/javascript">
-	
-	function doub() {
-		$('double_jeopardy').style.display = '';
-		$('single_jeopardy').style.display = 'none';
-		$('single_link').style.display='';
-		$('double_link').style.display='none';
-	}
-
-	function sing() {
-		$('single_jeopardy').style.display = '';
-		$('double_jeopardy').style.display = 'none';
-		$('double_link').style.display='';
-		$('single_link').style.display='none';
-	}
-</script>
-<a id="single_link" href="#" onclick="sing();" style="display: <%= (@finished ? '' : 'none') %>;">&lt;&lt; single</a>
-<a id="double_link" href="#" onclick="doub();">double &gt;&gt;</a>
 
 <div id="standings">
 	<% st = "" %>
