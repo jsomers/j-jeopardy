@@ -6,6 +6,10 @@ class BlastController < ApplicationController
   end
   
   def get_categories
+    if Rails.cache.read("has_cats").nil?
+      Rails.cache.write("cats", Category.find(:all).collect {|c| [c.name, c.q_count, c.id]}, :expires_in => 24.hours)
+      Rails.cache.write("has_cats", "true", :expires_in => 24.hours)
+    end
     query = params[:q].strip.upcase
     words = query.split(' ').sort {|a, b| b.length <=> a.length}
     if words.nil? or words.empty?
@@ -13,11 +17,7 @@ class BlastController < ApplicationController
     else
       garbage = ['THIS', 'THE', 'A', 'AN', 'OF', 'IN', 'ABOUT', 'TO', 'FROM', 'AM', 'AS']
       garbage.each {|g| words.delete(g) { words }}
-      if !(@categories = CACHE.get("categories"))
-        @categories = Category.find(:all).collect {|c| [c.name, c.q_count, c.id]}
-        CACHE.set("categories", @categories, 24.hours)
-      end
-      @categories = @categories.select {|c| begin c[0].include? words[0] rescue false end}
+      @categories = Rails.cache.read("cats").select {|c| begin c[0].include? words[0] rescue false end}
       if words.length > 1
         for word in words[1..-1]
           @categories = @categories.select {|c| c[0].include? word}
