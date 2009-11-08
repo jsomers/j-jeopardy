@@ -44,12 +44,6 @@ class PlayController < ApplicationController
     end
     if ep
       session[:ep_key] = ep_key
-      ep_charts = ep.charts.dclone
-      ep_charts[0] << ep.points[0]
-      ep_charts[1] << ep.points[1]
-      ep_charts[2] << ep.points[2]
-      ep.charts = ep_charts
-      ep.save
       @finished = double?
       @final = final?
     else
