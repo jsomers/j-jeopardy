@@ -4,7 +4,7 @@
 <script type="text/javascript">
 	var milisec = <%= time(@q.question.split(" ").length)[1] %>;
 	var seconds = <%= (!params[:time].nil? ? time(@q.question.split(" ").length)[0] - 2 : time(@q.question.split(" ").length)[0]) %>;
-	var home_url = '/play/board/<%= Question.find_by_id(params[:id]).game_id %>';
+	var home_url = '/play/board/<%= Question.find(params[:id].to_i).game_id %>';
 	var p1_key = 65;
 	var p2_key = 66;
 	var p3_key = 80;

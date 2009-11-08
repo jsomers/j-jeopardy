@@ -77,16 +77,18 @@ class PlayController < ApplicationController
       @finished = false
       @final = false
     end
-    @game_id = params[:id]
-    @game = Game.find_by_game_id(@game_id)
+    @game = Game.find_by_game_id(params[:id].to_i)
     @page_title = "Jeopardy! Game #{@game.game_id} (#{@game.airdate})"
     @body_id = "board"
     
     @single = @game.categories.first(6)
     @double = @game.categories[6..-2]
-  
-    @questions = @game.questions
     
+    if !(@questions = CACHE.get("questions-#{params[:id]}"))
+      @questions = @game.questions.collect {|q| [q.id, q.value, q.coord]}
+      CACHE.set("questions-#{params[:id]}", @questions, 45.minutes)
+    end
+
     @chars = ['<font color="red">&#10007;</font>', '<font color="#33ff33">&#10003;</font>', '<font color="white" size="1">&#9679;</font>']
   end
   
