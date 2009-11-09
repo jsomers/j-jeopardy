@@ -5,6 +5,11 @@
 		$("#start").click(function() {
 			window.location = "/blast";
 		});
+		$(".reveal").click(function() {
+			var id = $(this).attr("id").split("-")[1];
+			$(this).hide();
+			$("#answer-" + id).show();
+		});
 	});
 </script>
 <div id="instructions">
@@ -20,7 +25,7 @@
 	<ol style="line-height: 1.5em">
 	<% @stumpers.each do |q| %>
 	<li>($<%= q.value %>) <%= q.question %>:</li>
-		<ul style="list-style: none"><li><span style="font-weight: bold"><%= q.answer %></span></li></ul>
+		<ul style="list-style: none"><li><a href="#reveal" class="reveal" id="reveal-<%= q.id %>">(reveal answer)</a><span id="answer-<%= q.id %>" style="font-weight: bold; display: none;"><%= q.answer %></span></li></ul>
 	<% end %>
 	</ol>
 </div>
@@ -32,7 +37,7 @@
 	<ol style="line-height: 1.5em">
 	<% @ignorants.each do |q| %>
 	<li>($<%= q.value %>) <%= q.question %>:</li>
-		<ul style="list-style: none"><li><span style="font-weight: bold"><%= q.answer %></span></li></ul>
+		<ul style="list-style: none"><li><a href="#reveal" class="reveal" id="reveal-<%= q.id %>">(reveal answer)</a><span id="answer-<%= q.id %>" style="font-weight: bold; display: none;"><%= q.answer %></span></li></ul>
 	<% end %>
 	</ol>
 </div>
