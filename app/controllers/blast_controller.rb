@@ -67,12 +67,14 @@ class BlastController < ApplicationController
     @no_script = true
     @time = params[:time]
     @score = params[:score]
+    @stumpers = Question.find(params[:stumpers].split(",").collect {|x| x.to_i})
+    @ignorants = Question.find(params[:ignorants].split(",").collect {|x| x.to_i})
     if @score.index("-")
       color = "red"
     else
       color = "#33ff33"
     end
-    @final_score = "<span style=\"color:#{color};\">#{@score}</span>"
+    @final_score = "<span style=\"color:#{color};\">$#{@score}</span>"
     @game_id = params[:game_id]
     @body_id = "question"
   end

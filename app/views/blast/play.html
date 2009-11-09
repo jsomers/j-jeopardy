@@ -49,13 +49,14 @@
 	var game_over = function() {
 		var score = $("#score").html();
 		var time = $("#timer").attr("value");
-		window.location = "/blast/game_over?game_id=" + game_id + "&score=" + score + "&time=" + time;
+		window.location = "/blast/game_over?game_id=" + game_id + "&score=" + score + "&time=" + time + "&stumpers=" + stumpers.join(",") + "&ignorants=" + ignorants.join(",");
 	};
 	
 	var validate = function(guess, answer, value) {
 		if (guess == "") {
 			$("#outcome").css("color", "white");
 			$("#outcome").html(answer);
+			ignorants.push(question_ids[position - 1]);
 			setTimeout("load_question(" + position + ")", 1000);
 		} else {
 			correct = true;
@@ -83,6 +84,7 @@
 			} else {
 				$("#outcome").css("color", "red");
 				$("#outcome").html(answer);
+				stumpers.push(question_ids[position - 1]);
 				var new_score = old_score - value;
 				$("#score").html(new_score);
 				if (new_score >= 0) {
@@ -96,6 +98,8 @@
 	};
 	
 	var question_ids = [<%= @question_ids %>];
+	var stumpers = []; // Questions where you guess incorrectly.
+	var ignorants = []; // Questions that you pass on.
 	var position = <%= params[:position] or 0 %>;
 	var load_question = function(index) {
 		if (index == question_ids.length) {
