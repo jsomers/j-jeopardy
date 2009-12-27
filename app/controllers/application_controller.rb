@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
   def final?
     ep = Episode.find_by_key(session[:ep_key])
     questions = cache("questions-#{ep.game_id}") { Game.find_by_game_id(ep.game_id).questions }
-    return ep.answered >= (questions.select {|q| q.coord.include? "DJ" and !(q.coord == "N/A")}.length - 1) && double?
+    return ep.answered >= (questions.select {|q| !(q.coord == "N/A")}.length - 1) && double?
   end
   
   private
