@@ -212,7 +212,7 @@ class PlayController < ApplicationController
   end
   
   def wager
-    @q = Question.find_by_game_id(params[:id], :conditions => ['fj = ?', true])
+    @q = Question.find_by_game_id(params[:id], :conditions => ['value = "N/A"'])
     @category = Game.find_by_game_id(params[:id]).categories.last
     @page_title = "Final Jeopardy! (#{@category})"
     @body_id = "question"
