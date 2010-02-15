@@ -9,13 +9,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100215211424) do
+ActiveRecord::Schema.define(:version => 20100215220310) do
 
   create_table "categories", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "name"
-    t.integer  "q_count"
+    t.integer  "q_count",    :default => 0
   end
 
   create_table "completeness", :force => true do |t|
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(:version => 20100215211424) do
     t.text     "airdate"
     t.integer  "game_id"
     t.text     "metadata"
-    t.integer  "q_count"
+    t.integer  "q_count",    :default => 0
   end
 
   add_index "games", ["game_id"], :name => "index_games_on_game_id", :unique => true
