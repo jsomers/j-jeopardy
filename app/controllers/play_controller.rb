@@ -19,6 +19,14 @@ class PlayController < ApplicationController
     end
   end
   
+  def quickstart
+    @no_script = true
+    session[:players] = [nil, nil, nil]
+    @page_title = "Jimbo Jeopardy! Player names"
+    @body_id = "start"
+    @slick_input = true
+  end
+  
   def choose_game
     @page_title = "Jimbo Jeopardy! Choose a game to play"
     @body_id = "choose_game"

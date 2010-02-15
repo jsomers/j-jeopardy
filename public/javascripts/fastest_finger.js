@@ -17,7 +17,7 @@ function getArrows(ev, p1, p2, p3) {
 		window.location = home_url
 	}
     //ev = false;
-    if (ct > 0 || seconds > 5.0) {
+    if (ct > 0 || time_to_n > 50) {
 		switch(arrows) {
 			case p1_key:
 				nope1 = true;

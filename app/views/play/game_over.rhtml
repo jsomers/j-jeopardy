@@ -9,3 +9,7 @@
 </table>
 
 <div style="margin-top: 50px; font-family: Optima; font-variant: small-caps; color: white; font-size: 50px;"><small>And the winner is...</small><br/><font color="#33ff33"><%= [[ep.points[0], (p1 ? p1.handle : "Player 1")], [ep.points[1], (p2 ? p2.handle : "Player 2")], [ep.points[2], (p3 ? p3.handle : "Player 3")]].max[1] %></font><br/><br/> <small>(The answer was "<%= @answer %>")</small></div>
+
+<div style="margin-top: 20px; font-family: Optima; font-variant: small-caps; color: white; font-size: 20px;">
+	<a href="/play/quickstart" style="color: white;">Click here to play again</a>
+</div>

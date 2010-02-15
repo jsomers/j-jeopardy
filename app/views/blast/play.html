@@ -109,7 +109,7 @@
 		q_id = question_ids[index];
 		position += 1;
 		$.get("/blast/fetch_question", 
-			{ authencity_token: AUTH_TOKEN, q_id: q_id },
+			{ authenticity_token: AUTH_TOKEN, q_id: q_id },
 			function(ret) {
 				$("#q").html(ret["question"]);
 				$("#answer").attr("value", ret["answer"]);

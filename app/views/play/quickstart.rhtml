@@ -1,0 +1,50 @@
+<%= javascript_include_tag "jquery-1.3.2.min.js" -%>
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$("#quickstart").click(function() {
+			$.post("/player/quickstart", 
+				{p1: $("#handle-1").val(), p2: $("#handle-2").val(), p3: $("#handle-3").val(), authenticity_token: AUTH_TOKEN},
+				function(ret) {
+					window.location = "/play/choose_game";
+			});
+			return false;
+		});
+	});
+</script>
+
+<div id="wrapper">
+	<div id="sign_up_now">
+		Enter player names &amp; take your places</a>
+	</div>
+	
+	<div id="sign_in">
+		<span id="instructions">
+			Note that the <strong style="color: #444;">buzzer key</strong> for each player is specified next to their name box. <br/>
+		</span>
+	</div>
+	
+	<% if (n = flash[:notice]) %>
+		<div id="flash_notice">
+			<%= n %>
+		</div>
+	<% end %>
+	
+	<ol>
+		<% (1..3).each do |n| %>
+			<li id="p<%= n %>_spot">
+				<%= render :partial => "quickstart_spot", :locals => {:player => n.to_s, :failed => false} %>
+			</li>
+		<% end %>
+	</ol>
+	
+	<% if (a = flash[:alert]) %>
+		<div id="flash_alert">
+			<%= a %>
+		</div>
+	<% end %>
+	
+	<div id="play_now_button" style="padding-left: 20px">
+		<a href="/play/choose_game" id="quickstart">Ready? Play!</a>
+	</div>
+</div>
