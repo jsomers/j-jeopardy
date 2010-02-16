@@ -2,7 +2,19 @@
 <script type="text/javascript">
 
 	$(document).ready(function() {
+		$(".inactive").keydown(function(e) {
+			if (e.keyCode == 13) {
+				$("#loader").show();
+				$.post("/player/quickstart", 
+					{p1: $("#handle-1").val(), p2: $("#handle-2").val(), p3: $("#handle-3").val(), authenticity_token: AUTH_TOKEN},
+					function(ret) {
+						window.location = "/play/choose_game";
+				});
+				return false;
+			};
+		})
 		$("#quickstart").click(function() {
+			$("#loader").show();
 			$.post("/player/quickstart", 
 				{p1: $("#handle-1").val(), p2: $("#handle-2").val(), p3: $("#handle-3").val(), authenticity_token: AUTH_TOKEN},
 				function(ret) {
@@ -45,6 +57,9 @@
 	<% end %>
 	
 	<div id="play_now_button" style="padding-left: 20px">
-		<a href="/play/choose_game" id="quickstart">Ready? Play!</a>
+		<a href="/play/choose_game" id="quickstart">Ready? Play!</a> 
+		<div id="loader" style="margin-top: 20px; display: none;">
+			<img src="/images/loader.gif"/>
+		</div>
 	</div>
 </div>

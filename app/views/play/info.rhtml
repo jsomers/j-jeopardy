@@ -1,25 +1,22 @@
 <div id="readme" class="announce" style="width: 700px; margin:0 auto;">
 	<div class="wikistyle">
 		<h1 style="margin-bottom: -20px;">Some helpful information about the game</h1>
-		<h2>Getting started</h2>
+		
+		<h2>"The Keyboard Player"</h2>
+		
+		<p>You should choose one player to control the keyboard. That way you don't have to jostle the computer around to have each player type their own answers. Instead, players who have buzzed in should say their answer out loud, and the keyboard person should do their best to type it in.</p>
+		
+		<p>There's more info on how the answer checker works, and some hints on typing, in a section below.</p>
 
-		<p>To start a game, head to <code>/play/start</code> and enter your names. If you're only playing with two people, I'd use the first and third slots and leave the second one blank.</p>
+		<h2>Buzzing in (fastest finger)</h2>
 
-		<p>When you hit enter, that'll take you to <code>/play/choose_game</code>—where you can, obviously, choose a game. Pick one that sounds fun.</p>
+		<p>The buzzers are: the <strong>A</strong> key for <%= begin Player.find(session[:players][0].to_i).handle rescue "Player 1" end %>, <strong>B</strong> for <%= begin Player.find(session[:players][1].to_i).handle rescue "Player 2" end %>, and <strong>P</strong> for <%= begin Player.find(session[:players][2].to_i).handle rescue "Player 3" end %>. The idea there is to give the players as much space as possible. Of course, the best way to do that is to play with Wiimotes (see below).
 
-		<p>At the top of the board screen, one player's name (chosen randomly) should be underlined, which means it's their turn to select a category.</p>
-
-		<p>At this point you might want to go into "full-screen mode" on your browser. Close all tabs but the current one; hit the little button in the top-right corner of the window to get rid of the location bar; and go to <strong>View -> Status Bar</strong> to remove that. Minimize your Dock and drag the window as far as it can go.</p>
-
-		<h2>Fastest finger</h2>
-
-		<p>The buzzers are: P1 = <strong>A</strong>, P2 = <strong>B</strong>, P3 = <strong>P</strong>. The idea there is to give the players as much space as possible. Of course, the best way to do that is to play with Wiimotes (see below).
-
-		<p>When you choose a question, <strong>there will be a delay before an orange bar appears</strong> indicating that it's okay to buzz in. The idea is to give everyone time to read the question. (I may add a feature that varies this interval based on the length/difficulty of the question's text, but for now people seem to think the four seconds works nicely.)</p>
+		<p>When you choose a question, <strong>there will be a delay before an orange bar appears</strong> indicating that it's okay to buzz in. The idea is to give everyone time to read the question. The delay is based on the length of the question (plus a small random interval).</p>
 
 		<p>If a player buzzes in early, they will be locked out for a quarter of a second. Jumping the gun multiple times will not add more lockout time (so if you know you're locked out, you might as well frantically jam the crap out of the buzzer).</p>
 
-		<p>Once someone buzzes in, a red bar will show up and start to shrink. Players must say their answer before the bar disappears, and if they don't, the person with the keyboard should just type gibberish into the box.</p>
+		<p>Once someone buzzes in, a red bar will show up and start to shrink. Players must <strong>say</strong> their answer before the bar disappears, and if they don't, the person with the keyboard should just type gibberish into the box.</p>
 		<a name="typing"></a>
 		<h2>Typing answers <span style="color: red;">(important section)</span></h2>
 
@@ -31,13 +28,13 @@
 
 		<h2>Correctors</h2>
 
-		<p>Those cute little check marks and red X's and white dots are actually clickable, and they'll change a player's score appropriately. They can also be used to switch the player in control—just cycle through any one of that player's correctors and you'll see the underline move to their name.</p>
+		<p>Those cute little check marks and red X's and white dots on the main game board are actually clickable, and they'll change a player's score appropriately. They can also be used to switch the player in control—just cycle through any one of that player's correctors and you'll see the underline move to their name.</p>
 
 		<h2>Daily doubles</h2>
 
-		<p>These are hidden in the board, and they should work as expected. They make that familiar sound when you click them so be sure to have your speakers on.</p>
+		<p>These are hidden in the board and should work as expected. They make that familiar sound when you click them, so be sure to have your speakers on!</p>
 
-		<p>First, make a wager (must be at least $5), submit it, and answer the question. Players are given 15 seconds, which again gives them time to read and think a bit. Don't feel pressed to type the answer before the 15 seconds is up—you just have to say it before then. All that happens when the time runs out is that you're prompted to type in a guess.</p>
+		<p>First, make a wager (must be at least $5), submit it, and answer the question. Players are given 15 seconds, which again gives them time to read and think a bit. Don't feel pressed to type the answer before the 15 seconds is up—you just have to <em>say</em> it before then. All that happens when the time runs out is that you're prompted to type in a guess.</p>
 
 		<p>If there's a dispute here, fix it by playing with the text box (either by just hitting "enter" or by typing gibberish); there aren't correctors yet for daily doubles.</p>
 
@@ -81,13 +78,14 @@
 		<h2>Hidden modes</h2>
 
 		<ul style="line-height: 1.4em;">
-		<li> Try going to <code>/play/search</code> to search clues.</li>
-		<li> At /play/blast there's a "one-player" game that will feed you questions. See line 7 of <code>/app/controllers/play_controller</code> to see how questions are being pulled in at the moment. I haven't added scoring to this yet or anything but it has potential I think. If you enter a blank answer it'll show you the correct response and move you to the next question.</li>
-		<li> If you go to <code>/edit/board/[id]</code>, you'll be able to edit that particular game. It's the beginning of a "custom game" feature and/or just to make corrections.</li>
+		<li> Try going to <a href="/play/search">jimbojeopardy.com/play/search</a> to search clues.</li>
+		<li> At <a href="/blast">jimbojeopardy.com/blast</a> there's a "one-player" game that will feed you questions.</li>
 		</ul>
 
 
 		<h2>That's it!</h2>
+
+		<p>The <a href="/play/choose_game">page that you just came from</a> has a list of thousands of Jeopardy! games, color-coded by variety (like College, Tournament of Champions, Teen, Kids, etc.). When you've finished reading this page, head back there and choose one to play!</p>
 
 		<p>Let me know if you have other questions or ideas for improvement. My e-mail address is <em>jsomers@gmail.com</em>.</p>
 	</div>
