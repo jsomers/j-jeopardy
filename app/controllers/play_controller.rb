@@ -262,8 +262,10 @@ class PlayController < ApplicationController
     the_question = Question.find_by_id(params[:question_id])
     answer = the_question.answer.gsub('\\', '')
     game_id = the_question.game_id
-    g = Guess.new(:guess => guess, :question_id => the_question.id)
-    g.save
+    if guess != ""
+      g = Guess.new(:guess => guess, :question_id => the_question.id)
+      g.save
+    end
     guess_words = guess.split(' ')
     coords = the_question.coord
     col = coords.split(',')[1].to_i - 1
@@ -320,8 +322,10 @@ class PlayController < ApplicationController
     the_question = Question.find_by_id(params[:question_id])
     answer = the_question.answer.gsub('\\', '')
     game_id = the_question.game_id
-    g = Guess.new(:guess => guess, :question_id => the_question.id)
-    g.save
+    if guess != ""
+      g = Guess.new(:guess => guess, :question_id => the_question.id)
+      g.save
+    end
     guess_words = guess.split(' ')
     t = true
     for word in guess_words
@@ -355,8 +359,10 @@ class PlayController < ApplicationController
     guess = params[:answer]
     q = Question.find_by_id(params[:question_id])
     value = params[:value]
-    g = Guess.new(:guess => guess, :question_id => q.id)
-    g.save
+    if guess != ""
+      g = Guess.new(:guess => guess, :question_id => q.id)
+      g.save
+    end
     if guess.empty?
       @outcome = '(' + q.answer.gsub('\\', '') + ')<script type="text/javascript">window.location.href=window.location.href</script>'
     else
