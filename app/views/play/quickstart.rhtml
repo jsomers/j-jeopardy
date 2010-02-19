@@ -25,6 +25,12 @@
 	});
 </script>
 
+<% if (a = flash[:alert]) %>
+	<div id="flash_alert">
+		<%= a %>
+	</div>
+<% end %>
+
 <div id="wrapper">
 	<div id="sign_up_now">
 		Enter player names &amp; take your places</a>
@@ -49,12 +55,7 @@
 			</li>
 		<% end %>
 	</ol>
-	
-	<% if (a = flash[:alert]) %>
-		<div id="flash_alert">
-			<%= a %>
-		</div>
-	<% end %>
+
 	
 	<div id="play_now_button" style="padding-left: 20px">
 		<a href="/play/choose_game" id="quickstart">Ready? Play!</a> 
