@@ -115,7 +115,6 @@ class PlayController < ApplicationController
   def question
     ep = Episode.find_by_key(session[:ep_key])
     if !ep
-      debugger
       flash[:alert] = "You have to <strong>sign in below</strong> before you can play a game!"
       redirect_to "/play/quickstart"
       return
