@@ -113,17 +113,6 @@ class PlayController < ApplicationController
   end
   
   def question
-    if !session[:players] or session[:players].compact.length < 2
-      #flash[:alert] = "<strong>At least two players</strong> must be signed in before you can play."
-      #redirect_to "/play/start"
-      p1 = Player.new(:handle => "Player 1", :password => "jeopardy", :temp => true)
-      p2 = Player.new(:handle => "Player 2", :password => "jeopardy", :temp => true)
-      p3 = Player.new(:handle => "Player 3", :password => "jeopardy", :temp => true)
-      p1.save(false)
-      p2.save(false)
-      p3.save(false)
-      session[:players] = [p1.id.to_s, p2.id.to_s, p3.id.to_s]
-    end
     ep = Episode.find_by_key(session[:ep_key])
     @q = Question.find(params[:id])
     @page_title = "$#{@q.value} | #{@q.category.name}"
