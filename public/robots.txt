@@ -5,3 +5,4 @@
 # Disallow: /
 Disallow: /play/
 Disallow: /blast/
+Disallow: /player/
