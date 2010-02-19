@@ -66,6 +66,7 @@ class BlastController < ApplicationController
   def log_guess
     g = Guess.new(:guess => params[:guess], :question_id => params[:q_id].to_i)
     g.save
+    render :nothing => true
   end
   
   def game_over
