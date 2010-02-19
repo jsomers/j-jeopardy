@@ -243,6 +243,11 @@ class PlayController < ApplicationController
   end
   
   def wager
+    if !session[:ep_key]
+      flash[:alert] = "You have to <strong>sign in below</strong> before you can play a game!"
+      redirect_to "/play/quickstart"
+      return
+    end
     @q = Question.find_by_game_id(params[:id], :conditions => ['value = "N/A"'])
     @category = Game.find_by_game_id(params[:id]).categories.last
     @page_title = "Final Jeopardy! (#{@category})"
@@ -250,6 +255,11 @@ class PlayController < ApplicationController
   end
   
   def final_jeopardy
+    if !session[:ep_key]
+      flash[:alert] = "You have to <strong>sign in below</strong> before you can play a game!"
+      redirect_to "/play/quickstart"
+      return
+    end
     @q = Question.find_by_id(params[:q_id])
     @answer = @q.answer
     @wager1 = params[:wager_1]
