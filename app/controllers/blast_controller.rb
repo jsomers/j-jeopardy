@@ -63,6 +63,11 @@ class BlastController < ApplicationController
     render :json => {:category => @q.category.name, :answer => @q.answer, :question => @q.question, :value => @q.value}
   end
   
+  def log_guess
+    g = Guess.new(:guess => params[:guess], :question_id => params[:q_id].to_i)
+    g.save
+  end
+  
   def game_over
     @no_script = true
     @time = params[:time]

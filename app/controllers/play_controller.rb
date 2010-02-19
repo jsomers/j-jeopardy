@@ -31,9 +31,16 @@ class PlayController < ApplicationController
     @page_title = "Jimbo Jeopardy! Choose a game to play"
     @body_id = "choose_game"
     @no_script = true
-    if session[:players].compact.length < 2
-      flash[:alert] = "<strong>At least two players</strong> must be signed in before you can play."
-      redirect_to "/play/start"
+    if !session[:players] or session[:players].compact.length < 2
+      #flash[:alert] = "<strong>At least two players</strong> must be signed in before you can play."
+      #redirect_to "/play/start"
+      p1 = Player.new(:handle => "Player 1", :password => "jeopardy", :temp => true)
+      p2 = Player.new(:handle => "Player 2", :password => "jeopardy", :temp => true)
+      p3 = Player.new(:handle => "Player 3", :password => "jeopardy", :temp => true)
+      p1.save(false)
+      p2.save(false)
+      p3.save(false)
+      session[:players] = [p1.id.to_s, p2.id.to_s, p3.id.to_s]
     else
       # Grab list of games
       @games = Game.find_all_by_season(26)
@@ -41,6 +48,17 @@ class PlayController < ApplicationController
   end
   
   def board
+    if !session[:players] or session[:players].compact.length < 2
+      #flash[:alert] = "<strong>At least two players</strong> must be signed in before you can play."
+      #redirect_to "/play/start"
+      p1 = Player.new(:handle => "Player 1", :password => "jeopardy", :temp => true)
+      p2 = Player.new(:handle => "Player 2", :password => "jeopardy", :temp => true)
+      p3 = Player.new(:handle => "Player 3", :password => "jeopardy", :temp => true)
+      p1.save(false)
+      p2.save(false)
+      p3.save(false)
+      session[:players] = [p1.id.to_s, p2.id.to_s, p3.id.to_s]
+    end
     @no_script = true
     if (old_ep = Episode.find_all_by_game_id(params[:id]).select {|e| (e.key.split('_')[0..2].reject {|x| x == '0'} & session[:players].reject {|y| y.nil?}).length == session[:players].reject {|y| y.nil?}.length}.first)
       ep_key = old_ep.key
@@ -95,6 +113,17 @@ class PlayController < ApplicationController
   end
   
   def question
+    if !session[:players] or session[:players].compact.length < 2
+      #flash[:alert] = "<strong>At least two players</strong> must be signed in before you can play."
+      #redirect_to "/play/start"
+      p1 = Player.new(:handle => "Player 1", :password => "jeopardy", :temp => true)
+      p2 = Player.new(:handle => "Player 2", :password => "jeopardy", :temp => true)
+      p3 = Player.new(:handle => "Player 3", :password => "jeopardy", :temp => true)
+      p1.save(false)
+      p2.save(false)
+      p3.save(false)
+      session[:players] = [p1.id.to_s, p2.id.to_s, p3.id.to_s]
+    end
     ep = Episode.find_by_key(session[:ep_key])
     @q = Question.find(params[:id])
     @page_title = "$#{@q.value} | #{@q.category.name}"
@@ -244,6 +273,8 @@ class PlayController < ApplicationController
     the_question = Question.find_by_id(params[:question_id])
     answer = the_question.answer.gsub('\\', '')
     game_id = the_question.game_id
+    g = Guess.new(:guess => guess, :question_id => the_question.id)
+    g.save
     guess_words = guess.split(' ')
     coords = the_question.coord
     col = coords.split(',')[1].to_i - 1
@@ -300,6 +331,8 @@ class PlayController < ApplicationController
     the_question = Question.find_by_id(params[:question_id])
     answer = the_question.answer.gsub('\\', '')
     game_id = the_question.game_id
+    g = Guess.new(:guess => guess, :question_id => the_question.id)
+    g.save
     guess_words = guess.split(' ')
     t = true
     for word in guess_words
@@ -333,6 +366,8 @@ class PlayController < ApplicationController
     guess = params[:answer]
     q = Question.find_by_id(params[:question_id])
     value = params[:value]
+    g = Guess.new(:guess => guess, :question_id => q.id)
+    g.save
     if guess.empty?
       @outcome = '(' + q.answer.gsub('\\', '') + ')<script type="text/javascript">window.location.href=window.location.href</script>'
     else

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100215220310) do
+ActiveRecord::Schema.define(:version => 20100218225425) do
 
   create_table "categories", :force => true do |t|
     t.datetime "created_at"
@@ -52,6 +52,13 @@ ActiveRecord::Schema.define(:version => 20100215220310) do
   end
 
   add_index "games", ["game_id"], :name => "index_games_on_game_id", :unique => true
+
+  create_table "guesses", :force => true do |t|
+    t.integer  "question_id"
+    t.string   "guess"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "players", :force => true do |t|
     t.datetime "created_at"

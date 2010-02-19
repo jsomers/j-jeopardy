@@ -1,6 +1,7 @@
 class Question < ActiveRecord::Base
   belongs_to :game, :foreign_key => "game_id", :primary_key => "game_id";
   belongs_to :category;
+  has_many :guesses;
   
   def my_category
     g = Game.find_by_game_id(self.game_id)

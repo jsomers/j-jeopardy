@@ -53,6 +53,14 @@
 	};
 	
 	var validate = function(guess, answer, value) {
+		if (guess != "") {
+			$.post("/blast/log_guess", 
+				{ authenticity_token: AUTH_TOKEN, q_id: question_ids[position - 1], guess: guess },
+				function(ret) {
+					// Do nothing.
+				}
+			)
+		}
 		if (guess == "") {
 			$("#outcome").css("color", "white");
 			$("#outcome").html(answer);
