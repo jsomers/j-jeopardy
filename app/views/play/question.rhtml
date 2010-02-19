@@ -17,6 +17,7 @@
 	<img src="<%= image %>" width="500px"/>
 <% end %>
 
+<div id="ffinger"><span id="question_category"><%= @q.category.name %></span></div>
 <div id="q"><%= @q.question %></div>
 
 <% form_remote_tag :url => { :action => 'validate', :controller => 'play'}, :update => 'outcome' do -%>

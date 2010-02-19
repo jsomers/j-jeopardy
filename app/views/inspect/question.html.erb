@@ -1,0 +1,34 @@
+<%= javascript_include_tag "jquery-1.3.2.min.js" -%>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#reveal").click(function() {
+			$(this).hide();
+			$("#the-answer").show();
+		});
+	});
+</script>
+
+<% begin image = @q.question.scan(/<a href="(.*?)"/)[0] rescue image = false end %>
+<% if image %>
+	<img src="<%= image %>" width="500px"/>
+<% end %>
+
+
+<div id="ffinger"><span id="question_category"><%= @q.category.name %></span></div>
+<div id="q"><%= @q.question %></div>
+
+<div id="stumper">
+
+	<small>
+		<span style="color: white; font-variant: normal;">The correct answer is</span><br/>
+		<a href="#" id="reveal">(click here to reveal)</a>
+		<span id="the-answer" style="display: none; color: #33ff33"><%= Question.find_by_id(params[:id]).answer %></span>
+	</small>
+	
+	<div style="margin-top: 130px; font-variant: normal;">
+		<small>
+			<a id="home" href="/play/board/<%= Question.find_by_id(params[:id]).game_id %>">Click here to go back to the game board!</a>
+		</small>
+	</div>
+</div>

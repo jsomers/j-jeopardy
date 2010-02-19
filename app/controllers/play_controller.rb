@@ -115,8 +115,7 @@ class PlayController < ApplicationController
   def question
     ep = Episode.find_by_key(session[:ep_key])
     if !ep
-      flash[:alert] = "You have to <strong>sign in below</strong> before you can play a game!"
-      redirect_to "/play/quickstart"
+      redirect_to "/inspect/question/#{params[:id]}"
       return
     end
     @q = Question.find(params[:id])
@@ -243,12 +242,11 @@ class PlayController < ApplicationController
   end
   
   def wager
+    @q = Question.find_by_game_id(params[:id], :conditions => ['value = "N/A"'])
     if !session[:ep_key]
-      flash[:alert] = "You have to <strong>sign in below</strong> before you can play a game!"
-      redirect_to "/play/quickstart"
+      redirect_to "/inspect/question/#{@q.id}"
       return
     end
-    @q = Question.find_by_game_id(params[:id], :conditions => ['value = "N/A"'])
     @category = Game.find_by_game_id(params[:id]).categories.last
     @page_title = "Final Jeopardy! (#{@category})"
     @body_id = "question"
@@ -256,8 +254,7 @@ class PlayController < ApplicationController
   
   def final_jeopardy
     if !session[:ep_key]
-      flash[:alert] = "You have to <strong>sign in below</strong> before you can play a game!"
-      redirect_to "/play/quickstart"
+      redirect_to "/inspect/question/#{params[:q_id]}"
       return
     end
     @q = Question.find_by_id(params[:q_id])
