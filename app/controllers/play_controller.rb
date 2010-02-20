@@ -145,6 +145,10 @@ class PlayController < ApplicationController
   end
   
   def change_scores
+    if !session[:ep_key]
+      render :nothing => true
+      return
+    end
     ep = Episode.find_by_key(session[:ep_key])
     # Get parameters
     value = params[:value].to_i
