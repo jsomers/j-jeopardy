@@ -1,3 +1,3 @@
 <% p = player %>
 <% keys = {1 => 'A', 2 => 'B', 3 => 'P'} %>
-	<input id="handle-<%= p %>" name="handle" type="text" class="inactive" onkeypress="keypress(this)" onfocus="enterTextbox(this)" onblur="leaveTextbox(this, 'Player <%= p %>')" value="Player <%= p %>" style="padding: 2px;margin-top: 3px; <%= (failed ? 'background-color: #ffcccc; color: #444' : '') %>"/> <%= keys[p.to_i] %>
+	<input id="handle-<%= p %>" name="handle" type="text" class="inactive" onkeypress="keypress(this)" onfocus="enterTextbox(this)" onblur="leaveTextbox(this, 'Player <%= p %>')" value="Player <%= p %>" style="padding: 2px; margin-top: 3px; <%= (failed ? 'background-color: #ffcccc; color: #444' : '') %>; width: 300px;"/> <%= keys[p.to_i] %>

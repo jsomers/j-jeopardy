@@ -49,13 +49,13 @@
 	var game_over = function() {
 		var score = $("#score").html();
 		var time = $("#timer").attr("value");
-		window.location = "/blast/game_over?game_id=" + game_id + "&score=" + score + "&time=" + time + "&stumpers=" + stumpers.join(",") + "&ignorants=" + ignorants.join(",");
+		window.location = "/blast/game_over?game_id=" + game_id + "&p_id=" + p_id + "&score=" + score + "&time=" + time + "&stumpers=" + stumpers.join(",") + "&ignorants=" + ignorants.join(",");
 	};
 	
 	var validate = function(guess, answer, value) {
 		if (guess != "") {
 			$.post("/blast/log_guess", 
-				{ authenticity_token: AUTH_TOKEN, q_id: question_ids[position - 1], guess: guess },
+				{ authenticity_token: AUTH_TOKEN, q_id: question_ids[position - 1], p_id: p_id, guess: guess },
 				function(ret) {
 					// Do nothing.
 				}
@@ -109,6 +109,7 @@
 	var stumpers = []; // Questions where you guess incorrectly.
 	var ignorants = []; // Questions that you pass on.
 	var position = <%= params[:position] or 0 %>;
+	var p_id = <%= session[:p_id] or params[:p_id] or 0 %>;
 	var load_question = function(index) {
 		if (index == question_ids.length) {
 			game_over();
@@ -136,7 +137,7 @@
 		$("#save-game").click(function() {
 			var score = $("#score").html();
 			var time = $("#timer").attr("value");
-			var link = "jimbojeopardy.com/blast/play?game_id=" + game_id + "&score=" + score + "&time=" + time + "&position=" + Math.max(0, position - 1);
+			var link = "jimbojeopardy.com/blast/play?game_id=" + game_id + "&p_id=" + p_id + "&score=" + score + "&time=" + time + "&position=" + Math.max(0, position - 1);
 			alert("You can get back to this game anytime from this link:\n\n" + link);
 		});
 		

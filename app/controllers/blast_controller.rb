@@ -28,9 +28,21 @@ class BlastController < ApplicationController
   def play
     @no_script = true
     @body_id = "question"
+    if request.post? and (em = params[:email_address][/\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}\b/])
+      p = Player.new_if_needed(em)
+      p.save
+      session[:p_id] = p.id
+    elsif request.post?
+      flash[:alert] = "You need to enter a <strong>valid e-mail address</strong> (step 5) before playing. Please try again."
+      redirect_to "/blast"
+      return
+    end
     if (questionset_id = params[:game_id])
       @question_ids = Questionset.find(questionset_id.to_i).q_ids
       @game_id = questionset_id
+      if (params[:p_id])
+        session[:p_id] = params[:p_id]
+      end
     else
       season_min = params[:season_min].to_i
       season_max = params[:season_max].to_i
@@ -64,7 +76,12 @@ class BlastController < ApplicationController
   end
   
   def log_guess
-    g = Guess.new(:guess => params[:guess], :question_id => params[:q_id].to_i)
+    pid = (params[:p_id] ? params[:p_id].to_i : nil)
+    g = Guess.new(
+      :guess => params[:guess], 
+      :question_id => params[:q_id].to_i, 
+      :player_id => pid,
+      :source => "blast")
     g.save
     render :nothing => true
   end
@@ -75,6 +92,7 @@ class BlastController < ApplicationController
     @score = params[:score]
     @stumpers = Question.find(params[:stumpers].split(",").collect {|x| x.to_i})
     @ignorants = Question.find(params[:ignorants].split(",").collect {|x| x.to_i})
+    @p_id = session[:p_id] || params[:p_id]
     if @score.index("-")
       color = "red"
     else

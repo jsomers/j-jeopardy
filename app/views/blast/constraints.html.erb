@@ -58,9 +58,17 @@
 			$("#search").blur(function() {
 				$("#search_terms").attr("value", $("#search").attr("value"));
 			});
+			$("#email").blur(function() {
+				$("#email_address").attr("value", $("#email").attr("value"));
+			});
 			$("#search").keydown(function(ev) {
 				if (ev.keyCode == 13) {
 					$("#search_terms").attr("value", $("#search").attr("value"));
+				}
+			});
+			$("#email").keydown(function(ev) {
+				if (ev.keyCode == 13) {
+					$("#email_address").attr("value", $("#email").attr("value"));
 					$("#submit-constraints").submit();
 				}
 			});
@@ -142,6 +150,15 @@
 					</p>
 				</div><td>
 			</tr>
+			<tr>
+				<td valign="top" style="font-size: 35px; font-weight: bold; color: #555">5.</td>
+				<td><div style="border: 2px solid #ccc; width: 650px; margin: 0 auto; margin-bottom: 20px;">
+					<p>
+					<label for="email">Enter your <strong>e-mail address</strong>:<br/></label>
+					<input type="text" id="email" style="width: 300px; margin-top: 5px; font-size: 15px; text-align: center; padding: 4px;" value="<%= (session[:p_id] ? Player.find(session[:p_id].to_i).email : "") %>"/> <br/><span style="color: #444; font-size: 12px;">(this way you can <strong>keep track of your performance</strong>)</span>
+					</p>
+				</div><td>
+			</tr>
 		</div><!-- End demo -->
 	</table>
 		
@@ -154,6 +171,7 @@
 				<input type="hidden" id="season_max" name="season_max" value="26"/>
 				<input type="hidden" id="category_ids" name="category_ids" value=""/>
 				<input type="hidden" id="search_terms" name="search_terms" value=""/>
+				<input type="hidden" id="email_address" name="email_address" value="<%= (session[:p_id] ? Player.find(session[:p_id].to_i).email : "") %>"/>
 				<input type="image" src="/images/build_game.png" oversrc="/images/build_game-hover.png"/>
 			<% end %>
 		</div>
