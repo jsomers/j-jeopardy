@@ -19,6 +19,7 @@ class PlayerController < ApplicationController
     if invalids.empty?
       render :text => "OK"
     else
+      session[:players] = []
       render :text => invalids.collect {|i| "<strong>#{i}</strong>"}.join(", ")
     end
   end
