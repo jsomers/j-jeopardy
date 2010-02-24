@@ -189,6 +189,18 @@ class PlayController < ApplicationController
     end
     @q = Question.find_by_id(params[:q_id])
     @wager = params[:wager]
+    ep = Episode.find(session[:ep_id])
+    me = session[:current]
+    my_score = ep.points[session[:players].index(me)]
+    ep_points = ep.points.dclone
+    ep_points.delete_at(session[:players].index(me))
+    Wager.create(
+      :amount => @wager.to_i,
+      :my_score => my_score,
+      :their_scores => ep_points,
+      :player_id => me,
+      :question_id => @q.id
+    )
     @page_title = "Daily Double in #{@q.category.name} for $#{@wager}"
     @body_id = "question"
   end
@@ -377,7 +389,19 @@ class PlayController < ApplicationController
     @wager1 = params[:wager_1]
     @wager2 = params[:wager_2]
     @wager3 = params[:wager_3]
-    
+    wagers = [@wager1, @wager2, @wager3]
+    wagers.each_with_index do |wag, i|
+      the_ep_points = ep.points.dclone
+      my_score = the_ep_points[i]
+      the_ep_points.delete_at(i)
+      Wager.create(
+        :amount => wag.to_i,
+        :question_id => the_question.id,
+        :player_id => session[:players][i],
+        :my_score => my_score,
+        :their_scores => the_ep_points
+      )
+    end
     
     answer = the_question.answer
     game_id = the_question.game_id

@@ -1,6 +1,7 @@
 require "digest"
 class Player < ActiveRecord::Base
   has_many :guesses
+  has_many :wagers
   has_and_belongs_to_many :episodes
   
   def self.new_if_needed(addr)
