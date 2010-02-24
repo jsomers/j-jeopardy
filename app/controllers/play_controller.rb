@@ -21,6 +21,8 @@ class PlayController < ApplicationController
   
   def quickstart
     @no_script = true
+    session[:ep_id] = nil
+    session[:current] = nil
     session[:players] = []
     @page_title = "Jimbo Jeopardy! Player names"
     @body_id = "start"
@@ -28,8 +30,15 @@ class PlayController < ApplicationController
   end
   
   def choose_game
+    if session[:go_to_game]
+      redirect_to "/play/board/#{session[:go_to_game]}"
+    end
+    session[:ep_id] = nil
+    session[:current] = nil
     if !session[:players] or session[:players].compact.length == 0
       redirect_to "/play/quickstart"
+      flash[:notice] = "<strong>At least one player</strong> has to be signed in before you can play!"
+      return
     end
     @page_title = "Jimbo Jeopardy! Choose a game to play"
     @body_id = "choose_game"
@@ -41,8 +50,12 @@ class PlayController < ApplicationController
   def board
     @no_script = true
     @game_id = params[:id].to_i
-    if !session[:players] then session[:players] = [nil, nil, nil] end
-    
+    if !session[:players]
+      session[:go_to_game] = @game_id
+      redirect_to "/play/quickstart"
+      flash[:notice] = "You'll have to <strong>sign in quickly</strong> before you can play! Type your e-mail address below:"
+      return
+    end
     if session[:ep_id].nil?
       if session[:players].compact.length.zero?
         ep = Episode.create(:game_id => @game_id)
@@ -57,8 +70,8 @@ class PlayController < ApplicationController
         end
       end
       session[:ep_id] = ep.id
+      session[:current] = session[:players].compact.rand
     end
-    
     @game_id = params[:id]
     @game = Game.find_by_game_id(@game_id)
     @doubled = Date.parse(@game.airdate) >= Date.parse("2001-11-26")
@@ -77,7 +90,6 @@ class PlayController < ApplicationController
   
   def question
     ep = Episode.find(session[:ep_id])
-    debugger
     if !ep
       redirect_to "/inspect/question/#{params[:id]}"
       return
@@ -317,7 +329,7 @@ class PlayController < ApplicationController
     answer_color = (t ? '#33ff33' : 'red')
     st = ''
     st += '<b><font color="' + answer_color + '">' + answer + '</font></b><br/>'
-    st += '<small>' + '<font color="' + font_color + '">' + '[' + ((pl = Player.find(session[:current].to_i)) ? pl.handle : 'Player') + (t ? ' +' : ' -') + '$' + value.to_s + ']</font><br/>'
+    st += '<small>' + '<font color="' + font_color + '">' + '[' + (session[:current] ? Player.find(session[:current].to_i).handle : 'Player') + (t ? ' +' : ' -') + '$' + value.to_s + ']</font><br/>'
     st += '<a href="/play/board/' + game_id.to_s + '" style="color: white;">&lt;&lt; Go back</a>'
     ep.save
     @outcome = st

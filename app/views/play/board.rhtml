@@ -21,6 +21,7 @@ $(document).ready(function() {
 });
 </script>
 
+<div style="position: relative; top: -5px; color: #001166; font-family: Optima, Georgia; font-size: 30px;">Jimbo Jeopardy! Game #<%= @game.game_id %> (<%= @game.airdate %>)</div>
 <%= if params[:answer] then '<font color="white">(The answer was <b>' + params[:answer] + '</b>)</font>' end %>
 <% ep = Episode.find(session[:ep_id]) %>
 <%= render :partial => 'standings' %>

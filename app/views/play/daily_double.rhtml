@@ -32,7 +32,7 @@
 	<input type="hidden" name="wager" id="wager" value="<%= @wager %>">
 	<input id="question_id" name="question_id" type="hidden" value="<%= @q.id %>">
 	<input type="hidden" name="wager" id="wager" value="<%= @wager %>">
-	<input id="ffinger" name="ffinger" type="text" value="<%= ((pl = Player.find(session[:current].to_i)) ? pl.handle : "Player") %> (for $<%= @wager %>):"><br/>
+	<input id="ffinger" name="ffinger" type="text" value="<%= (session[:current] ? Player.find(session[:current].to_i).handle : "Player") %> (for $<%= @wager %>):"><br/>
 	<input id="answer" name="answer" type="text">
 	<% coords = @q.coord %>
 	<% col = coords.split(',')[1].to_i - 1 %>

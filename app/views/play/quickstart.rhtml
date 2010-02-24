@@ -36,29 +36,37 @@
 			});
 			return false;
 		});
+		$("#why").click(function() {
+			$("#email-text").show();
+		});
+		$("#why").hover(function() {
+			$("#email-text").show();
+		});
 	});
 </script>
+
 
 <div id="flash_alert" style="display: none;">
 	Each player must enter a <strong>valid e-mail address</strong>. The following entries failed to validate: <span id="invalids"></span>
 </div>
 
 <div id="wrapper">
-	<div id="sign_up_now">
-		Enter player e-mails &amp; take your places</a>
-	</div>
+	<% if (n = flash[:notice]) %>
+		<div id="flash_notice">
+			<%= n %>
+		</div>
+	<% end %>
+	<% if !n %>
+		<div id="sign_up_now">
+			Enter player e-mails &amp; take your places</a>
+		</div>
+	<% end %>
 	
 	<div id="sign_in">
 		<span id="instructions">
 			Note that the <strong style="color: #444;">buzzer key</strong> for each player is specified next to their e-mail box. <br/>
 		</span>
 	</div>
-	
-	<% if (n = flash[:notice]) %>
-		<div id="flash_notice">
-			<%= n %>
-		</div>
-	<% end %>
 	
 	<ol>
 		<% (1..3).each do |n| %>
@@ -77,14 +85,12 @@
 	
 	<div id="sign_in" style="margin-top: 40px; margin-left: 20px;">
 		<span id="instructions" style="color: #444; font-size: 15px;">
-			<strong>Why do we ask for your e-mail address?</strong><br/><br/>
-				<span style="font-size: 14px;">
-				First, we will <strong>NEVER</strong> send you any e-mail that you don't<br/> <strong>explicitly request</strong>.<br/><br/>
-				By tracking which games you play, we can make sure <br/> that you don't accidentally play the same game twice.<br/><br/>
-				We can give you access to all sorts of interesting statistics <br/> about your play, and stack you up against other players.<br/><br/>
-				It's easier to remember your own e-mail address <br/>than some new user name and password. <br/><br/>
-				If you're still uncomfortable, just give us a fake e-mail!<br/> (Like <code>paranoiac@example.com</code>)
-				</span>
+			<a href="#" id="why">Why do we ask for your <strong>e-mail address?</strong></a><br/><br/>
+				<div id="email-text" style="font-size: 14px; width: 300px; margin:0 auto; text-align: center; border:1px solid #aaa; padding: 10px; background-color: #ffffee; display: none;">
+				First, we will <strong>NEVER</strong> send you any e-mail that you don't <strong>explicitly request</strong>.<br/><br/>
+				But by tracking which games you play, we can make sure that you don't accidentally play the same game twice, and we can give you access to all sorts of interesting statistics about your play, including how you stack up against other players.<br/><br/>
+				But you're still uncomfortable, just give us a fake e-mail! (Like <code>paranoiac@example.com</code>)
+				</div>
 		</span>
 	</div>
 </div>

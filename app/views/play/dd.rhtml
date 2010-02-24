@@ -2,7 +2,7 @@
 <%= render :partial => 'standings' %>
 <% form_tag(:action => 'daily_double', :controller => 'play') { %>
 	<div id="double">DAILY DOUBLE!</div>
-	<input id="ffinger" name="ffinger" value="<%= ((pl = Player.find(session[:current].to_i)) ? pl.handle : "Player") %> ($<%=  ep.points[session[:players].index(session[:current])] %>)" type="text"><br/>
+	<input id="ffinger" name="ffinger" value="<%= (session[:current] ? Player.find(session[:current].to_i).handle : "Player") %> ($<%=  ep.points[session[:players].index(session[:current])] %>)" type="text"><br/>
 	<input id="wager" name="wager" type="text" style="text-align: center;"><br/><br/>
 	<input type="hidden" name="q_id" value="<%= params[:id] %>">
 	<input type="Submit" value="Submit your wager">
