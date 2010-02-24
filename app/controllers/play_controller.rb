@@ -90,11 +90,11 @@ class PlayController < ApplicationController
   end
   
   def question
-    ep = Episode.find(session[:ep_id])
-    if !ep
+    if !session[:ep_id]
       redirect_to "/inspect/question/#{params[:id]}"
       return
     end
+    ep = Episode.find(session[:ep_id])
     @q = Question.find(params[:id])
     @page_title = "$#{@q.value} | #{@q.category.name}"
     @body_id = "question"
@@ -122,6 +122,10 @@ class PlayController < ApplicationController
   end
   
   def change_scores
+    if !session[:ep_id]
+      render :nothing => true
+      return
+    end
     ep = Episode.find(session[:ep_id])
     # Get parameters
     value = params[:value].to_i
@@ -179,6 +183,10 @@ class PlayController < ApplicationController
   end
   
   def daily_double
+    if !session[:ep_id]
+      redirect_to "/inspect/question/#{params[:q_id]}"
+      return
+    end
     @q = Question.find_by_id(params[:q_id])
     @wager = params[:wager]
     @page_title = "Daily Double in #{@q.category.name} for $#{@wager}"
@@ -219,6 +227,10 @@ class PlayController < ApplicationController
   end
   
   def wager
+    if !session[:ep_id]
+      redirect_to "/play/board/#{params[:id]}"
+      return
+    end
     @q = Question.find_by_game_id(params[:id], :conditions => ['value = "N/A"'])
     @category = Game.find_by_game_id(params[:id]).categories.last
     @page_title = "Final Jeopardy! (#{@category})"
