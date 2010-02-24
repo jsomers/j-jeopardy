@@ -48,6 +48,7 @@ class PlayController < ApplicationController
   end
   
   def board
+    session[:go_to_game] = nil
     @no_script = true
     @game_id = params[:id].to_i
     if !session[:players]
