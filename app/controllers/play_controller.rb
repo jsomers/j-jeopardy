@@ -256,8 +256,11 @@ class PlayController < ApplicationController
     answer = the_question.answer.gsub('\\', '')
     game_id = the_question.game_id
     if guess != ""
-      g = Guess.new(:guess => guess, :question_id => the_question.id)
-      g.save
+      Guess.create(
+        :guess => guess, 
+        :question_id => the_question.id, 
+        :player_id => session[:players][params[:player].to_i - 1]
+      )
     end
     guess_words = guess.split(' ')
     coords = the_question.coord
@@ -316,8 +319,11 @@ class PlayController < ApplicationController
     answer = the_question.answer.gsub('\\', '')
     game_id = the_question.game_id
     if guess != ""
-      g = Guess.new(:guess => guess, :question_id => the_question.id)
-      g.save
+      Guess.create(
+        :guess => guess, 
+        :question_id => the_question.id, 
+        :player_id => session[:current]
+      )
     end
     guess_words = guess.split(' ')
     t = true
@@ -348,44 +354,31 @@ class PlayController < ApplicationController
     @outcome = st
   end
   
-  def validate_blast
-    guess = params[:answer]
-    q = Question.find_by_id(params[:question_id])
-    value = params[:value]
-    if guess != ""
-      g = Guess.new(:guess => guess, :question_id => q.id)
-      g.save
-    end
-    if guess.empty?
-      @outcome = '(' + q.answer.gsub('\\', '') + ')<script type="text/javascript">window.location.href=window.location.href</script>'
-    else
-      t = true
-      for word in guess.split(' ')
-        if !q.answer.gsub('\\', '').downcase.include? word.downcase
-          t = false
-        end
-      end
-      if t
-        @outcome = '<font color="#33ff33">&#10003; (' + q.answer.gsub('\\', '') + ')</font><script type="text/javascript">window.location.href=window.location.href</script>'
-      else
-        @outcome = '<font color="red">&#10007; (' + q.answer.gsub('\\', '') + ')</font><script type="text/javascript">window.location.href=window.location.href</script>'
-      end
-    end
-  end
-  
   def game_over
     @page_title = "Game over!"
     @body_id = "question"
     ep = Episode.find(session[:ep_id])
+    the_question = Question.find_by_id(params[:q_id])
+    
     @guess1 = params[:guess_1]
     @guess2 = params[:guess_2]
     @guess3 = params[:guess_3]
+    guesses = [@guess1, @guess2, @guess3]
+    guesses.each_with_index do |gue, i|
+      if gue != ""
+        Guess.create(
+          :guess => gue, 
+          :question_id => the_question.id,
+          :player_id => session[:players][i]
+        )
+      end
+    end
     
     @wager1 = params[:wager_1]
     @wager2 = params[:wager_2]
     @wager3 = params[:wager_3]
     
-    the_question = Question.find_by_id(params[:q_id])
+    
     answer = the_question.answer
     game_id = the_question.game_id
     guess1_words = @guess1.split(' ')
