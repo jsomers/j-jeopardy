@@ -4,7 +4,6 @@ class TrackWagers < ActiveRecord::Migration
     add_column :wagers, :their_scores, :text
     add_column :wagers, :question_id, :integer
     add_column :wagers, :player_id, :integer
-    end
   end
 
   def self.down
