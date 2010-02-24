@@ -122,7 +122,7 @@
 #question #q{width:500px;margin:0px auto;text-align:center;padding:15px;color:white;font-family:Optima,Georgia;font-variant:small-caps;font-size:45px;line-height:100%;}
 #question a{color:white;color:#ffdb60;}
 #question #value{font-size:30px;font-weight:bold;font-family:Optima,Georgia;color:#ffdb60;}
-#question #ffinger{background-color:#211eab;border:none;text-align:center;color:#ffdb60;font-family:Optima,Georgia;font-variant:small-caps;font-size:30px;}
+#question #ffinger,#category{background-color:#211eab;border:none;text-align:center;color:#ffdb60;font-family:Optima,Georgia;font-variant:small-caps;font-size:30px;}
 #question #outcome{margin-top:15px;font-family:Optima,Georgia;color:white;}
 #question #stumper{font-family:Optima,Georgia;font-size:25px;font-variant:small-caps;}
 #question #stumper a{color:white;}

@@ -1,12 +1,26 @@
 class PlayerController < ApplicationController
   def quickstart
-    p1 = Player.new(:handle => params[:p1], :password => "jeopardy")
-    p2 = Player.new(:handle => params[:p2], :password => "jeopardy")
-    p3 = Player.new(:handle => params[:p3], :password => "jeopardy")
-    p1.save(false)
-    p2.save(false)
-    p3.save(false)
-    session[:players] = [p1.id.to_s, p2.id.to_s, p3.id.to_s]
-    render :text => "Players #{p1.id}, #{p2.id}, and #{p3.id} successfully created."
+    raw = [params[:em1], params[:em2], params[:em3]]
+    invalids = []
+    raw.each do |r|
+      email = r[/\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}\b/]
+      if !email
+        if not r.include? "Player "
+          invalids << r
+          session[:players] << nil
+        else
+          session[:players] << nil
+        end  
+      else
+        p = Player.new_if_needed(email)
+        session[:players] << p.id
+      end
+    end
+    if invalids.empty?
+      render :text => "OK"
+    else
+      render :text => invalids.collect {|i| "<strong>#{i}</strong>"}.join(", ")
+    end
   end
+
 end

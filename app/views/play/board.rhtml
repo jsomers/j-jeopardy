@@ -22,7 +22,7 @@ $(document).ready(function() {
 </script>
 
 <%= if params[:answer] then '<font color="white">(The answer was <b>' + params[:answer] + '</b>)</font>' end %>
-<% ep = Episode.find_by_key(session[:ep_key]) %>
+<% ep = Episode.find(session[:ep_id]) %>
 <%= render :partial => 'standings' %>
 
 <% if !@finished %>

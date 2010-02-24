@@ -21,99 +21,63 @@ class PlayController < ApplicationController
   
   def quickstart
     @no_script = true
-    session[:players] = [nil, nil, nil]
+    session[:players] = []
     @page_title = "Jimbo Jeopardy! Player names"
     @body_id = "start"
     @slick_input = true
   end
   
   def choose_game
+    if !session[:players] or session[:players].compact.length == 0
+      redirect_to "/play/quickstart"
+    end
     @page_title = "Jimbo Jeopardy! Choose a game to play"
     @body_id = "choose_game"
     @no_script = true
-    if !session[:players] or session[:players].compact.length < 2
-      #flash[:alert] = "<strong>At least two players</strong> must be signed in before you can play."
-      #redirect_to "/play/start"
-      p1 = Player.new(:handle => "Player 1", :password => "jeopardy", :temp => true)
-      p2 = Player.new(:handle => "Player 2", :password => "jeopardy", :temp => true)
-      p3 = Player.new(:handle => "Player 3", :password => "jeopardy", :temp => true)
-      p1.save(false)
-      p2.save(false)
-      p3.save(false)
-      session[:players] = [p1.id.to_s, p2.id.to_s, p3.id.to_s]
-    else
-      # Grab list of games
-      @games = Game.find_all_by_season(26)
-    end
+    # Grab list of games
+    @games = Game.find_all_by_season(26)
   end
   
   def board
-    if !session[:players] or session[:players].compact.length < 2
-      #flash[:alert] = "<strong>At least two players</strong> must be signed in before you can play."
-      #redirect_to "/play/start"
-      p1 = Player.new(:handle => "Player 1", :password => "jeopardy", :temp => true)
-      p2 = Player.new(:handle => "Player 2", :password => "jeopardy", :temp => true)
-      p3 = Player.new(:handle => "Player 3", :password => "jeopardy", :temp => true)
-      p1.save(false)
-      p2.save(false)
-      p3.save(false)
-      session[:players] = [p1.id.to_s, p2.id.to_s, p3.id.to_s]
-    end
     @no_script = true
-    if (old_ep = Episode.find_all_by_game_id(params[:id]).select {|e| (e.key.split('_')[0..2].reject {|x| x == '0'} & session[:players].reject {|y| y.nil?}).length == session[:players].reject {|y| y.nil?}.length}.first)
-      ep_key = old_ep.key
-      session[:players] = old_ep.key.split('_')[0..2].collect {|x| if x == '0' then nil else x end}
-      ep = old_ep
-    else
-      ep_key = session[:players].collect {|p| p.to_i}.join('_') + '_' + params[:id]
-      ep = Episode.find_by_key(ep_key)
-    end
-    if ep
-      session[:ep_key] = ep_key
-      @finished = double?
-      @final = final?
-    else
-      points = [0, 0, 0]
-      session[:current] = session[:players].rand
-      charts = [[], [], []]
-      single_table = []
-      for i in (1..6)
-        a = []
-        for j in (1..5)
-          a << [2, 2, 2, 0, 0]
+    @game_id = params[:id].to_i
+    if !session[:players] then session[:players] = [nil, nil, nil] end
+    
+    if session[:ep_id].nil?
+      if session[:players].compact.length.zero?
+        ep = Episode.create(:game_id => @game_id)
+      else
+        players = Player.find(session[:players].compact)
+        eps_for_each = players.collect {|p| p.episodes_for_game(@game_id)}
+        if (ep = eps_for_each.inject {|int, e| int & e}.first)
+          # Do nothing
+        else
+          ep = players.first.episodes.create(:game_id => @game_id)
+          (players - [players.first]).each {|p| p.episodes << ep}
         end
-        single_table << a
       end
-      double_table = []
-      for i in (1..6)
-        a = []
-        for j in (1..5)
-          a << [2, 2, 2, 0, 0]
-        end
-        double_table << a
-      end
-      new_ep = Episode.new(:key => ep_key, :game_id => params[:id].to_i, :answered => 0, :single_table => single_table, :double_table => double_table, :points => points, :charts => charts)
-      new_ep.save
-      session[:ep_key] = ep_key
-      @finished = false
-      @final = false
+      session[:ep_id] = ep.id
     end
+    
     @game_id = params[:id]
     @game = Game.find_by_game_id(@game_id)
     @doubled = Date.parse(@game.airdate) >= Date.parse("2001-11-26")
-    @page_title = "Jeopardy! Game #{@game.game_id} (#{@game.airdate})"
+    @page_title = "Jimbo Jeopardy! Game #{@game.game_id} (#{@game.airdate})"
     @body_id = "board"
     
     @single = @game.categories.first(6)
     @double = @game.categories[6..-2]
     
+    @finished = double?
+    @final = final?
+    
     @questions = cache("questions_#{@game.game_id}") { map = {}; @game.questions.each {|q| map[q.coord] = q.id}; map }
-
     @chars = ['<font color="red">&#10007;</font>', '<font color="#33ff33">&#10003;</font>', '<font color="white" size="1">&#9679;</font>']
   end
   
   def question
-    ep = Episode.find_by_key(session[:ep_key])
+    ep = Episode.find(session[:ep_id])
+    debugger
     if !ep
       redirect_to "/inspect/question/#{params[:id]}"
       return
@@ -145,11 +109,7 @@ class PlayController < ApplicationController
   end
   
   def change_scores
-    if !session[:ep_key]
-      render :nothing => true
-      return
-    end
-    ep = Episode.find_by_key(session[:ep_key])
+    ep = Episode.find(session[:ep_id])
     # Get parameters
     value = params[:value].to_i
     type = params[:type].to_i
@@ -247,20 +207,12 @@ class PlayController < ApplicationController
   
   def wager
     @q = Question.find_by_game_id(params[:id], :conditions => ['value = "N/A"'])
-    if !session[:ep_key]
-      redirect_to "/inspect/question/#{@q.id}"
-      return
-    end
     @category = Game.find_by_game_id(params[:id]).categories.last
     @page_title = "Final Jeopardy! (#{@category})"
     @body_id = "question"
   end
   
   def final_jeopardy
-    if !session[:ep_key]
-      redirect_to "/inspect/question/#{params[:q_id]}"
-      return
-    end
     @q = Question.find_by_id(params[:q_id])
     @answer = @q.answer
     @wager1 = params[:wager_1]
@@ -271,7 +223,7 @@ class PlayController < ApplicationController
   end
   
   def validate
-    ep = Episode.find_by_key(session[:ep_key])
+    ep = Episode.find(session[:ep_id])
     guess = params[:answer]
     player = params[:player]
     value = params[:value]
@@ -332,7 +284,7 @@ class PlayController < ApplicationController
   end
   
   def validate_dd
-    ep = Episode.find_by_key(session[:ep_key])
+    ep = Episode.find(session[:ep_id])
     guess = params[:answer]
     value = params[:wager]
     the_question = Question.find_by_id(params[:question_id])
@@ -399,7 +351,7 @@ class PlayController < ApplicationController
   def game_over
     @page_title = "Game over!"
     @body_id = "question"
-    ep = Episode.find_by_key(session[:ep_key])
+    ep = Episode.find(session[:ep_id])
     @guess1 = params[:guess_1]
     @guess2 = params[:guess_2]
     @guess3 = params[:guess_3]

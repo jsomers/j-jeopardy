@@ -5,31 +5,43 @@
 		$(".inactive").keydown(function(e) {
 			if (e.keyCode == 13) {
 				$("#loader").show();
+				$("#flash_alert").hide();
 				$.post("/player/quickstart", 
-					{p1: $("#handle-1").val(), p2: $("#handle-2").val(), p3: $("#handle-3").val(), authenticity_token: AUTH_TOKEN},
+					{em1: $("#email-1").val(), em2: $("#email-2").val(), em3: $("#email-3").val(), authenticity_token: AUTH_TOKEN},
 					function(ret) {
-						window.location = "/play/choose_game";
+						if (ret == "OK") {
+							window.location = "/play/choose_game";
+						} else {
+							$("#loader").hide();
+							$("#invalids").html(ret);
+							$("#flash_alert").show();
+						};
 				});
 				return false;
 			};
 		})
 		$("#quickstart").click(function() {
 			$("#loader").show();
+			$("#flash_alert").hide();
 			$.post("/player/quickstart", 
-				{p1: $("#handle-1").val(), p2: $("#handle-2").val(), p3: $("#handle-3").val(), authenticity_token: AUTH_TOKEN},
+				{em1: $("#email-1").val(), em2: $("#email-2").val(), em3: $("#email-3").val(), authenticity_token: AUTH_TOKEN},
 				function(ret) {
-					window.location = "/play/choose_game";
+					if (ret == "OK") {
+						window.location = "/play/choose_game";
+					} else {
+						$("#loader").hide();
+						$("#invalids").html(ret);
+						$("#flash_alert").show();
+					};
 			});
 			return false;
 		});
 	});
 </script>
 
-<% if (a = flash[:alert]) %>
-	<div id="flash_alert">
-		<%= a %>
-	</div>
-<% end %>
+<div id="flash_alert" style="display: none;">
+	Each player must enter a <strong>valid e-mail address</strong>. The following entries failed to validate: <span id="invalids"></span>
+</div>
 
 <div id="wrapper">
 	<div id="sign_up_now">
@@ -58,12 +70,12 @@
 	
 	<div id="play_now_button" style="padding-left: 20px">
 		<a href="/play/choose_game" id="quickstart">Ready? Play!</a> 
-		<div id="loader" style="margin-top: 20px; display: none;">
+		<div id="loader" style="margin-top: 10px; display: none;">
 			<img src="/images/loader.gif"/>
 		</div>
 	</div>
 	
-	<div id="sign_in" style="margin-top: 50px; margin-left: 20px;">
+	<div id="sign_in" style="margin-top: 40px; margin-left: 20px;">
 		<span id="instructions" style="color: #444; font-size: 15px;">
 			<strong>Why do we ask for your e-mail address?</strong><br/><br/>
 				<span style="font-size: 14px;">

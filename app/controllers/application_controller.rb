@@ -16,13 +16,13 @@ class ApplicationController < ActionController::Base
   # from your application log (in this case, all fields with names like "password"). 
   # filter_parameter_logging :password
   def double?
-    ep = Episode.find_by_key(session[:ep_key])
+    ep = Episode.find(session[:ep_id])
     questions = cache("questions-#{ep.game_id}") { Game.find_by_game_id(ep.game_id).questions }
     return ep.answered >= questions.select {|q| !q.coord.include? "DJ" and !(q.coord == "N/A")}.length
   end
   
   def final?
-    ep = Episode.find_by_key(session[:ep_key])
+    ep = Episode.find(session[:ep_id])
     questions = cache("questions-#{ep.game_id}") { Game.find_by_game_id(ep.game_id).questions }
     return ep.answered >= (questions.select {|q| q.coord.include? "DJ" and !(q.coord == "N/A")}.length - 1) && double?
   end
@@ -37,6 +37,6 @@ class ApplicationController < ActionController::Base
   end
   
 #  def ep
-#    return Episode.find_by_key(session[:ep_key])
+#    return Episode.find(session[:ep_id])
 #  end
 end

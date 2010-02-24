@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100223213937) do
+ActiveRecord::Schema.define(:version => 20100224024229) do
 
   create_table "categories", :force => true do |t|
     t.datetime "created_at"
@@ -31,13 +31,16 @@ ActiveRecord::Schema.define(:version => 20100223213937) do
   end
 
   create_table "episodes", :force => true do |t|
-    t.string  "key"
     t.text    "single_table"
     t.text    "double_table"
     t.text    "points"
-    t.text    "charts"
     t.integer "game_id"
     t.integer "answered",     :default => 0
+  end
+
+  create_table "episodes_players", :id => false, :force => true do |t|
+    t.integer "episode_id"
+    t.integer "player_id"
   end
 
   create_table "games", :force => true do |t|

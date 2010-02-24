@@ -9,7 +9,7 @@ module ApplicationHelper
   end
   
   #def ep
-  #  return Episode.find_by_key(session[:ep_key])
+  #  return Episode.find(session[:ep_id])
   #end
   
   def p1

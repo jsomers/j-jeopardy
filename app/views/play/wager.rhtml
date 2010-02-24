@@ -1,4 +1,4 @@
-<% ep = Episode.find_by_key(session[:ep_key]) %>
+<% ep = Episode.find(session[:ep_id]) %>
 <script type="text/javascript">
 	function lock(n) {
 		$('wager_' + n).style.color = "#211eab";
