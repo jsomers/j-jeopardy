@@ -1,0 +1,64 @@
+ANALYTICS, ETC.
+
+no blank guesses; dd correctors; wager limits; don't let anyone press ENTER on final jeopardy.
+
+use session to save player names (to display in quickstart), but overwrite the session[:players] each time someone quickstarts anyway.
+
+Custom games tool. Season 99. Only show them there if they are complete. Otherwise they're only visible to the creating user.
+Blast play tracking. Separate accounting ("source" parameter on Guesses) & need Episode-style tracking for Blast. Add the constraints to Questionsets (these would be the equivalent of a Game).
+
+Wager model:
+	- my_score
+	- other_scores
+	- wager
+	- player_id
+	
+Remember to separate out for blast
+
+Special DD corrector using wager data?
+
+Fix images
+
+API and widgets
+	
+game (aggregated)
+	- mini board layout with pcts:
+		* % not answered
+		* % answered correctly
+		* % answered incorrectly
+	- for DDs, average wager
+	- avg. scores for top, middle, and worst player
+	- performance aggregated over the category (+/- in $s for the players; % correct)
+	- click each question (chart or whatever) for individual analytics
+	- final jeopardy percentages, wagers
+	- percentile difficulty of all games
+	
+question
+	- question text, answer (hidden)
+	- guess list, collapsed (e.g., instead of "A, A, A, A, B, B, C, D", you'd have "A (50%), B (25%), C (12.5%), D (12.5%)")
+	- # of times seen; # of correct answers; # of incorrect answers.
+	- percentile difficulty overall (of all questions)
+
+player
+	- # of questions seen (rank)
+	- # answered correctly (rank) / # incorrectly
+	- # of games played (rank)
+	- list of current episodes, with progress ("n of 61 questions") & current scores for each. Provides links to play. (Sets up session?)
+	- list of finished episodes, links to episode analytics.
+	- avg. score per game
+	- win percentage
+	- avg. wager in daily doubles
+	- avg. wager in final jeopardy
+	- "canonical" board:
+		* performance strictly based on position
+	- best categories
+
+episode
+	- normal board view, but with both rounds exposed and showing final jeopardy.
+	- shows wager.
+
+overall
+	- # of episodes, accounting for completeness
+	- # of players
+	- # of questions answered; % correct, incorrect
+	- superboard with pie charts based solely on position
