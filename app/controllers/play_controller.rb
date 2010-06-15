@@ -108,12 +108,12 @@ class PlayController < ApplicationController
       ep.answered += 1
     end
     if coords.split(',')[0] == 'J'
-      ep_single_table = ep.single_table.dclone
+      ep_single_table = Marshal.load(Marshal.dump(ep.single_table))
       ep_single_table[col][row][3] = 1
       ep_single_table[col][row][4] = @q.id
       ep.single_table = ep_single_table
     else
-      ep_double_table = ep.double_table.dclone
+      ep_double_table = Marshal.load(Marshal.dump(ep.double_table))
       ep_double_table[col][row][3] = 1
       ep_double_table[col][row][4] = @q.id
       ep.double_table = ep_double_table
@@ -139,11 +139,11 @@ class PlayController < ApplicationController
     
     # Change the question outcome
     if my_id.include? 'DJ'
-      ep_double_table = ep.double_table.dclone
+      ep_double_table = Marshal.load(Marshal.dump(ep.double_table))
       ep_double_table[col][row][player] = new_type
       ep.double_table = ep_double_table
     else
-      ep_single_table = ep.single_table.dclone
+      ep_single_table = Marshal.load(Marshal.dump(ep.single_table))
       ep_single_table[col][row][player] = new_type
       ep.single_table = ep_single_table
     end
@@ -162,7 +162,7 @@ class PlayController < ApplicationController
         char = '<font color="red">&#10007;</font>'
     end
     
-    ep_points = ep.points.dclone
+    ep_points = Marshal.load(Marshal.dump(ep.points))
     case player
       when 0
         ep_points[0] += delta
@@ -192,7 +192,7 @@ class PlayController < ApplicationController
     ep = Episode.find(session[:ep_id])
     me = session[:current]
     my_score = ep.points[session[:players].index(me)]
-    ep_points = ep.points.dclone
+    ep_points = Marshal.load(Marshal.dump(ep.points))
     ep_points.delete_at(session[:players].index(me))
     Wager.create(
       :amount => @wager.to_i,
@@ -285,7 +285,7 @@ class PlayController < ApplicationController
       end
     end
     font_color = (t ? '#33ff33' : 'red')
-    ep_points = ep.points.dclone
+    ep_points = Marshal.load(Marshal.dump(ep.points))
     if player == '1'
       ep_points[0] += (t ? value.to_i : value.to_i * -1)
       p = session[:players][0]
@@ -298,11 +298,11 @@ class PlayController < ApplicationController
     end
     ep.points = ep_points
     if coords.split(',')[0] == 'J'
-      ep_single_table = ep.single_table.dclone
+      ep_single_table = Marshal.load(Marshal.dump(ep.single_table))
       ep_single_table[col][row][player.to_i - 1] = (t ? 1 : 0)
       ep.single_table = ep_single_table
     elsif coords.split(',')[0] == 'DJ' 
-      ep_double_table = ep.double_table.dclone
+      ep_double_table = Marshal.load(Marshal.dump(ep.double_table))
       ep_double_table[col][row][player.to_i - 1] = (t ? 1 : 0)
       ep.double_table = ep_double_table
     end
@@ -344,7 +344,7 @@ class PlayController < ApplicationController
         t = false
       end
     end
-    ep_points = ep.points.dclone
+    ep_points = Marshal.load(Marshal.dump(ep.points))
     if session[:current] == session[:players][0]
       ep_points[0] += (t ? value.to_i : value.to_i * -1)
       p = session[:players][0]
@@ -391,7 +391,7 @@ class PlayController < ApplicationController
     @wager3 = params[:wager_3]
     wagers = [@wager1, @wager2, @wager3]
     wagers.each_with_index do |wag, i|
-      the_ep_points = ep.points.dclone
+      the_ep_points = Marshal.load(Marshal.dump(ep.points))
       my_score = the_ep_points[i]
       the_ep_points.delete_at(i)
       Wager.create(
@@ -427,7 +427,7 @@ class PlayController < ApplicationController
         t3 = false
       end
     end
-    ep_points = ep.points.dclone
+    ep_points = Marshal.load(Marshal.dump(ep.points))
     ep_points[0] += (t1 ? @wager1.to_i : @wager1.to_i * -1)
     ep_points[1] += (t2 ? @wager2.to_i : @wager2.to_i * -1)
     ep_points[2] += (t3 ? @wager3.to_i : @wager3.to_i * -1)
