@@ -24,6 +24,8 @@ class PlayController < ApplicationController
     session[:ep_id] = nil
     session[:current] = nil
     session[:players] = []
+    session[:p1_key], session[:p2_key], session[:p3_key] = nil, nil, nil
+    session[:p1_key_name], session[:p2_key_name], session[:p3_key_name] = nil, nil, nil
     @page_title = "Jimbo Jeopardy! Player names"
     @body_id = "start"
     @slick_input = true
@@ -45,6 +47,22 @@ class PlayController < ApplicationController
     @no_script = true
     # Grab list of games
     @games = Game.find_all_by_season(26)
+  end
+  
+  def change_keys
+    debugger
+    render :layout => false
+  end
+  
+  def commit_key_change
+    p1, p2, p3 = params[:p1].split("-"), params[:p2].split("-"), params[:p3].split("-")
+    session[:p1_key] = p1[1]
+    session[:p2_key] = p2[1]
+    session[:p3_key] = p3[1]
+    session[:p1_key_name] = p1[0]
+    session[:p2_key_name] = p2[0]
+    session[:p3_key_name] = p3[0]
+    render :text => "OK"
   end
   
   def board
