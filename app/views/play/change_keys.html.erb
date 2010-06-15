@@ -76,7 +76,6 @@ function displayKeyCode(plyr, evt)
 
 $(document).ready(function() {
 	$("#commit").click(function() {
-		console.log($("#p1keycode").html())
 		$.post("/play/commit_key_change", 
 			{
 				authenticity_token: AUTH_TOKEN, 
