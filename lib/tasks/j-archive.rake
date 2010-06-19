@@ -41,56 +41,60 @@ namespace :fetch do
       game_urls.each do |game_url|
         game_id = game_url.split("game_id=")[-1].to_i
         puts "Fetching clues for game #{game_id}..."
+        begin
         # Edge cases...
-        if !game_url.include? "j-archive.com" then game_url = "http://www.j-archive.com/" + game_url end
-        if Game.find_by_game_id(game_id)
-          puts "  already have it?"
-          next
-        end
-        game_page = doc(game_url)
-        game_params = {}
-        game_params[:categories] = (game_page/"td.category_name").collect {|td| clean(td.inner_html)}
-        game_params[:airdate] = (game_page/"title").inner_html.split(" aired ")[-1]
-        game_params[:game_id] = game_id
-        game_params[:season] = season
+          if !game_url.include? "j-archive.com" then game_url = "http://www.j-archive.com/" + game_url end
+          if Game.find_by_game_id(game_id)
+            puts "  already have it?"
+            next
+          end
+          game_page = doc(game_url)
+          game_params = {}
+          game_params[:categories] = (game_page/"td.category_name").collect {|td| clean(td.inner_html)}
+          game_params[:airdate] = (game_page/"title").inner_html.split(" aired ")[-1]
+          game_params[:game_id] = game_id
+          game_params[:season] = season
 
-        (game_page/"td.clue").each do |clue|
-          clue = Hpricot(clue.inner_html)
-          clue_params = {}
-          clue_params[:game_id] = game_params[:game_id]
+          (game_page/"td.clue").each do |clue|
+            clue = Hpricot(clue.inner_html)
+            clue_params = {}
+            clue_params[:game_id] = game_params[:game_id]
           
-          # Get the question's value:
-          if !(dd = (clue/"td.clue_value_daily_double").inner_html).strip.empty?
-            clue_params[:value] = "DD"
-          elsif !(val = (clue/"td.clue_value").inner_html).strip.empty?
-            clue_params[:value] = val.gsub("$", "")
-          elsif (fj = (clue/"#clue_FJ")) and !fj.inner_html.strip.empty?
-            clue_params[:question] = clean(fj.inner_html)
-            clue_params[:coord] = "N/A"
-            clue_params[:value] = "N/A"
-            clue_params[:fj] = fj
-            final_table = Hpricot((game_page/"table.final_round").first.inner_html)
-            answer = Hpricot(clean((final_table/"div").first.attributes["onmouseover"]))
+            # Get the question's value:
+            if !(dd = (clue/"td.clue_value_daily_double").inner_html).strip.empty?
+              clue_params[:value] = "DD"
+            elsif !(val = (clue/"td.clue_value").inner_html).strip.empty?
+              clue_params[:value] = val.gsub("$", "")
+            elsif (fj = (clue/"#clue_FJ")) and !fj.inner_html.strip.empty?
+              clue_params[:question] = clean(fj.inner_html)
+              clue_params[:coord] = "N/A"
+              clue_params[:value] = "N/A"
+              clue_params[:fj] = fj
+              final_table = Hpricot((game_page/"table.final_round").first.inner_html)
+              answer = Hpricot(clean((final_table/"div").first.attributes["onmouseover"]))
+              clue_params[:answer] = clean((answer/"em.correct_response").inner_html)
+              q = Question.new(clue_params)
+              q.save
+              next
+            else # This is an empty question. Move on.
+              next
+            end
+            # Get the question and coord:
+            clue_params[:question] = clean((clue/"td.clue_text").inner_html)
+            clue_params[:coord] = (clue/"td.clue_text").first.attributes["id"].split("clue_")[-1].gsub("_", ",")
+          
+            # Get the answer:
+            answer = Hpricot((clue/"div").first.attributes["onmouseover"])
             clue_params[:answer] = clean((answer/"em.correct_response").inner_html)
             q = Question.new(clue_params)
             q.save
-            next
-          else # This is an empty question. Move on.
-            next
           end
-          # Get the question and coord:
-          clue_params[:question] = clean((clue/"td.clue_text").inner_html)
-          clue_params[:coord] = (clue/"td.clue_text").first.attributes["id"].split("clue_")[-1].gsub("_", ",")
-          
-          # Get the answer:
-          answer = Hpricot((clue/"div").first.attributes["onmouseover"])
-          clue_params[:answer] = clean((answer/"em.correct_response").inner_html)
-          q = Question.new(clue_params)
-          q.save
+          g = Game.new(game_params)
+          g.save
+          puts "  done."
+        rescue
+          puts "  something went wrong fetching this game."
         end
-        g = Game.new(game_params)
-        g.save
-        puts "  done."
       end
     end
   end

@@ -171,6 +171,7 @@
 				<input type="hidden" id="season_max" name="season_max" value="26"/>
 				<input type="hidden" id="category_ids" name="category_ids" value=""/>
 				<input type="hidden" id="search_terms" name="search_terms" value=""/>
+				<input type="checkbox" name="finals"/>
 				<input type="hidden" id="email_address" name="email_address" value="<%= (session[:p_id] ? Player.find(session[:p_id].to_i).email : "") %>"/>
 				<input type="image" src="/images/build_game.png" oversrc="/images/build_game-hover.png"/>
 			<% end %>

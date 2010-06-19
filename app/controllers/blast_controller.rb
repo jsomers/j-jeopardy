@@ -44,20 +44,30 @@ class BlastController < ApplicationController
         session[:p_id] = params[:p_id]
       end
     else
+      if params[:finals]
+        # We should respect the season parameters and search terms,
+        # but throw out categories and values.
+        @final = true
+        @questions = Question.find_all_by_value("N/A")
+      end
       season_min = params[:season_min].to_i
       season_max = params[:season_max].to_i
       value_min = params[:value_min].to_i
       value_max = params[:value_max].to_i
       category_ids = params[:category_ids].split(",").collect {|id| id.strip.to_i}
       search_terms = params[:search_terms].split(",").collect {|term| term.strip.downcase}.sort {|a, b| b.length <=> a.length}
-    
-      @questions = refine_by_categories(category_ids)
+      
+      unless params[:finals]
+        @questions = refine_by_categories(category_ids)
+      end
       search_results = refine_by_search_terms(@questions, search_terms)
       @questions = search_results[0]
       flag = search_results[1]
       if !flag
         @questions = refine_by_seasons(@questions, season_min, season_max)
-        @questions = refine_by_values(@questions, value_min, value_max)
+        unless params[:finals]
+          @questions = refine_by_values(@questions, value_min, value_max)
+        end
       end
       @question_ids = @questions.sort_by { rand }.collect {|q| q.id.to_s}.join(",")
       if @question_ids.empty?
