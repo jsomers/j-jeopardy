@@ -1,0 +1,67 @@
+<%= javascript_include_tag "jquery-1.3.2.min.js", "jquery-ui-slider.min.js", "jquery.autocomplete.js" -%>
+<%= stylesheet_link_tag 'main', "jquery-ui-slider.css", "jquery.autocomplete.css" -%>
+<%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? %>
+
+<style type="text/css">
+	#demo-frame > div.demo { padding: 10px !important; };
+	a {
+		
+	}
+	p {
+		text-align: center;
+	}
+</style>
+
+<script type="text/javascript">
+	$(function() {
+		$("#slider-range").slider({
+			min: 0,
+			max: 1,
+			step: 0.01,
+			value: 0.29,
+			slide: function(event, ui) {
+				$("#amount").val(ui.value)
+			}
+		});
+		$("#amount").val($("#slider-range").slider("value"));
+	});
+
+$(document).ready(function() {
+	$("#commit").click(function() {
+		$.post("/play/commit_timer_change", 
+			{
+				authenticity_token: AUTH_TOKEN, 
+				new_time: $("#amount").val()
+			},
+			function(ret) {
+				if (ret == "OK") {
+					alert("Timer parameter has been changed successfully!");
+				}
+			}
+		)
+		return false;
+	})
+})	
+</script>
+
+<div class="demo" style="margin-left: 40px;">
+<table style="margin:0 auto;">
+	<tr>
+		<td><div style="border: 2px solid #ccc; width: 650px; margin: 0 auto; margin-bottom: 20px;">
+			<p>
+			<label for="amount" style="text-align: center;">Set the <strong>timer multiplier
+</strong> to:</label><br/>
+			<input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold; font-size: 24px; width: 190px; text-align: center;" />
+			<br/>
+			 (a higher number means you have more time)
+			</p>
+
+			<div id="slider-range" style="width: 500px; margin: 0 auto; margin-bottom: 20px;"></div>
+		</div></td>
+	</tr>
+	<tr>
+		<td>
+			<input type="submit" id="commit" value="Commit" style="text-align: center;"/>
+		</td>
+	</tr>
+</table>

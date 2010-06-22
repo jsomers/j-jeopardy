@@ -2,7 +2,7 @@
 module ApplicationHelper
   def time(len)
     spice = rand(50) / 100.0
-    base = 0.29 * len + 1.2
+    base = (session[:time_multiplier] || 0.29) * len + 1.2
     if len <= 7 then base += 1.5 end
     t = base + spice
     return [[1 + t.to_i, 10].min, ((t - t.to_i) * 10).to_i]

@@ -65,6 +65,11 @@ class PlayController < ApplicationController
     render :text => "OK"
   end
   
+  def commit_timer_change
+    session[:time_multiplier] = params[:new_time].to_f
+    render :text => "OK"
+  end
+  
   def board
     session[:go_to_game] = nil
     @no_script = true
