@@ -20,7 +20,7 @@ set :deploy_to, "/home/james/public_html/#{application}"
 # your SCM below:
 # set :scm, :subversion
 
-set :location, "jimbojeopardy.com"
+set :location, "jimbotronimo.com"
 role :app, location
 role :web, location
 role :db,  location, :primary => true
