@@ -34,14 +34,14 @@
 </div>
 
 <div id="accordion">
-	<% for n in (1..26).to_a.reverse %>
+	<% for n in (1..27).to_a.reverse %>
 		<a href="#" class="season_link">
-			<h3 id="h3_season_<%= n %>" class="unselected">Season <%= n %> <span style="color: #aaa; font-weight: normal;">(<%= Season.find(n).n_games %><% if n == 26 %> games<% end %>)</span></h3>
+			<h3 id="h3_season_<%= n %>" class="unselected">Season <%= n %> <span style="color: #aaa; font-weight: normal;">(<%= Season.find(n).n_games %><% if n == 27 %> games<% end %>)</span></h3>
 		</a>
 		<div id="season_<%= n %>_shell" class="season" season:id="<%= n %>">
-			<% if n == 26 %>
+			<% if n == 27 %>
 				<%= render :partial => "season", :locals => {:n => n} %>
-				<script type="text/javascript">$("#h3_season_26").addClass("selected");$("#h3_season_26").removeClass("unselected")</script>
+				<script type="text/javascript">$("#h3_season_27").addClass("selected");$("#h3_season_27").removeClass("unselected")</script>
 			<% else %>
 				<div id="season_<%= n %>_shell" season:id="<%= n %>">
 					<div id="loader">
