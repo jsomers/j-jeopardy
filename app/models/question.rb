@@ -22,4 +22,34 @@ class Question < ActiveRecord::Base
     self.category = c
     self.save
   end
+  
+  def self.find_all_using_search_terms(query)
+    words = query.split(' ')
+    garbage = ['this', 'the', 'a', 'an', 'of', 'in', 'about', 'to', 'from', 'am', 'as']
+    garbage.each {|g| words.delete(g) { words }}
+    if !words.nil? and !words.empty?
+      questions = self.find(:all, :conditions => ["question like '%%" + words[0] + "%%' or answer like '%%" + words[0] + "%%'"], :limit => 3000)
+    else
+      questions = nil
+    end
+    if questions
+      if words.length > 1
+        for word in words[1..-1]
+          questions = questions.select { |q| q.question.downcase.include? word or q.answer.downcase.include? word }
+        end
+      end
+    end
+    return questions
+  end
+  
+  def self.html_for_questions(questions)
+    returned = "<ul style='list-style:none;'>"
+    for q in questions
+      begin
+        returned += '<li>' + q.question + ' (<span id="answer' + q.id.to_s + '" style="display:none;">' + q.answer + '</span><a href="#show" id="reveal' + q.id.to_s + '" onclick="reveal(' + q.id.to_s + ');">answer</a>) <small>(<font color="#aaaaaa">$' + q.value.to_s + ', ' + Game.find_by_game_id(q.game_id).airdate + '</font>)</small> </li><br/>'
+      rescue
+      end
+    end
+    returned += '</li></ul><br/>'
+  end
 end
