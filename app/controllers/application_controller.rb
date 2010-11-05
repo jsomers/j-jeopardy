@@ -304,6 +304,7 @@ class ApplicationController < ActionController::Base
     st += '<small>' + '<font color="' + font_color + '">' + '[' + (session[:current] ? Player.find(session[:current].to_i).handle : 'Player') + (t ? ' +' : ' -') + '$' + value.to_s + ']</font><br/>'
     st += '<a href="/play/board/' + game_id.to_s + '" style="color: white;">&lt;&lt; Go back</a>'
     ep.save
+    return st
   end
   
   private
