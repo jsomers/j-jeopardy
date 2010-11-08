@@ -143,3 +143,6 @@
 #edit_value{color:white;border:none;background-color:#211eab;font-size:10px;text-align:center;}
 #edit_question{color:white;border:1px solid gray;background-color:#211eab;font-family:sans-serif;padding:5px;font-size:10px;height:100px;}
 #edit_answer{color:white;border:1px solid gray;background-color:#211eab;font-size:10px;text-align:center;}
+#answer{font-size:16px;padding:5px;}
+#guess{font-size:20px;}
+#outcome{font-size:20px;}

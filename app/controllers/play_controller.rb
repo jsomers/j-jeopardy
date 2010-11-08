@@ -232,4 +232,9 @@ class PlayController < ApplicationController
     ep.save
     @answer = answer
   end
+  
+  def change_current_player_directly
+    session[:current] = session[:players][params[:choice].to_i - 1]
+    render :text => "OK"
+  end
 end

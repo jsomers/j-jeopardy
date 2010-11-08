@@ -18,6 +18,17 @@ $(document).ready(function() {
 			"json"
 		)
 	});
+	
+	$(".player_name").click(function() {
+		var choice = $(this).attr("id").replace("name", "");
+		$.post("/play/change_current_player_directly",
+			{ authenticity_token: AUTH_TOKEN, choice: choice },
+			function(ret) {
+				$(".player_name").css("border-bottom", "none");
+				$("#name" + choice).css("border-bottom", "1px solid white");
+			}
+		)
+	});
 });
 </script>
 
@@ -133,7 +144,7 @@ $(document).ready(function() {
 				$("#name" + ps[i]).css("border-bottom", "none");
 			}
 		}
-	}
+	};	
 
 </script>
 
