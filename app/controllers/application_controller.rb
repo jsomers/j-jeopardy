@@ -228,6 +228,7 @@ class ApplicationController < ActionController::Base
         t = false
       end
     end
+    if guess.empty? then t = false end
     font_color = (t ? '#33ff33' : 'red')
     ep_points = Marshal.load(Marshal.dump(ep.points))
     if player == '1'
@@ -285,6 +286,7 @@ class ApplicationController < ActionController::Base
         t = false
       end
     end
+    if guess.empty? then t = false end
     ep_points = Marshal.load(Marshal.dump(ep.points))
     if session[:current] == session[:players][0]
       ep_points[0] += (t ? value.to_i : value.to_i * -1)
