@@ -30,6 +30,7 @@ class PlayController < ApplicationController
     @body_id = "choose_game"
     @no_script = true
     @games = Game.find_all_by_season(26)
+    @max_season = Season.all.collect(&:id).max
     
     redirect_to_game_if_specified
     reject_playerless_games

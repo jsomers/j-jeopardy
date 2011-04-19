@@ -11,6 +11,7 @@ namespace :fetch do
   def clean(str)
     return HTMLEntities.new.decode(str).gsub("\\", "")
   end
+  
   task :games => :environment do
     # For each season, grab the list of game URLs:
     game_urls_to_get = {}

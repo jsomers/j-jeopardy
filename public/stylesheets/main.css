@@ -136,6 +136,7 @@
 #dd #single_link{display:none;}
 #dd #double{color:white;font-family:Optima,Georgia;font-size:60px}
 #dd #ffinger{background-color:#aa0011;border:none;text-align:center;color:#ffdb60;font-family:Optima,Georgia;font-variant:small-caps;font-size:30px;}
+#dd #category{background: #A01; font-size: 14px;}
 #out{border:5px solid #211eab;margin-bottom:5px;width:1000px;}
 #d2{background-color:#211eab;border:none;color:#211eab;font-size:20px;font-family:Optima,Georgia;font-variant:small-caps;text-align:center;}
 .fj{background-color:#211eab;color:white;font-family:Optima,Georgia;font-weight:bold;border:1px dashed white;font-size:16px;text-align:center;padding:7px;}

@@ -26,6 +26,7 @@
 		display()
 	</script>
 
+<div id="category"><%= @q.category.name %></div>
 <div id="q"><%= @q.question %></div>
 
 <% form_remote_tag :url => { :action => 'validate_dd', :controller => 'play'}, :update => 'outcome' do -%>
