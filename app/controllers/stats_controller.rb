@@ -77,16 +77,13 @@ class StatsController < ApplicationController
               end
             end
           else
-            begin
-              wager = wagers.select {|wa| wa.question.id == single_question.id}.first
-              correct = Guess.find_by_question_id_and_player_id(wager.question_id, wager.player.id).correct?
-              if correct
-                pts_single[i] += wager.amount
-              else
-                pts_single[i] -= wager.amount
-              end
-            rescue
-              # Do nothing
+            wager = wagers.select {|wa| wa.question.id == single_question.id}.first
+            if !wager then next end
+            correct = Guess.find_by_question_id_and_player_id(wager.question_id, wager.player.id).correct?
+            if correct
+              pts_single[episode.players.index(wager.player)] += wager.amount
+            else
+              pts_single[episode.players.index(wager.player)] -= wager.amount
             end
           end
           
@@ -102,16 +99,13 @@ class StatsController < ApplicationController
               end
             end
           else
-            begin
-              wager = wagers.select {|wa| wa.question.id == single_question.id}.first
-              correct = Guess.find_by_question_id_and_player_id(wager.question_id, wager.player.id).correct?
-              if correct
-                pts_single[i] += wager.amount
-              else
-                pts_single[i] -= wager.amount
-              end
-            rescue
-              # Do nothing
+            wager = wagers.select {|wa| wa.question.id == double_question.id}.first
+            if !wager then next end
+            correct = Guess.find_by_question_id_and_player_id(wager.question_id, wager.player.id).correct?
+            if correct
+              pts_double[episode.players.index(wager.player)] += wager.amount
+            else
+              pts_double[episode.players.index(wager.player)] -= wager.amount
             end
           end
         end
