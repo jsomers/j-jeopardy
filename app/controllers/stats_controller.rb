@@ -50,6 +50,10 @@ class StatsController < ApplicationController
         sode[:loser] = p1
       end
       sode[:pts_final] = scores
+      
+      wagers = Game.find_by_game_id(episode.game_id).questions.select {|q| q.value == "DD"}.collect {|q| q.wagers}.flatten.select {|w| w.player and episode.players.include? w.player}
+      dds = wagers.collect {|w| begin [w.player.email, w.my_score, w.amount, Guess.find_by_question_id_and_player_id(w.question_id, w.player.id).correct?] rescue nil end}.compact
+      
       # Number of questions each player got right and wrong
       # Negative points and positive points for each player
       # Scores after single jeopardy, double jeopardy, and final
@@ -72,6 +76,18 @@ class StatsController < ApplicationController
                 pts_single[i] += single_question.value.to_i
               end
             end
+          else
+            begin
+              wager = wagers.select {|wa| wa.question.id == single_question.id}.first
+              correct = Guess.find_by_question_id_and_player_id(wager.question_id, wager.player.id).correct?
+              if correct
+                pts_single[i] += wager.amount
+              else
+                pts_single[i] -= wager.amount
+              end
+            rescue
+              # Do nothing
+            end
           end
           
           begin double_question = Question.find(double[4]) rescue next end
@@ -85,6 +101,18 @@ class StatsController < ApplicationController
                 pts_double[i] += double_question.value.to_i
               end
             end
+          else
+            begin
+              wager = wagers.select {|wa| wa.question.id == single_question.id}.first
+              correct = Guess.find_by_question_id_and_player_id(wager.question_id, wager.player.id).correct?
+              if correct
+                pts_single[i] += wager.amount
+              else
+                pts_single[i] -= wager.amount
+              end
+            rescue
+              # Do nothing
+            end
           end
         end
       end
@@ -94,8 +122,6 @@ class StatsController < ApplicationController
       sode[:n_correct] = {p1 => n_correct[pos[p1]], p2 => n_correct[pos[p2]]}
       sode[:n_wrong] = {p1 => n_wrong[pos[p1]], p2 => n_wrong[pos[p2]]}
       
-      wagers = Game.find_by_game_id(episode.game_id).questions.select {|q| q.value == "DD"}.collect {|q| q.wagers}.flatten
-      dds = wagers.select {|w| w.player and episode.players.include? w.player}.collect {|w| begin [w.player.email, w.my_score, w.amount, Guess.find_by_question_id_and_player_id(w.question_id, w.player.id).correct?] rescue nil end}.compact
       sode[:dds] = dds
       episodes << sode
     end
