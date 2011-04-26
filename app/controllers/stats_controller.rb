@@ -95,7 +95,7 @@ class StatsController < ApplicationController
       sode[:n_wrong] = {p1 => n_wrong[pos[p1]], p2 => n_wrong[pos[p2]]}
       
       wagers = Game.find_by_game_id(episode.game_id).questions.select {|q| q.value == "DD"}.collect {|q| q.wagers}.flatten
-      dds = wagers.collect {|w| begin [w.player.email, w.my_score, w.amount, Guess.find_by_question_id_and_player_id(w.question_id, w.player.id).correct?] rescue nil end}.compact
+      dds = wagers.select {|w| w.player and episode.players.include? w.player}.collect {|w| begin [w.player.email, w.my_score, w.amount, Guess.find_by_question_id_and_player_id(w.question_id, w.player.id).correct?] rescue nil end}.compact
       sode[:dds] = dds
       episodes << sode
     end
