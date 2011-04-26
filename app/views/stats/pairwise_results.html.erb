@@ -32,7 +32,7 @@
 	<div style="font-size: 32px; text-align: center;">
 		<strong><%= winner[0].split("@").first %></strong> vs. <strong><%= loser[0].split("@").first %></strong>
 	</div>
-	<div style="font-size: 20px; text-align: center;">
+	<div style="font-size: 20px; text-align: center; margin-top: 5px;">
 	<% if winner[1] != loser[1] %>
 		<strong><%= winner[0].split("@").first %></strong> is ahead with <%= winner[1] %> games to <%= loser[0].split("@").first %>'s <%= loser[1] %>.
 	<% else %>
@@ -43,7 +43,7 @@
 	<% @results[:episodes].each_with_index do |sode, i| %>
 		<% ep = sode[:ep] %>
 	<div style="margin:0 auto; text-align: center; margin-top: 20px;">
-		<h3 style="margin-bottom: 3px;"><a href="/play/board/<%= sode[:game_id] %>">Episode #<%= sode[:ep].id %></a> &mdash; <strong><%= sode[:winner].split("@").first %></strong> wins, <%= number_with_delimiter(sode[:pts_final][sode[:winner]]) %> to <%= number_with_delimiter(sode[:pts_final][sode[:loser]]) %></h3>
+		<h3 style="margin-bottom: 3px;"><a href="/play/board/<%= sode[:game_id] %>">Episode #<%= sode[:ep].id %></a> &mdash; <strong><%= sode[:winner].split("@").first %></strong> wins <%= number_with_delimiter(sode[:pts_final][sode[:winner]]) %> to <%= number_with_delimiter(sode[:pts_final][sode[:loser]]) %></h3>
 		
 		<table style="margin:0 auto; margin-bottom: 40px;">
 			<tr>
