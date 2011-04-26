@@ -30,13 +30,15 @@ class StatsController < ApplicationController
     wins = {p1 => 0, p2 => 0}
     showdowns.each do |episode|
       sode = {:game_id => episode.game_id}
+      # Sort out which player is in which position
       if episode.players.length == 2
         pos = {episode.players[0].email => 0, episode.players[1].email => 2}
       elsif episode.players.length == 3
         pos = {episode.players[0].email => 0, episode.players[1].email => 1, episode.players[2].email => 2}
       end
-      # Basic outcome stuff.
+      # Basic outcome.
       scores = {p1 => episode.points[pos[p1]].to_i, p2 => episode.points[pos[p2]].to_i}
+      sode[:pts_final] = scores
       if scores[p1] > scores[p2]
         sode[:winner] = p1
         sode[:loser] = p2
@@ -49,74 +51,8 @@ class StatsController < ApplicationController
         sode[:winner] = p1
         sode[:loser] = p1
       end
-      sode[:pts_final] = scores
-      
-      wagers = Game.find_by_game_id(episode.game_id).questions.select {|q| q.value == "DD"}.collect {|q| q.wagers}.flatten.select {|w| w.player and episode.players.include? w.player}
-      dds = wagers.collect {|w| begin [w.player.email, w.my_score, w.amount, Guess.find_by_question_id_and_player_id(w.question_id, w.player.id).correct?] rescue nil end}.compact
-      
-      # Number of questions each player got right and wrong
-      # Negative points and positive points for each player
-      # Scores after single jeopardy, double jeopardy, and final
-      n_correct = {0 => 0, 1 => 0, 2 => 0}
-      n_wrong = {0 => 0, 1 => 0, 2 => 0}
-      pts_single = {0 => 0, 1 => 0, 2 => 0}
-      pts_double = {0 => 0, 1 => 0, 2 => 0}
-      for i in (1..6)
-        for j in (1..5)
-          begin single = episode.single_table[i][j] rescue next end
-          begin double = episode.double_table[i][j] rescue next end
-          begin single_question = Question.find(single[4]) rescue next end
-          if single_question.value != "DD"
-            (0..2).each do |i|
-              if single[i] == 0
-                n_wrong[i] += 1
-                pts_single[i] -= single_question.value.to_i
-              elsif single[i] == 1
-                n_correct[i] += 1
-                pts_single[i] += single_question.value.to_i
-              end
-            end
-          else
-            wager = wagers.select {|wa| wa.question.id == single_question.id}.first
-            if !wager then next end
-            correct = Guess.find_by_question_id_and_player_id(wager.question_id, wager.player.id).correct?
-            if correct
-              pts_single[episode.players.index(wager.player)] += wager.amount
-            else
-              pts_single[episode.players.index(wager.player)] -= wager.amount
-            end
-          end
-          
-          begin double_question = Question.find(double[4]) rescue next end
-          if double_question.value != "DD"
-            (0..2).each do |i|
-              if double[i] == 0
-                n_wrong[i] += 1
-                pts_double[i] -= double_question.value.to_i
-              elsif double[i] == 1
-                n_correct[i] += 1
-                pts_double[i] += double_question.value.to_i
-              end
-            end
-          else
-            wager = wagers.select {|wa| wa.question.id == double_question.id}.first
-            if !wager then next end
-            correct = Guess.find_by_question_id_and_player_id(wager.question_id, wager.player.id).correct?
-            if correct
-              pts_double[episode.players.index(wager.player)] += wager.amount
-            else
-              pts_double[episode.players.index(wager.player)] -= wager.amount
-            end
-          end
-        end
-      end
-      
-      sode[:pts_single] = {p1 => pts_single[pos[p1]], p2 => pts_single[pos[p2]]}
-      sode[:pts_double] = {p1 => pts_double[pos[p1]], p2 => pts_double[pos[p2]]}
-      sode[:n_correct] = {p1 => n_correct[pos[p1]], p2 => n_correct[pos[p2]]}
-      sode[:n_wrong] = {p1 => n_wrong[pos[p1]], p2 => n_wrong[pos[p2]]}
-      
-      sode[:dds] = dds
+      sode[:ep] = episode
+      sode[:pos] = pos
       episodes << sode
     end
     return {:wins => wins.to_a, :episodes => episodes}

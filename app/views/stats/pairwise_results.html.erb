@@ -7,6 +7,19 @@
 	#container {
 		margin:0 auto;
 		width: 800px;
+		margin-bottom: 100px;
+	}
+	
+	.minus {
+		color: red;
+	}
+	
+	.plus {
+		color: green;
+	}
+	
+	.dd {
+		color: blue;
 	}
 </style>
 
@@ -26,41 +39,159 @@
 		<%= winner[0].split("@").first %> and <%= loser[0].split("@").first %> are tied with <%= winner[1] %> games apiece.
 	<% end %>
 	</div>
+
+	<% @results[:episodes].each_with_index do |sode, i| %>
+		<% ep = sode[:ep] %>
+	<div style="margin:0 auto; text-align: center; margin-top: 20px;">
+		<h3 style="margin-bottom: 3px;"><a href="/play/board/<%= sode[:game_id] %>">Episode #<%= sode[:ep].id %></a> &mdash; <strong><%= sode[:winner].split("@").first %></strong> wins, <%= number_with_delimiter(sode[:pts_final][sode[:winner]]) %> to <%= number_with_delimiter(sode[:pts_final][sode[:loser]]) %></h3>
+		
+		<table style="margin:0 auto; margin-bottom: 40px;">
+			<tr>
+				<td valign="top" style="border: 1px solid #ccc;">
+							<table style="border-bottom: 1px solid #eee">
+								<tr>
+									<td colspan="6" style="border-bottom: 1px solid #eee; padding-bottom: 5px;"><strong><%= sode[:winner].split("@").first %>
+</strong></td>
+								</tr>
+							<% pos_1 = sode[:pos][sode[:winner]] %>
+							<% for i in (0..4) %>
+								<tr height="20px;">
+								<% for j in (0..5) %>
+									<td width="55px;">
+									<% o = ep.single_table[j][i] %>
+									<% q = Question.find(o[4]) %>
+									<% dd = q.value == "DD" %>
+									<% if !dd %>
+										<%= (o[pos_1] == 1 ? "<span class='plus'>+#{q.value}</span>" : (o[pos_1] == 0 ? "<span class='minus'>-#{q.value}</span>" : "--")) %>
+									<% else %>
+										<% w = Wager.find_by_question_id_and_player_id(q.id, Player.find_by_email(sode[:winner]).id) %>
+										<% g = Guess.find_by_question_id_and_player_id(q.id, Player.find_by_email(sode[:winner]).id) %>
+										<% if w and g %>
+											<%= (g.correct? ? "[<span class='plus'>+#{w.amount}</span>]" : "[<span class='minus'>-#{w.amount}</span>]") %>
+										<% else %>
+											<%= "[DD]" %>
+										<% end %>
+									<% end %>
+									</td>
+								<% end %>
+								</tr>
+							<% end %>
+							</table>
+
+							<table>
+							<% for i in (0..4) %>
+								<tr height="20px;">
+								<% for j in (0..5) %>
+									<td width="55px;">
+									<% o = ep.double_table[j][i] %>
+									<% q = Question.find(o[4]) %>
+									<% dd = q.value == "DD" %>
+									<% if !dd %>
+										<%= (o[pos_1] == 1 ? "<span class='plus'>+#{q.value}</span>" : (o[pos_1] == 0 ? "<span class='minus'>-#{q.value}</span>" : "--")) %>
+									<% else %>
+										<% w = Wager.find_by_question_id_and_player_id(q.id, Player.find_by_email(sode[:winner]).id) %>
+										<% g = Guess.find_by_question_id_and_player_id(q.id, Player.find_by_email(sode[:winner]).id) %>
+										<% if w and g %>
+											<%= (g.correct? ? "[<span class='plus'>+#{w.amount}</span>]" : "[<span class='minus'>-#{w.amount}</span>]") %>
+										<% else %>
+											<%= "[DD]" %>
+										<% end %>
+									<% end %>
+									</td>
+								<% end %>
+								</tr>
+							<% end %>
+							<tr>
+								<td colspan="6" style="border-top: 1px solid #eee; padding-top: 5px;">
+									
+										<% final = Game.find_by_game_id(ep.game_id).questions.select {|q| q.value == "N/A"}.first %>
+										<% w = final.wagers.select {|wager| wager.player == Player.find_by_email(sode[:winner])}.first %>
+										<% g = final.guesses.select {|guess| guess.player == Player.find_by_email(sode[:winner])}.first %>
+										<% if w and g %>
+											<%= (g.correct? ? "<span class='plus'>+#{w.amount}</span>" : "<span class='minus'>-#{w.amount}</span>") %>
+										<% else %>
+											???
+										<% end %>
+									<strong>= <%= number_with_delimiter(sode[:pts_final][sode[:winner]]) %></strong></td>
+							</tr>
+							</table>
+
+				</td>
+				<td valign="top" style="border: 1px solid #ccc;">
+							<table style="border-bottom: 1px solid #eee;">
+								<tr>
+									<td colspan="6" style="border-bottom: 1px solid #eee; padding-bottom: 5px;"><strong><%= sode[:loser].split("@").first %>
+</strong></td>
+								</tr>
+							<% pos_2 = sode[:pos][sode[:loser]] %>
+							<% for i in (0..4) %>
+								<tr height="20px;">
+								<% for j in (0..5) %>
+									<td width="55px;">
+									<% o = ep.single_table[j][i] %>
+									<% q = Question.find(o[4]) %>
+									<% dd = q.value == "DD" %>
+									<% if !dd %>
+										<%= (o[pos_2] == 1 ? "<span class='plus'>+#{q.value}</span>" : (o[pos_2] == 0 ? "<span class='minus'>-#{q.value}</span>" : "--")) %>
+									<% else %>
+										<% w = Wager.find_by_question_id_and_player_id(q.id, Player.find_by_email(sode[:loser]).id) %>
+										<% g = Guess.find_by_question_id_and_player_id(q.id, Player.find_by_email(sode[:loser]).id) %>
+										<% if w and g %>
+											<%= (g.correct? ? "[<span class='plus'>+#{w.amount}</span>]" : "[<span class='minus'>-#{w.amount}</span>]") %>
+										<% else %>
+											<%= "[DD]" %>
+										<% end %>
+									<% end %>
+									</td>
+								<% end %>
+								</tr>
+							<% end %>
+							</table>
+
+							<table>
+							<% for i in (0..4) %>
+								<tr height="20px;">
+								<% for j in (0..5) %>
+									<td width="55px;">
+									<% o = ep.double_table[j][i] %>
+									<% q = Question.find(o[4]) %>
+									<% dd = q.value == "DD" %>
+									<% if !dd %>
+										<%= (o[pos_2] == 1 ? "<span class='plus'>+#{q.value}</span>" : (o[pos_2] == 0 ? "<span class='minus'>-#{q.value}</span>" : "--")) %>
+									<% else %>
+										<% w = Wager.find_by_question_id_and_player_id(q.id, Player.find_by_email(sode[:loser]).id) %>
+										<% g = Guess.find_by_question_id_and_player_id(q.id, Player.find_by_email(sode[:loser]).id) %>
+										<% if w and g %>
+											<%= (g.correct? ? "[<span class='plus'>+#{w.amount}</span>]" : "[<span class='minus'>-#{w.amount}</span>]") %>
+										<% else %>
+											<%= "[DD]" %>
+										<% end %>
+									<% end %>
+									</td>
+								<% end %>
+								</tr>
+							<% end %>
+							<tr>
+								<td colspan="6" style="border-top: 1px solid #eee; padding-top: 5px;">
+									
+										<% final = Game.find_by_game_id(ep.game_id).questions.select {|q| q.value == "N/A"}.first %>
+										<% w = final.wagers.select {|wager| wager.player == Player.find_by_email(sode[:loser])}.first %>
+										<% g = final.guesses.select {|guess| guess.player == Player.find_by_email(sode[:loser])}.first %>
+										<% if w and g %>
+											<%= (g.correct? ? "<span class='plus'>+#{w.amount}</span>" : "<span class='minus'>-#{w.amount}</span>") %>
+										<% else %>
+											???
+										<% end %>
+									<strong>= <%= number_with_delimiter(sode[:pts_final][sode[:loser]]) %></strong></td>
+							</tr>
+							</table>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<% end %>
 	
 	<div style="font-size: 16px; text-align: center;">
 		<a href="/stats/pairwise">(compare other players)</a>
 	</div>
-
-	<table style="margin-top: 20px;">
-	<% @results[:episodes].each_with_index do |sode, i| %>
-		<% if i % 2 == 0 %>
-		<tr>
-		<% end %>
-		<td valign="top" style="padding: 10px; border: 1px solid #ccc;">
-		<h3><a href="/play/board/<%= sode[:game_id] %>">Episode #<%= sode[:game_id] %></a></h3>
-		<% if (sode[:winner] == sode[:loser]) %>
-			This was a tie game. The scores were:
-		<% else %>
-			<strong><%= sode[:winner].split("@").first %></strong> won this episode <%= number_with_delimiter(sode[:pts_final][sode[:winner]]) %> to <%= number_with_delimiter(sode[:pts_final][sode[:loser]]) %>. The scores were:
-		<% end %>
-		<ul>
-			<li><%= number_with_delimiter(sode[:pts_single][sode[:winner]]) %> to <%= number_with_delimiter(sode[:pts_single][sode[:loser]]) %> after Single Jeopardy!</li>
-			<li><%= number_with_delimiter(sode[:pts_double][sode[:winner]] + sode[:pts_single][sode[:winner]]) %> to <%= number_with_delimiter(sode[:pts_double][sode[:loser]] + sode[:pts_single][sode[:loser]]) %> after Double Jeopardy!</li>
-			<li><%= number_with_delimiter(sode[:pts_final][sode[:winner]]) %> to <%= number_with_delimiter(sode[:pts_final][sode[:loser]]) %> after Final Jeopardy!</li>
-		</ul>
-	
-		<%= sode[:winner].split("@").first %> got <%= pluralize(sode[:n_correct][sode[:winner]], "question") %> and missed <%= pluralize(sode[:n_wrong][sode[:winner]], "question") %>;<br/>
-		<%= sode[:loser].split("@").first %> got <%= pluralize(sode[:n_correct][sode[:loser]], "question") %> and missed <%= pluralize(sode[:n_wrong][sode[:loser]], "question") %>.<br/><br/>
-	
-		There were <%= sode[:dds].length %> Daily Double! situations:
-		<ul>
-			<% sode[:dds].each do |dd| %>
-			<li>With <%= number_with_delimiter(dd[1]) %>, <%= dd[0].split("@").first %> wagered <%= number_with_delimiter(dd[2]) %> <% if dd[3] %> and got it right. <% else %> but missed it.<% end %></li>
-			<% end %>
-		</ul>
-		</td>
-		<% if i % 2 == 1 %>
-		</tr>
-		<% end %>
-	<% end %>
 </div>

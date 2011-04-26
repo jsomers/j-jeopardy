@@ -16,7 +16,7 @@
 	</div>
 <% end %>
 
-<div id="landing" style="margin:0 auto; width: 800px; text-align: center; margin-top: 300px; font-size: 32px;">
+<div id="landing" style="margin:0 auto; width: 800px; text-align: center; margin-top: 100px; font-size: 32px;">
 	<form action="/stats/pairwise_results" method="post" id="go">
 		<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 		<input id="player_1" name="player_1" type="text" class="inactive" onkeypress="keypress(this)" onfocus="enterTextbox(this)" onblur="leaveTextbox(this, 'Player 1')" value="Player 1" style="font-size: 28px; width: 350px; padding: 5px; text-align: center;"/>
