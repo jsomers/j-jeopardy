@@ -45,7 +45,7 @@
 		<% end %>
 		<ul>
 			<li><%= number_with_delimiter(sode[:pts_single][sode[:winner]]) %> to <%= number_with_delimiter(sode[:pts_single][sode[:loser]]) %> after Single Jeopardy!</li>
-			<li><%= number_with_delimiter(sode[:pts_double][sode[:winner]]) %> to <%= number_with_delimiter(sode[:pts_double][sode[:loser]]) %> after Double Jeopardy!</li>
+			<li><%= number_with_delimiter(sode[:pts_double][sode[:winner]] + sode[:pts_single][sode[:winner]]) %> to <%= number_with_delimiter(sode[:pts_double][sode[:loser]] + sode[:pts_single][sode[:loser]]) %> after Double Jeopardy!</li>
 			<li><%= number_with_delimiter(sode[:pts_final][sode[:winner]]) %> to <%= number_with_delimiter(sode[:pts_final][sode[:loser]]) %> after Final Jeopardy!</li>
 		</ul>
 	
