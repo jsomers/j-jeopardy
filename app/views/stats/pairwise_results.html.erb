@@ -1,0 +1,66 @@
+<style type="text/css">
+	body {
+		font-family: Verdana;
+		font-size: 12.3px;
+	}
+	
+	#container {
+		margin:0 auto;
+		width: 800px;
+	}
+</style>
+
+<% sorted = @results[:wins].sort {|a, b| b[1] <=> a[1]} %>
+<% winner = sorted.first %>
+<% loser = sorted.last %>
+
+<div id="container">
+
+	<div style="font-size: 32px; text-align: center;">
+		<strong><%= winner[0].split("@").first %></strong> vs. <strong><%= loser[0].split("@").first %></strong>
+	</div>
+	<div style="font-size: 20px; text-align: center;">
+	<% if winner[1] != loser[1] %>
+		<strong><%= winner[0].split("@").first %></strong> is ahead with <%= winner[1] %> games to <%= loser[0].split("@").first %>'s <%= loser[1] %>.
+	<% else %>
+		<%= winner[0].split("@").first %> and <%= loser[0].split("@").first %> are tied with <%= winner[1] %> games apiece.
+	<% end %>
+	</div>
+	
+	<div style="font-size: 16px; text-align: center;">
+		<a href="/stats/pairwise">(compare other players)</a>
+	</div>
+
+	<table style="margin-top: 20px;">
+	<% @results[:episodes].each_with_index do |sode, i| %>
+		<% if i % 2 == 0 %>
+		<tr>
+		<% end %>
+		<td valign="top" style="padding: 10px; border: 1px solid #ccc;">
+		<h3><a href="/play/board/<%= sode[:game_id] %>">Episode #<%= sode[:game_id] %></a></h3>
+		<% if (sode[:winner] == sode[:loser]) %>
+			This was a tie game. The scores were:
+		<% else %>
+			<strong><%= sode[:winner].split("@").first %></strong> won this episode <%= number_with_delimiter(sode[:pts_final][sode[:winner]]) %> to <%= number_with_delimiter(sode[:pts_final][sode[:loser]]) %>. The scores were:
+		<% end %>
+		<ul>
+			<li><%= number_with_delimiter(sode[:pts_single][sode[:winner]]) %> to <%= number_with_delimiter(sode[:pts_single][sode[:loser]]) %> after Single Jeopardy!</li>
+			<li><%= number_with_delimiter(sode[:pts_double][sode[:winner]]) %> to <%= number_with_delimiter(sode[:pts_double][sode[:loser]]) %> after Double Jeopardy!</li>
+			<li><%= number_with_delimiter(sode[:pts_final][sode[:winner]]) %> to <%= number_with_delimiter(sode[:pts_final][sode[:loser]]) %> after Final Jeopardy!</li>
+		</ul>
+	
+		<%= sode[:winner].split("@").first %> got <%= pluralize(sode[:n_correct][sode[:winner]], "question") %> and missed <%= pluralize(sode[:n_wrong][sode[:winner]], "question") %>;<br/>
+		<%= sode[:loser].split("@").first %> got <%= pluralize(sode[:n_correct][sode[:loser]], "question") %> and missed <%= pluralize(sode[:n_wrong][sode[:loser]], "question") %>.<br/><br/>
+	
+		There were <%= sode[:dds].length %> Daily Double! situations:
+		<ul>
+			<% sode[:dds].each do |dd| %>
+			<li>With <%= number_with_delimiter(dd[1]) %>, <%= dd[0].split("@").first %> wagered <%= number_with_delimiter(dd[2]) %> <% if dd[3] %> and got it right. <% else %> but missed it.<% end %></li>
+			<% end %>
+		</ul>
+		</td>
+		<% if i % 2 == 1 %>
+		</tr>
+		<% end %>
+	<% end %>
+</div>
