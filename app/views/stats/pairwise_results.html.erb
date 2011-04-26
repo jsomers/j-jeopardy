@@ -59,7 +59,7 @@
 								<% for j in (0..5) %>
 									<td width="55px;">
 									<% o = ep.single_table[j][i] %>
-									<% q = Question.find(o[4]) %>
+									<% begin q = Question.find(o[4]) rescue next end %>
 									<% dd = q.value == "DD" %>
 									<% if !dd %>
 										<%= (o[pos_1] == 1 ? "<span class='plus'>+#{q.value}</span>" : (o[pos_1] == 0 ? "<span class='minus'>-#{q.value}</span>" : "--")) %>
@@ -84,7 +84,7 @@
 								<% for j in (0..5) %>
 									<td width="55px;">
 									<% o = ep.double_table[j][i] %>
-									<% q = Question.find(o[4]) %>
+									<% begin q = Question.find(o[4]) rescue next end %>
 									<% dd = q.value == "DD" %>
 									<% if !dd %>
 										<%= (o[pos_1] == 1 ? "<span class='plus'>+#{q.value}</span>" : (o[pos_1] == 0 ? "<span class='minus'>-#{q.value}</span>" : "--")) %>
@@ -129,7 +129,7 @@
 								<% for j in (0..5) %>
 									<td width="55px;">
 									<% o = ep.single_table[j][i] %>
-									<% q = Question.find(o[4]) %>
+									<% begin q = Question.find(o[4]) rescue next end %>
 									<% dd = q.value == "DD" %>
 									<% if !dd %>
 										<%= (o[pos_2] == 1 ? "<span class='plus'>+#{q.value}</span>" : (o[pos_2] == 0 ? "<span class='minus'>-#{q.value}</span>" : "--")) %>
@@ -154,7 +154,7 @@
 								<% for j in (0..5) %>
 									<td width="55px;">
 									<% o = ep.double_table[j][i] %>
-									<% q = Question.find(o[4]) %>
+									<% begin q = Question.find(o[4]) rescue next end %>
 									<% dd = q.value == "DD" %>
 									<% if !dd %>
 										<%= (o[pos_2] == 1 ? "<span class='plus'>+#{q.value}</span>" : (o[pos_2] == 0 ? "<span class='minus'>-#{q.value}</span>" : "--")) %>
