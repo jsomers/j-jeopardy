@@ -1,8 +1,8 @@
-- setting to change keycode
+- missing questions
+- fix image downloads
 - fix deploy / faster deploy
+- setting to change keycode
 - index page
-- popups
 - new games (& better process)
 - split up the seasons (sliders?)
 - refactor / speed up code
-- github styling on pages with lots of text.
