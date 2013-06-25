@@ -1,5 +1,7 @@
 - missing questions
 - fix image downloads
+- security patch?
+- data analysis! more than 100,000 guesses in here! blog post. show jeopardy board.
 - fix deploy / faster deploy
 - setting to change keycode
 - index page

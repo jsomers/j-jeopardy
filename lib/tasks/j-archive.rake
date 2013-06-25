@@ -15,7 +15,7 @@ namespace :fetch do
   task :games => :environment do
     # For each season, grab the list of game URLs:
     game_urls_to_get = {}
-    (1..27).each do |season|
+    (1..29).each do |season|
       puts "Checking season #{season} for new games..."
       season_page = doc("http://j-archive.com/showseason.php?season=#{season}")
       games_we_have_for_this_season = Game.find_all_by_season(season).collect(&:game_id)

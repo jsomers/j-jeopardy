@@ -79,6 +79,73 @@ class Game < ActiveRecord::Base
 #    return mes
   end
   
+  def clean(str)
+    return HTMLEntities.new.decode(str).gsub("\\", "")
+  end
+  
+  def replenish!
+    require 'open-uri'
+    require 'htmlentities'
+    require 'hpricot'
+    Hpricot.buffer_size = 262144 # http://justsoftwareconsulting.com/blog/?p=123
+    
+    game_page = open("http://www.j-archive.com/showgame.php?game_id=#{game_id}") {|f| Hpricot(f)}
+    game_params = {}
+    game_params[:categories] = (game_page/"td.category_name").collect {|td| clean(td.inner_html)}
+    game_params[:airdate] = (game_page/"title").inner_html.split(" aired ")[-1]
+    game_params[:game_id] = game_id
+    game_params[:season] = season
+    
+    (game_page/"td.clue").each do |clue|
+      clue = Hpricot(clue.inner_html)
+      clue_params = {}
+      clue_params[:game_id] = game_params[:game_id]
+    
+      # Get the question's value:
+      if !(dd = (clue/"td.clue_value_daily_double").inner_html).strip.empty?
+        clue_params[:value] = "DD"
+      elsif !(val = (clue/"td.clue_value").inner_html).strip.empty?
+        clue_params[:value] = val.gsub("$", "")
+      elsif (fj = (clue/"#clue_FJ")) and !fj.inner_html.strip.empty?
+        clue_params[:question] = clean(fj.inner_html)
+        clue_params[:coord] = "N/A"
+        clue_params[:value] = "N/A"
+        clue_params[:fj] = fj
+        final_table = Hpricot((game_page/"table.final_round").first.inner_html)
+        answer = Hpricot(clean((final_table/"div").first.attributes["onmouseover"]))
+        clue_params[:answer] = clean((answer/"em.correct_response").inner_html)
+        unless qu = questions.find_by_coord(clue_params[:coord])
+          puts "creating clue with params #{clue_params.inspect}"
+          Question.create!(clue_params)
+        else
+          puts "--- #{qu.coord} already exists ---"
+        end
+        next        
+      else
+        puts "Empty clue!"
+        next
+      end
+      # Get the question and coord:
+      clue_params[:question] = clean((clue/"td.clue_text").inner_html)
+      clue_params[:coord] = (clue/"td.clue_text").first.attributes["id"].split("clue_")[-1].gsub("_", ",")
+    
+      # Get the answer:
+      answer = Hpricot((clue/"div").first.attributes["onmouseover"])
+      clue_params[:answer] = clean((answer/"em.correct_response").inner_html)
+      unless qu = questions.find_by_coord(clue_params[:coord])
+        puts "creating clue with params #{clue_params.inspect}"
+        Question.create!(clue_params)
+      else
+        puts "--- #{qu.coord} already exists ---"
+      end
+    end
+    self.update_attributes!(game_params)
+    set_question_categories
+    count_questions
+    set_season_count
+    puts "  done."
+  end
+  
   def check_completeness
     game = Game.find_by_game_id(self.game_id)
     questions = Question.find_all_by_game_id(self.game_id)
@@ -104,7 +171,11 @@ class Game < ActiveRecord::Base
   
   def set_question_categories
     self.questions.each do |q|
-      q.set_category
+      begin
+        q.set_category
+      rescue Exception => e
+        puts "Couldn't set category on question #{q.id}. Exception: #{e}"
+      end
     end
   end
   
