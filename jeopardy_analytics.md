@@ -1,19 +1,11 @@
-ANALYTICS, ETC.
-
-Wager model:
-	- my_score
-	- other_scores
-	- wager
-	- player_id
-	
-Remember to separate out for blast
+Ken Jennings games (against the world)
 
 Special DD corrector using wager data?
 
 Fix images
 
 API and widgets
-	
+
 game (aggregated)
 	- mini board layout with pcts:
 		* % not answered
@@ -25,7 +17,7 @@ game (aggregated)
 	- click each question (chart or whatever) for individual analytics
 	- final jeopardy percentages, wagers
 	- percentile difficulty of all games
-	
+
 question
 	- question text, answer (hidden)
 	- guess list, collapsed (e.g., instead of "A, A, A, A, B, B, C, D", you'd have "A (50%), B (25%), C (12.5%), D (12.5%)")
