@@ -12,9 +12,14 @@
 
 <%= javascript_include_tag 'timer' %>
 
-<% begin image = @q.question.scan(/<a href="(.*?)"/)[0] rescue image = false end %>
-<% if image %>
-	<img src="<%= image %>" width="500px"/>
+<% if image = @q.first_image %>
+  <% if image.include?('jimbojeopardy-images') %>
+    <img src="<%= image %>" width="500px"/>
+  <% else %>
+    <div class="broken-j-archive-image">[J-Archive has not yet uploaded this image]</div>
+  <% end %>
+  <div class="image_caption"><%= @q.caption %></div>
+  <% @q.question = @q.question_without_caption %>
 <% end %>
 
 <div id="category"><%= @q.category.name %></div>

@@ -1,6 +1,15 @@
+- multiplayer jeopardy blast
+- jeopardy answer that would answer the most questions
+
+- "make your own jeopardy game" could be a very important feature.
+
 Ken Jennings games (against the world)
 
 Special DD corrector using wager data?
+
+How hard is Jeopardy? (% of questions correct)
+How much harder is single than double Jeopardy?
+How much harder is Tournament of Champions / regular than College / Teen? (Here we have players who are *not* geared to the game type.)
 
 Fix images
 

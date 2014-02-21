@@ -52,4 +52,28 @@ class Question < ActiveRecord::Base
     end
     returned += '</li></ul><br/>'
   end
+  
+  def first_image
+    question.scan(/href="(.*?)"/).flatten.detect {|a| mime = Rehoster::MIME_TYPES[a.split(".").last]; mime && mime.include?('image')}
+  end
+  
+  def caption
+    question.scan(/\(.*?<a.*?href="#{first_image}".*?>(.*?)<\/a>\)/).flatten.first
+  end
+  
+  def question_without_caption
+    question.gsub(/\(.*?<a.*?href="#{first_image}".*?>(.*?)<\/a>\)/, "").strip
+  end
+  
+  def rehost_media!
+    (Hpricot(question)/"a").each do |a|
+      next unless a['href'].include?('media')
+      
+      rehosted_url = Rehoster.rehost(a['href'])
+      next unless rehosted_url.present?
+      
+      self.question = question.gsub(a['href'], rehosted_url)
+    end
+    save! if question_changed?
+  end
 end
