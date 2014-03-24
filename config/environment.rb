@@ -24,6 +24,10 @@ Rails::Initializer.run do |config|
   # They can then be installed with "rake gems:install" on new installations.
   config.gem "htmlentities"
   config.gem "hpricot"
+  config.gem 'redis'
+  config.gem 'redis-mutex'
+  # config.gem 'redis-objects'
+  
   #config.gem "memcache-client"
   # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
   # config.gem "aws-s3", :lib => "aws/s3"
@@ -78,5 +82,8 @@ ActionMailer::Base.smtp_settings = {
     :user_name => "jsomers",
     :password => "1TwoMany!"
 }
+require 'addressable/uri'
 
 CACHE = MemCache.new('127.0.0.1')
+ngram_uri = Addressable::URI.parse('redis://localhost:6379')
+$ngram_redis = Redis.new(:host => ngram_uri.host, :port => ngram_uri.port, :password => ngram_uri.password)

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Jeopardy! Ngrams</title>
+  <%= stylesheet_link_tag    "ngrams", :media => "all" %>
+  <%= javascript_include_tag "ngrams/jquery" %>
+  <%= javascript_include_tag "ngrams/jquery-ujs" %>
+  <%= javascript_include_tag "ngrams/bootstrap-tooltip" %>
+  <%= javascript_include_tag "ngrams/bootstrap-popover" %>
+  <%= javascript_include_tag "ngrams/base" %>
+  <%= javascript_include_tag "ngrams/extensions" %>
+  <%= javascript_include_tag "ngrams/highcharts" %>
+</head>
+<body>
+  <div class="container-fluid">
+    <%= yield %>
+  </div>
+  
+  <footer>
+    <span class="footer span12">
+      <ul>
+        <li><a href="mailto:jeopardyngrams@gmail.com">Contact</a> | </li>
+        <li><a href="/about">About</a> | </li>
+        <li>&copy; <%= Time.zone.now.year %></li>
+      </ul>
+    </span>
+  </footer>
+</body>
+</html>

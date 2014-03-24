@@ -1,3 +1,6 @@
+# Must hardcode the AWS credentials because the environment doesn't have them.
+
+ssh_options[:keys] = [File.join(ENV["HOME"], ".ssh", "id_rsa_black")]
 default_run_options[:pty] = true
 set :application, "jeopardy"
 

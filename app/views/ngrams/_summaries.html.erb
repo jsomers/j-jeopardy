@@ -1,0 +1,8 @@
+<h4>
+  A few questions matching at least one of your search terms:
+  <span class="btn btn-small moreArticles">See more questions</span>
+</h4>
+
+<% articles.each do |article| %>
+  <%= render 'summary', :article => article %>
+<% end %>
