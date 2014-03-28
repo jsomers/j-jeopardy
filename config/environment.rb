@@ -69,14 +69,4 @@ Rails::Initializer.run do |config|
 end
 ExceptionNotifier.exception_recipients = %w(jsomers@gmail.com)
 
-ActionMailer::Base.smtp_settings = {
-    :tls => true,
-    :address => "smtp.gmail.com",
-    :port => "587",
-    :domain => "jimbojeopardy.com",
-    :authentication => :plain,
-    :user_name => "jsomers",
-    :password => "1TwoMany!"
-}
-
 CACHE = MemCache.new('127.0.0.1')
