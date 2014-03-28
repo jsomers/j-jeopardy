@@ -1,5 +1,10 @@
 # Must hardcode the AWS credentials because the environment doesn't have them.
 
+# To install local gems, first find them at `~/.rvm/gems/ruby-1.8.7-p371/cache`
+# then move the files to a directory, tar it
+# then scp the tarball to the server
+# then sudo gem install --local *.gem
+
 ssh_options[:keys] = [File.join(ENV["HOME"], ".ssh", "id_rsa_black")]
 default_run_options[:pty] = true
 set :application, "jeopardy"
