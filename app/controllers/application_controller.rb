@@ -194,7 +194,7 @@ class ApplicationController < ActionController::Base
   end
   
   def initiate_daily_double_wager(ep, wager, q)
-    wager = params[:wager]
+    wager = params[:wager].gsub(/[^\d]/, '')
     me = session[:current]
     my_score = ep.points[session[:players].index(me)]
     ep_points = Marshal.load(Marshal.dump(ep.points))

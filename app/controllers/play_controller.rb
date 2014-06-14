@@ -132,9 +132,9 @@ class PlayController < ApplicationController
   def final_jeopardy
     @q = Question.find_by_id(params[:q_id])
     @answer = @q.answer
-    @wager1 = params[:wager_1]
-    @wager2 = params[:wager_2]
-    @wager3 = params[:wager_3]
+    @wager1 = params[:wager_1].gsub(/[^\d]/, '')
+    @wager2 = params[:wager_2].gsub(/[^\d]/, '')
+    @wager3 = params[:wager_3].gsub(/[^\d]/, '')
     @page_title = "Final Jeopardy!"
     @body_id = "question"
   end
@@ -148,7 +148,7 @@ class PlayController < ApplicationController
   def validate_dd
     ep = Episode.find(session[:ep_id])
     q = Question.find_by_id(params[:question_id])
-    @outcome = dd_validation_for_question(q, ep, params[:answer], params[:wager])
+    @outcome = dd_validation_for_question(q, ep, params[:answer], params[:wager].gsub(/[^\d]/, ''))
   end
   
   def load_season
@@ -184,9 +184,9 @@ class PlayController < ApplicationController
       end
     end
     
-    @wager1 = params[:wager_1]
-    @wager2 = params[:wager_2]
-    @wager3 = params[:wager_3]
+    @wager1 = params[:wager_1].gsub(/[^\d]/, '')
+    @wager2 = params[:wager_2].gsub(/[^\d]/, '')
+    @wager3 = params[:wager_3].gsub(/[^\d]/, '')
     wagers = [@wager1, @wager2, @wager3]
     wagers.each_with_index do |wag, i|
       the_ep_points = Marshal.load(Marshal.dump(ep.points))
