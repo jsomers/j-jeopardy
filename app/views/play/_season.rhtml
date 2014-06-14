@@ -13,9 +13,6 @@
 		<% if game.played?(session[:players]) %>
 			<% cl = "played" %>
 		<% end %>
-		<% if game.in_progress?(session[:players]) %>
-			<% cl = "in_progress" %>
-		<% end %>
 		<% if game.q_count <= 60 %>
 			<% cl = "miss" %>
 		<% end %>

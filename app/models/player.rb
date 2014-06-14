@@ -20,5 +20,4 @@ class Player < ActiveRecord::Base
   def episodes_for_game(game_id)
     return self.episodes.select {|ep| ep.game_id == game_id}
   end
-  
 end

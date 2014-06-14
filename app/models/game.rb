@@ -160,13 +160,8 @@ class Game < ActiveRecord::Base
   
   def played?(plyrs)
     players = Player.find(plyrs.compact)
-    return !players.collect {|p| p.episodes_for_game(self.game_id)}.flatten.select {|ep| ep.answered > 0}.empty?
-  end
-  
-  def in_progress?(plyrs)
-    players = Player.find(plyrs.compact)
-    eps_for_each = players.collect {|p| p.episodes_for_game(self.game_id)}
-    return (ep = eps_for_each.inject {|int, e| int & e}.first) && ep.answered < 60
+    eps_for_each = players.collect {|p| p.episodes_for_game(game_id)}.flatten
+    return eps_for_each.any? {|e| e.answered > 0}
   end
   
   def set_question_categories

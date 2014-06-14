@@ -58,7 +58,6 @@
 #choose_game a.game_link{padding:3px;padding-bottom:0;color:#222;font-size:11.85px;}
 #choose_game a.game_link:hover{color:black;text-decoration:underline;}
 #choose_game a.game_link.played{color:#aaa;}
-#choose_game a.game_link.in_progress{color:green;}
 #choose_game a.game_link.college{color:#1e6c8f;}
 #choose_game a.game_link.toc{color:#b8441c;}
 #choose_game a.game_link.miss{color:#ff9988;}
