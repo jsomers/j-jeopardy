@@ -8,6 +8,10 @@ function display(){
     milisec=0 
     seconds+=1
     $('stumper').style.display = '';
+    if (!!$('guess_form')) {
+      $('guess_form').remove();
+    }
+    donezotronimo = true;
  } 
  else 
     milisec-=1 

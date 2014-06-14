@@ -10,6 +10,8 @@ function playMusic(nm) {
 var ct = 0;
 
 function getArrows(ev, p1, p2, p3) {
+  if (typeof(donezotronimo) !== 'undefined' && donezotronimo) return false;
+
 	time_to_n = (seconds * 10) + milisec
     arrows = ((ev.which) || (ev.keyCode));
     

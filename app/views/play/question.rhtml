@@ -25,7 +25,7 @@
 <div id="category"><%= @q.category.name %></div>
 <div id="q"><%= @q.question %></div>
 
-<% form_remote_tag :url => { :action => 'validate', :controller => 'play' }, :update => 'outcome' do -%>
+<% form_remote_tag :url => { :action => 'validate', :controller => 'play' }, :update => 'outcome', :html => {:id => "guess_form"} do -%>
 	<input id="ffinger" name="ffinger" type="text"><br/>
 	<input type="hidden" name="value" id="value" value="<%= @q.value %>">
 	<input id="question_id" name="question_id" type="hidden" value="<%= params[:id] %>">
