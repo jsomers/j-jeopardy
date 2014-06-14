@@ -1,3 +1,12 @@
+Good Ngram queries:
+
+this man, this woman
+hamlet, king lear, ..
+1995, 1996, 1997, 1998, 1999, 2000
+bush, obama, clinton, gore
+obama, bieber
+
+
 - multiplayer jeopardy blast
 - jeopardy answer that would answer the most questions
 
