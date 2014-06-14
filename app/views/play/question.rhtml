@@ -25,13 +25,13 @@
 <div id="category"><%= @q.category.name %></div>
 <div id="q"><%= @q.question %></div>
 
-<% form_remote_tag :url => { :action => 'validate', :controller => 'play'}, :update => 'outcome' do -%>
+<% form_remote_tag :url => { :action => 'validate', :controller => 'play' }, :update => 'outcome' do -%>
 	<input id="ffinger" name="ffinger" type="text"><br/>
 	<input type="hidden" name="value" id="value" value="<%= @q.value %>">
 	<input id="question_id" name="question_id" type="hidden" value="<%= params[:id] %>">
 	<input type="hidden" name="player" id="player" value="">
 	<input id="answer" name="answer" type="text" style="display: none;" tabindex='1'>
-	<%= submit_tag 'Guess', :id => 'guess', :style => 'display: none;' %>
+  <input id="guess" name="commit" type="submit" value="Guess" style="display: none;" onclick="var a=this.form.onsubmit(); this.disabled=true; this.value='...';">
 <% end -%>
 
 <div id="outcome"><%= @outcome %></div>
