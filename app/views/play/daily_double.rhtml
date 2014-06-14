@@ -49,7 +49,7 @@
 	<% col = coords.split(',')[1].to_i - 1 %>
 	<% row = coords.split(',')[2].to_i - 1 %>
 	<% if coords.include? 'DJ' then ep.double_table[col][row][3] = 1 else ep.single_table[col][row][3] = 1 end %>
-	<%= submit_tag 'Guess', :id => 'guess', :onclick => '$(\'d2\').style.color = \'#211eab\';seconds=1000' %>
+  <input id="guess" name="commit" type="submit" value="Guess" onclick="$('d2').style.color = '#211eab'; seconds=1000; var a=this.form.onsubmit(); this.disabled=true; this.value='...';">
 <% end -%>
 
 <div id="outcome"><%= @outcome %></div>
