@@ -39,9 +39,9 @@
 			$("#season-slider-range").slider({
 				range: true,
 				min: 1,
-				max: 27,
+				max: 32,
 				step: 1,
-				values: [20, 27],
+				values: [20, 32],
 				slide: function(event, ui) {
 					$("#seasons").val(ui.values[0] + ' - ' + ui.values[1]);
 					$("#season_min").attr("value", ui.values[0]);
@@ -168,7 +168,7 @@
 				<input type="hidden" id="value_min" name="value_min" value="300"/>
 				<input type="hidden" id="value_max" name="value_max" value="800"/>
 				<input type="hidden" id="season_min" name="season_min" value="20"/>
-				<input type="hidden" id="season_max" name="season_max" value="27"/>
+				<input type="hidden" id="season_max" name="season_max" value="32"/>
 				<input type="hidden" id="category_ids" name="category_ids" value=""/>
 				<input type="hidden" id="search_terms" name="search_terms" value=""/>
 				<input type="hidden" id="email_address" name="email_address" value="<%= (session[:p_id] ? Player.find(session[:p_id].to_i).email : "") %>"/>
