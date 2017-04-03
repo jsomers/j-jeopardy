@@ -11,14 +11,20 @@ var startDictation = function() {
 
     recognition.lang = "en-US";
     recognition.start();
+    
+    document.getElementById('mic_icon').style.visibility = "visible";
 
     recognition.onresult = function(e) {
-      document.getElementById('answer').value = e.results[0][0].transcript;
+      document.getElementById('mic_icon').style.visibility = "hidden";
       recognition.stop();
-      document.getElementById('answer').focus();
+      if (document.getElementById('answer').value.trim() === "") {
+      	document.getElementById('answer').value = e.results[0][0].transcript;
+      	document.getElementById('answer').focus();
+      }
     };
 
     recognition.onerror = function(e) {
+      document.getElementById('mic_icon').style.visibility = "hidden";
       recognition.stop();
     }
   }

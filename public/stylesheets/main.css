@@ -148,3 +148,13 @@
 #outcome{font-size:20px;}
 .image_caption{color: white;font-size: 15px;margin-bottom: 15px;}
 .broken-j-archive-image{color: white;font-size:15px;}
+
+img#mic_icon {animation: pulse 1.5s infinite;}
+@keyframes pulse {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity 1;
+  }
+}
