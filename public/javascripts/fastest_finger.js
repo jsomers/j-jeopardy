@@ -2,6 +2,28 @@ nope1 = false;
 nope2 = false;
 nope3 = false;
 
+var startDictation = function() {
+  if (window.hasOwnProperty('webkitSpeechRecognition')) {
+    var recognition = new webkitSpeechRecognition();
+
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.lang = "en-US";
+    recognition.start();
+
+    recognition.onresult = function(e) {
+      document.getElementById('answer').value = e.results[0][0].transcript;
+      recognition.stop();
+      document.getElementById('answer').focus();
+    };
+
+    recognition.onerror = function(e) {
+      recognition.stop();
+    }
+  }
+}
+
 function playMusic(nm) {
 	obj = document.embeds[nm];
 	if(obj.Play) obj.Play();
@@ -39,6 +61,7 @@ function getArrows(ev, p1, p2, p3) {
 				if (nope1 && time_to_n > 55) {
 					return '0'
 				} else {
+          startDictation();
                 $('ffinger').value = p1 + ':';
                 $('player').value = '1';
                 $('answer').style.display = '';
@@ -55,6 +78,7 @@ function getArrows(ev, p1, p2, p3) {
 				if (nope2 && time_to_n > 55) {
 					return '0'
 				} else {
+          startDictation();
                 $('ffinger').value = p2 + ':';
                 $('player').value = '2';
                 $('answer').style.display = '';
@@ -71,6 +95,7 @@ function getArrows(ev, p1, p2, p3) {
 				if (nope3 && time_to_n > 55) {
 					return '0'
 				} else {
+          startDictation();
                 $('ffinger').value = p3 + ':';
                 $('player').value = '3';
                 $('answer').style.display = '';
