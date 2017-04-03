@@ -30,7 +30,7 @@
 	<input type="hidden" name="value" id="value" value="<%= @q.value %>">
 	<input id="question_id" name="question_id" type="hidden" value="<%= params[:id] %>">
 	<input type="hidden" name="player" id="player" value="">
-  <img src="/images/mic_icon.png" id="mic_icon" style="position: relative; top: 5px; right: 5px; width: 16px;">
+  <img src="/images/mic_icon.png" id="mic_icon" style="position: relative; top: 5px; right: 5px; width: 16px; visibility: hidden;">
 	<input id="answer" name="answer" type="text" style="display: none;" tabindex='1' oninput="document.getElementById('mic_icon').style.visibility = 'hidden';">
   <input id="guess" name="commit" type="submit" value="Guess" style="display: none;" onclick="var a=this.form.onsubmit(); this.disabled=true; this.value='...';">
 <% end -%>
