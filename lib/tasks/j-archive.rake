@@ -15,7 +15,7 @@ namespace :fetch do
   task :games => :environment do
     # For each season, grab the list of game URLs:
     game_urls_to_get = {}
-    (1..32).each do |season|
+    (1..33).each do |season|
       puts "Checking season #{season} for new games..."
       season_page = doc("http://j-archive.com/showseason.php?season=#{season}")
       games_we_have_for_this_season = Game.find_all_by_season(season).collect(&:game_id)
@@ -101,7 +101,7 @@ namespace :fetch do
   end
   
   task :metadata => :environment do
-    (1..32).each do |season|
+    (1..33).each do |season|
       season_page = doc("http://j-archive.com/showseason.php?season=#{season}")
       content = Hpricot((season_page/"#content").inner_html)
       puts "Fetching metadata for season #{season}."
