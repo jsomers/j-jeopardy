@@ -1,3 +1,27 @@
+# To deploy
+# Log into server using `jeopardy` command.
+#
+# cd ~/public_html/jeopardy/releases
+# 
+# git clone git@github.com:jsomers/j-jeopardy.git 20170403075055
+# 
+# cd ..
+# rm -rf current/
+# rm current
+# 
+# ln -s -f releases/20170403075055/ current
+# 
+# current
+# mkdir tmp
+# 
+# vim config/database.yml
+# [edit the file to include the prod database password]
+# 
+# vim config/initializers/aws.rb
+# [edit the file to include the correct key and password]
+# 
+# touch /home/james/public_html/jeopardy/current/tmp/restart.txt
+
 # Must hardcode the AWS credentials because the environment doesn't have them.
 
 # To install local gems, first find them at `~/.rvm/gems/ruby-1.8.7-p371/cache`
